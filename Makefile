@@ -6,7 +6,7 @@
 #    By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 17:55:02 by jorgutie          #+#    #+#              #
-#    Updated: 2025/02/14 00:11:43 by jorgutie         ###   ########.fr        #
+#    Updated: 2025/02/14 00:58:46 by jorgutie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -67,6 +67,7 @@ $(LIBFT):
 	@make -C $(LIBFT_DIR)
 
 # Cleanup rules
+# TEST REMOVE ME TODO
 clean:
 	@make -C $(LIBFT_DIR) clean
 	@$(RM) -r $(OBJ_DIR)
