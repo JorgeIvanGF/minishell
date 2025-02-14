@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+         #
+#    By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/12 16:25:40 by jorgutie          #+#    #+#              #
-#    Updated: 2024/12/27 19:35:23 by jorgutie         ###   ########.fr        #
+#    Updated: 2025/02/14 00:44:44 by pdrettas         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ CFLAGS = -Wall -Wextra -Werror $(INC)
 
 # Source files
 SRCS = ft_atoi.c \
+	   ft_atoi_long \
 	   ft_bzero.c \
 	   ft_calloc.c \
 	   ft_isalnum.c \
