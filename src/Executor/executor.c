@@ -1,21 +1,9 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   executor.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/14 02:02:40 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/02/17 21:51:44 by pauladretta      ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../../inc/minishell.h"
 
-init_list_commands()
+int	init_list_commands()
 {
 	// initialize first command (head)
-	
+	return (1);
 }
 
 t_lst_rdir *init_list_redirection(t_rdir *head, t_rdir *tail, int size)

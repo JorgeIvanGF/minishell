@@ -31,8 +31,10 @@ newtest
 #VS Code Directory
 .vscode/
 
-# Binary
+# Executable
 minishell
 
 #libft files
 #libft/src/ft_strcmp.c
+libft/libft.a
+

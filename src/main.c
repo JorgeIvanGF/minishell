@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/14 00:13:35 by jorgutie          #+#    #+#             */
-/*   Updated: 2025/02/17 22:37:01 by pauladretta      ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
@@ -32,9 +21,10 @@ int main(int argc, char **argv, char **env)
 	(void) argv;
 	(void) env;
 
+	minishell = NULL;
 	while (1)
 	{
-		init_minishell(minishell, env);
+		// init_minishell(minishell, env);
 		input = readline(ORANGE"MINISHELL> "RESET); // Display prompt and get input
 		if (!input) // If Ctrl+D is pressed, exit
 		{
@@ -49,7 +39,7 @@ int main(int argc, char **argv, char **env)
 		// parser(input, minishell);
 
 		//........... Execution Part......................
-		ft_execution(minishell); // To Paula
+		// ft_execution(minishell); // To Paula
 		
 		// ............Free Everything....................
 		free(input); // Free memory allocated by readline
