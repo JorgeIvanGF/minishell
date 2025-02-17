@@ -6,7 +6,7 @@
 /*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:27:35 by jorgutie          #+#    #+#             */
-/*   Updated: 2025/02/17 11:43:40 by jorgutie         ###   ########.fr       */
+/*   Updated: 2025/02/17 18:35:13 by jorgutie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,3 +59,5 @@ int syntax_check(char *input)
 	}
 	return (0);
 }
+
+ft_pu
