@@ -3,20 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 02:02:40 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/02/14 02:03:41 by pdrettas         ###   ########.fr       */
+/*   Updated: 2025/02/17 21:51:44 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../inc/minishell.h"
 
-t_list_redirection *init_list_redirection(t_redirection *head, t_redirection *tail, int size)
+init_list_commands()
 {
-	t_list_redirection *list_redirection;
+	// initialize first command (head)
 	
-	list_redirection = malloc(1 * sizeof(t_list_redirection));
+}
+
+t_lst_rdir *init_list_redirection(t_rdir *head, t_rdir *tail, int size)
+{
+	t_lst_rdir *list_redirection;
+	
+	list_redirection = malloc(1 * sizeof(t_lst_rdir));
 	if (!list_redirection)
 	{
 		return (NULL);
@@ -28,11 +34,11 @@ t_list_redirection *init_list_redirection(t_redirection *head, t_redirection *ta
 	return(list_redirection);
 }
 
-t_redirection *init_redirection(int type, char *name)
+t_rdir *init_redirection(int type, char *name)
 {
-	t_redirection *redirection; // objekt bzw. instance
+	t_rdir *redirection; // objekt bzw. instance
 
-	redirection = malloc(1 * sizeof (t_redirection));
+	redirection = malloc(1 * sizeof (t_rdir));
 	if (!redirection)
 	{
 		return(NULL);
@@ -43,30 +49,32 @@ t_redirection *init_redirection(int type, char *name)
 	return(redirection);
 }
 
-int main ()
+void ft_execution (t_minishell *minishell)
 {
-	t_redirection *redirection_0;
-	t_redirection *redirection_1;
-	t_redirection *redirection_2;
-	t_redirection *redirection_3;
-	t_list_redirection *list_redirection;
-	
-	redirection_0 = init_redirection(0, NULL);
-	// printf("redirection 0: type = %d, name = %s\n", redirection_0->type, redirection_0->name);
-	redirection_1 = init_redirection(1, NULL);
-	// printf("redirection 1: type = %d, name = %s\n", redirection_1->type, redirection_1->name);
-	redirection_2 = init_redirection(2, NULL);
-	// printf("redirection 2: type = %d, name = %s\n", redirection_2->type, redirection_2->name);
-	redirection_3 = init_redirection(3, NULL);
-	// printf("redirection 3: type = %d, name = %s\n", redirection_3->type, redirection_3->name);
-	
-	redirection_0->next = redirection_1;
-	redirection_1->next = redirection_2;
-	redirection_2->next = redirection_3;
-	redirection_3->next = NULL;
-
-	list_redirection = init_list_redirection(redirection_0, redirection_3, 4);
+	(void) minishell;
 
 	
-	return (0);
+
+
+	// t_redirection *redirection_0;
+	// t_redirection *redirection_1;
+	// t_redirection *redirection_2;
+	// t_redirection *redirection_3;
+	// t_list_redirection *list_redirection;
+	
+	// redirection_0 = init_redirection(0, NULL);
+	// // printf("redirection 0: type = %d, name = %s\n", redirection_0->type, redirection_0->name);
+	// redirection_1 = init_redirection(1, NULL);
+	// // printf("redirection 1: type = %d, name = %s\n", redirection_1->type, redirection_1->name);
+	// redirection_2 = init_redirection(2, NULL);
+	// // printf("redirection 2: type = %d, name = %s\n", redirection_2->type, redirection_2->name);
+	// redirection_3 = init_redirection(3, NULL);
+	// // printf("redirection 3: type = %d, name = %s\n", redirection_3->type, redirection_3->name);
+	
+	// redirection_0->next = redirection_1;
+	// redirection_1->next = redirection_2;
+	// redirection_2->next = redirection_3;
+	// redirection_3->next = NULL;
+
+	// list_redirection = init_list_redirection(redirection_0, redirection_3, 4);
 }

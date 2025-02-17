@@ -3,21 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 00:13:35 by jorgutie          #+#    #+#             */
-/*   Updated: 2025/02/14 00:18:22 by jorgutie         ###   ########.fr       */
+/*   Updated: 2025/02/16 01:38:45 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../inc/minishell.h"
+
+t_minishell *init_minishell (char **env)
+{
+	t_minishell *minishell;
+	
+	minishell = malloc(1 * (sizeof(t_minishell)));
+	
+	minishell->env = env;
+	minishell->list_cmd = NULL;
+
+	return(minishell);
+}
 
 int main(int argc, char **argv, char **env)
 {
 	char *input;
 	t_minishell *minishell;
+	(void) argc;
+	(void) argv;
+	(void) env;
 
-	
 	while (1)
 	{
 		minishell = init_minishell(env);
@@ -30,9 +44,9 @@ int main(int argc, char **argv, char **env)
 		if (*input) // If input is not empty, add it to history
 			add_history(input);
 		printf("--readline: %s\n", input); // to test the readline
-		if(!syntax_check(input))
-			process_input(input);
-		parser(input, minishell);
+		// if(!syntax_check(input))
+			// process_input(input);
+		// parser(input, minishell);
 
 		//........... Execution Part......................
 		ft_execution(minishell); // To Paula

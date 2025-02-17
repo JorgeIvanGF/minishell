@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+         #
+#    By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/12 16:25:40 by jorgutie          #+#    #+#              #
-#    Updated: 2025/02/14 00:44:44 by pdrettas         ###   ########.fr        #
+#    Updated: 2025/02/16 23:52:44 by pauladretta      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,9 +26,10 @@ CFLAGS = -Wall -Wextra -Werror $(INC)
 
 # Source files
 SRCS = ft_atoi.c \
-	   ft_atoi_long \
+	   ft_atoi_long.c \
 	   ft_bzero.c \
 	   ft_calloc.c \
+	   ft_free_2d.c \
 	   ft_isalnum.c \
 	   ft_isalpha.c \
 	   ft_isascii.c \
@@ -46,6 +47,7 @@ SRCS = ft_atoi.c \
 	   ft_putstr_fd.c \
 	   ft_split.c \
 	   ft_strchr.c \
+	   ft_strcmp.c \
 	   ft_strdup.c \
 	   ft_striteri.c \
 	   ft_strjoin.c \
@@ -58,8 +60,10 @@ SRCS = ft_atoi.c \
 	   ft_strrchr.c \
 	   ft_strtrim.c \
 	   ft_substr.c \
+	   ft_swap.c \
 	   ft_tolower.c \
 	   ft_toupper.c \
+	   ft_uitoa.c \
 	   ft_printf.c \
 	   ft_printf_functions_1.c \
 	   get_next_line_utils.c \
