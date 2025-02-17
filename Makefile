@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+         #
+#    By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 17:55:02 by jorgutie          #+#    #+#              #
-#    Updated: 2025/02/14 00:58:46 by jorgutie         ###   ########.fr        #
+#    Updated: 2025/02/17 22:35:58 by pauladretta      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ OBJ_DIR     = obj
 INC_DIR     = inc
 
 # Source files
-SRC_FILES   = main.c 
+SRC_FILES   = main.c Executor/executor.c
 			
 			
 

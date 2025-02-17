@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 16:36:01 by jorgutie          #+#    #+#             */
-/*   Updated: 2025/02/14 00:06:31 by jorgutie         ###   ########.fr       */
+/*   Updated: 2025/02/17 21:06:58 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ typedef struct s_command
 	struct s_command	*next;
 }	t_cmd;
 
-// List of Commnands Struct__________________________
+// List of Commands Struct__________________________
 typedef struct s_list_commands
 {
 	int		size;
@@ -79,7 +79,6 @@ typedef struct s_minishell
 	char		**env;
 	t_lst_cmd	*list_cmd;
 }t_minishell;
-
 
 #endif
 
