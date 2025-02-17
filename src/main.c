@@ -6,7 +6,7 @@
 /*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 00:13:35 by jorgutie          #+#    #+#             */
-/*   Updated: 2025/02/14 00:18:22 by jorgutie         ###   ########.fr       */
+/*   Updated: 2025/02/17 10:38:01 by jorgutie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int main(int argc, char **argv, char **env)
 	
 	while (1)
 	{
-		minishell = init_minishell(env);
+		init_minishell(minishell, env);
 		input = readline(ORANGE"MINISHELL> "RESET); // Display prompt and get input
 		if (!input) // If Ctrl+D is pressed, exit
 		{
