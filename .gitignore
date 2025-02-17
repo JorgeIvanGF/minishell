@@ -1,0 +1,38 @@
+#Own files 
+.vscode
+
+#System files
+.DS_Store
+
+#Object files
+*.o
+libft/*.o
+
+#Libraries
+*.lib
+*.a
+
+#Folders
+obj/
+libft/obj/
+
+#Executables
+*.out
+*.exe
+
+#Temp Files
+*.swp
+inc/parser.h
+newtest
+
+#Debug Files
+*.dSYM/
+
+#VS Code Directory
+.vscode/
+
+# Binary
+minishell
+
+#libft files
+#libft/src/ft_strcmp.c
