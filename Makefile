@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+         #
+#    By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 17:55:02 by jorgutie          #+#    #+#              #
-#    Updated: 2025/02/17 22:35:58 by pauladretta      ###   ########.fr        #
+#    Updated: 2025/02/18 10:37:37 by jorgutie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,11 @@ OBJ_DIR     = obj
 INC_DIR     = inc
 
 # Source files
-SRC_FILES   = main.c Executor/executor.c
+SRC_FILES   = main.c Executor/executor.c \
+				Parser/parser.c \
+				Parser/syntax.c \
+				Parser/tokenizer.c \
+				Parser/tokenizer_helper.c
 			
 			
 

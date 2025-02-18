@@ -1,36 +1,6 @@
 #include "minishell.h"
 #include "parsing.h"
 
-// Get the token type (based on the enum)
-static t_token_type	get_token_type(char *word)
-{
-	if (!ft_strcmp(word, "|"))
-		return PIPE;
-	if (!ft_strcmp(word, "<"))
-		return REDIR_IN;
-	if (!ft_strcmp(word, ">"))
-		return REDIR_OUT;
-	if (!ft_strcmp(word, ">>"))
-		return APPEND;
-	if (!ft_strcmp(word, "<<"))
-		return HEREDOC;
-	return WORD;
-}
-
-// Creation of a token with malloc and assign the type
-static t_token	*new_token(char *value, t_token_type type)
-{
-	t_token	*token;
-	
-	token = malloc(sizeof(t_token));
-	if (!token)
-		return (NULL);
-	token->value = ft_strdup(value);
-	token->type = type;
-	token->next = NULL;
-	return (token);
-}
-
 // Simple initialization of the tokens list
 void	init_tokens(t_lst_token *tokens)
 {
@@ -70,14 +40,10 @@ int	process_word(char *word, t_lst_token *tokens)
 	return (1);
 }
 
-// Skip spaces
-void	skip_spaces(const char *input, int *i)
-{
-	while (input[*i] == ' ')
-		(*i)++;
-}
 
-// lexer in action
+
+// Lexer in action: Skip spaces, extract operator or "word" then
+// add to token list acoording to its type
 int	ft_lexer(char *input, t_lst_token *tokens)
 {
 	int		i;
@@ -104,8 +70,8 @@ int	ft_lexer(char *input, t_lst_token *tokens)
 	return (1);
 }
 
-// Creation of the list of tokens, initialize it, 
-// 
+// Creation of the list of tokens, initialize it, lexer the input 
+// into tokens  
 t_lst_token	*tokenize(char *input)
 {
 	t_lst_token	*tokens;
