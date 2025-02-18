@@ -48,7 +48,7 @@ int	ft_lexer(char *input, t_lst_token *tokens)
 {
 	int		i;
 	char	*word;
-	t_token	*token;
+	//t_token	*token;
 	
 	i = 0;
 	while (input[i])
@@ -61,13 +61,30 @@ int	ft_lexer(char *input, t_lst_token *tokens)
 		else
 			word = extract_word(&i, input); // Normal command/arg
 		if (!word)
-			return (NULL);
-		token = new_token(word, get_token_type(word)); //Add token
-		free(word);
+			return (0);
+		//token = new_token(word, get_token_type(word)); //Add token
 		if (!process_word(word, tokens))
 			return (0);
 	}
 	return (1);
+}
+
+void	free_token_list(t_lst_token *tokens)
+{
+	t_token *curr;
+	t_token *next;
+
+	if (!tokens)
+		return;
+	curr = tokens->head;
+	while (curr)
+	{
+		next = curr->next;
+		free(curr->value);
+		free(curr);
+		curr = next;
+	}
+	free(tokens);
 }
 
 // Creation of the list of tokens, initialize it, lexer the input 
@@ -82,7 +99,7 @@ t_lst_token	*tokenize(char *input)
 	init_tokens(tokens);
 	if (!ft_lexer(input, tokens))
 	{
-		free_token_list(tokens); // TO DO.....
+		free_token_list(tokens); // TO DO.....,.
 		return (NULL);
 	}	
 	return (tokens);

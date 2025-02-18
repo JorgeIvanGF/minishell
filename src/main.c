@@ -54,17 +54,31 @@ int main(int argc, char **argv, char **env)
 */
 
 // JORGE MAIN ------------------------------------------------------------------
+
+
+// To Test the Lexer (Tmporary function)
+void print_tokens(t_lst_token *tokens)
+{
+	t_token *curr = tokens->head;
+	while (curr)
+	{
+		printf("Token: %-10s | Type: %d\n", curr->value, curr->type);
+		curr = curr->next;
+	}
+}
+
+
 int main(int argc, char **argv, char **env)
 {
 	char *input;
-	t_minishell *minishell;
+	//t_minishell *minishell;
 	t_lst_token	*tokens;
 
 	(void) argc;
 	(void) argv;
 	(void) env;
 
-	minishell = NULL;
+	//minishell = malloc((sizeof(t_minishell *)));
 	while (1)
 	{
 		//init_minishell(minishell, env);
@@ -82,9 +96,15 @@ int main(int argc, char **argv, char **env)
 		tokens = tokenize(input); 
 		if (!tokens)
 		{
+			printf("Error: Tokenization failed.\n");
 			free(input);
 			continue ;
 		}
+
+		print_tokens(tokens); // Debugging tokens
+		free_token_list(tokens);
+		free(input);
+		/*
 		// Check syntax using tokens list
 		if (syntax_check(tokens))
 		{
@@ -99,9 +119,13 @@ int main(int argc, char **argv, char **env)
 
 		//........... Execution Part......................
 		// ft_execution(minishell); // To Paula
+
+	
 		
 		// ............Free Everything....................
 		free(input); // Free memory allocated by readline
+
+		*/
 	}
 	return 0;
 }

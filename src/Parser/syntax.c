@@ -47,5 +47,3 @@ int syntax_check(char *input)
 	}
 	return (0);
 }
-
-ft_pu

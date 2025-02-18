@@ -41,9 +41,10 @@ void		free_token_list(t_lst_token *tokens);
 void		parser(t_lst_token *tokens, t_minishell *shell);
 int			syntax_check(char *input);
 
-// tokenize_helper.c:
+// tokenize_utils.c:
 void			skip_spaces(const char *input, int *i);
 t_token_type	get_token_type(char *word);
 t_token			*new_token(char *value, t_token_type type);
-
+char			*extract_operator(int *i, char *input);
+char			*extract_word(int *i, char *input);
 #endif

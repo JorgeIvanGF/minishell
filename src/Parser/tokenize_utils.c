@@ -40,7 +40,7 @@ t_token	*new_token(char *value, t_token_type type)
 }
 
 // Extract Normal Words (Handles Quotes Too!)
-char *extract_word(int *i, char *input)
+char	*extract_word(int *i, char *input)
 {
 	int start = *i;
 	char quote = 0;

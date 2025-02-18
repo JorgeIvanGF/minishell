@@ -6,7 +6,7 @@
 #    By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 17:55:02 by jorgutie          #+#    #+#              #
-#    Updated: 2025/02/18 10:37:37 by jorgutie         ###   ########.fr        #
+#    Updated: 2025/02/18 12:58:03 by jorgutie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,7 +45,7 @@ SRC_FILES   = main.c Executor/executor.c \
 				Parser/parser.c \
 				Parser/syntax.c \
 				Parser/tokenizer.c \
-				Parser/tokenizer_helper.c
+				Parser/tokenize_utils.c
 			
 			
 
@@ -57,7 +57,8 @@ INC         = -I$(INC_DIR) -I$(LIBFT_DIR)/inc
 # Rule to build object files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INC) -c $< -o $@
+	@echo "$(BLUE)Compiling $<...$(RESET)"
+	@$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
 # Main target
 all: $(NAME)
