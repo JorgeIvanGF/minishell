@@ -2,7 +2,7 @@
 #include "../inc/minishell.h"
 #include "../inc/parsing.h"
 
-t_minishell *init_minishell (char **env)
+t_minishell *init_minishell (t_minishell *minishell,char **env)
 {
 	t_minishell *minishell;
 	
@@ -73,7 +73,7 @@ void print_tokens(t_lst_token *tokens)
 int main(int argc, char **argv, char **env)
 {
 	char *input;
-	//t_minishell *minishell;
+	t_minishell *minishell;
 	t_lst_token	*tokens;
 
 	(void) argc;
@@ -83,7 +83,7 @@ int main(int argc, char **argv, char **env)
 	//minishell = malloc((sizeof(t_minishell *)));
 	while (1)
 	{
-		//init_minishell(minishell, env);
+		init_minishell(minishell, env);
 		input = readline(ORANGE"MINISHELL> "RESET); // Display prompt and get input
 		if (!input) // If Ctrl+D is pressed, exit
 		{
@@ -113,6 +113,8 @@ int main(int argc, char **argv, char **env)
 			continue ;
 		}
 
+		// Parsing part
+		parser(tokens, minishell);
 		free_token_list(tokens);
 		free(input);
 		

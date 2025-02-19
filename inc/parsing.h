@@ -47,4 +47,8 @@ t_token_type	get_token_type(char *word);
 t_token			*new_token(char *value, t_token_type type);
 char			*extract_operator(int *i, char *input);
 char			*extract_word(int *i, char *input);
+
+// parser.c
+void	parser(t_lst_token *tokens, t_minishell *minishell);
+
 #endif
