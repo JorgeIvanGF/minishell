@@ -53,6 +53,12 @@ char	*extract_word(int *i, char *input)
 			quote = 0; // Close quote
 		(*i)++;
 	}
+	// If quote is still open, return NULL to indicate syntax error
+	if (quote)
+	{
+		printf(MAG"Syntax error: Unmatched quotes\n"RESET);
+		return (NULL);
+	}
 	return (ft_substr(input, start, *i - start));
 }
 

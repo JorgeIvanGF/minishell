@@ -39,7 +39,7 @@ typedef struct s_token_list
 t_lst_token	*tokenize(char *input);
 void		free_token_list(t_lst_token *tokens);
 void		parser(t_lst_token *tokens, t_minishell *shell);
-int			syntax_check(char *input);
+int			syntax_check(t_lst_token *tokens);
 
 // tokenize_utils.c:
 void			skip_spaces(const char *input, int *i);

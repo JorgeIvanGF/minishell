@@ -26,7 +26,7 @@ int	add_token_to_list(char *word, t_lst_token *tokens)
 	return (1);
 }
 
-// Process the word
+// Process the word (create and add token and token type)
 int	process_word(char *word, t_lst_token *tokens)
 {
 	if (!word)
@@ -39,8 +39,6 @@ int	process_word(char *word, t_lst_token *tokens)
 	free(word);
 	return (1);
 }
-
-
 
 // Lexer in action: Skip spaces, extract operator or "word" then
 // add to token list acoording to its type
@@ -69,6 +67,7 @@ int	ft_lexer(char *input, t_lst_token *tokens)
 	return (1);
 }
 
+// To free all the tokens in the list, and also the list itself
 void	free_token_list(t_lst_token *tokens)
 {
 	t_token *curr;
@@ -99,7 +98,7 @@ t_lst_token	*tokenize(char *input)
 	init_tokens(tokens);
 	if (!ft_lexer(input, tokens))
 	{
-		free_token_list(tokens); // TO DO.....,.
+		free_token_list(tokens);
 		return (NULL);
 	}	
 	return (tokens);

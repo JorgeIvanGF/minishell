@@ -19,6 +19,8 @@
 # define YELLOW "\033[0;33m"
 # define WHITE "\033[0;37m"
 # define RESET "\033[0m"
+# define B_RED "\033[1;31m"// Bright Red
+# define MAG "\033[0;35m"// Magenta
 
 
 

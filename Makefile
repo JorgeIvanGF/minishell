@@ -6,7 +6,7 @@
 #    By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 17:55:02 by jorgutie          #+#    #+#              #
-#    Updated: 2025/02/18 12:58:03 by jorgutie         ###   ########.fr        #
+#    Updated: 2025/02/18 17:22:15 by jorgutie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,14 +57,14 @@ INC         = -I$(INC_DIR) -I$(LIBFT_DIR)/inc
 # Rule to build object files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
-	@echo "$(BLUE)Compiling $<...$(RESET)"
+	@echo "$(BLUE)Compiling $< ...$(RESET)"
 	@$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
 # Main target
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(OBJS) $(LIBFT) -o $(NAME) $(RL_FLAGS)
+	@$(CC) $(OBJS) $(LIBFT) -o $(NAME) $(RL_FLAGS)
 	@echo "$(GREEN)** $(NAME) Compiled successfully! **"
 
 # Libft Dependency (Build)

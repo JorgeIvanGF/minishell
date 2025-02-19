@@ -53,6 +53,8 @@ int main(int argc, char **argv, char **env)
 // ..............................................................................
 */
 
+
+
 // JORGE MAIN ------------------------------------------------------------------
 
 
@@ -96,15 +98,13 @@ int main(int argc, char **argv, char **env)
 		tokens = tokenize(input); 
 		if (!tokens)
 		{
-			printf("Error: Tokenization failed.\n");
+			printf(RED"Error: Tokenization failed.\n"RESET);
 			free(input);
 			continue ;
 		}
 
 		print_tokens(tokens); // Debugging tokens
-		free_token_list(tokens);
-		free(input);
-		/*
+
 		// Check syntax using tokens list
 		if (syntax_check(tokens))
 		{
@@ -112,6 +112,12 @@ int main(int argc, char **argv, char **env)
 			free(input);
 			continue ;
 		}
+
+		free_token_list(tokens);
+		free(input);
+		
+		/*
+		
 		// Parse tokens into command structs
 		parser(tokens, minishell);
 

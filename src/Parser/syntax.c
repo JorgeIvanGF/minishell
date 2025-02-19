@@ -1,41 +1,52 @@
 #include "minishell.h"
 #include "parsing.h"
 
-static int unmatched_quotes(char *input)
+int	syntax_check(t_lst_token *tokens)
 {
-	int i;
-	char quote;
+	t_token *curr;
 
-	i = 0;
-	quote = 0;
-	while (input[i])
+	if (!tokens || !tokens->head)
+		return (0); // No tokens, no syntax error
+
+	curr = tokens->head;
+
+	// Rule 1: First token cant be PIPE
+	if (curr->type == PIPE)
 	{
-		if ((input[i] == '\'' || input[i] == '"') && !quote)
-			quote = input[i];
-		else if (input[i] == quote)
-			quote = 0;
-		i++;
+		printf(RED"Syntax error: invalid pipe usage\n"RESET);
+		return (1);
 	}
-	return (quote);
-}
 
-static int check_invalid_pipes(char *input)
-{
-	int i;
-
-	i = 0;
-	while (input[i])
+	while (curr) // through all the tokens
 	{
-		if (input[i] == '|' && (i == 0 || input[i + 1] == '\0'))
+		// Rule 2: Double pipes are not allowed (||)
+		if (curr->type == PIPE && curr->next && curr->next->type == PIPE)
+		{
+			printf(RED"Syntax error: Invalid pipe usage\n"RESET);
 			return (1);
-		i++;
+		}
+		// Rule 3: Redirections must be followed by a WORD
+		if ((curr->type == REDIR_IN || curr->type == REDIR_OUT
+				|| curr->type == APPEND || curr->type == HEREDOC)
+			&& (!curr->next || curr->next->type != WORD))
+		{
+			printf(RED"Syntax error: missing file after '%s'\n"RESET, curr->value);
+			return (1);
+		}
+		// Rule 4: Last token cannot be a PIPE or Redirection
+		if (!curr->next && (curr->type == PIPE || curr->type == REDIR_IN
+				|| curr->type == REDIR_OUT || curr->type == APPEND
+				|| curr->type == HEREDOC))
+		{
+			printf(RED"Syntax error: unexpected '%s'\n"RESET, curr->value);
+			return (1);
+		}
+		curr = curr->next;
 	}
 	return (0);
 }
 
-int syntax_check(char *input)
-{
-	if (unmatched_quotes(input))
+	/* if (unmatched_quotes(input))
 	{
 		printf(RED"Syntax error: unmatched quotes\n"RESET);
 		return (1);
@@ -45,5 +56,6 @@ int syntax_check(char *input)
 		printf(RED"Syntax error: invalid pipe usage\n"RESET);
 		return (1);
 	}
-	return (0);
-}
+	*/
+
+
