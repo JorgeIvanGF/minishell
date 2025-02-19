@@ -40,18 +40,24 @@ t_token	*new_token(char *value, t_token_type type)
 }
 
 // Extract Normal Words (Handles Quotes Too!)
+// the loop continues as long as: Not reach the end of string
+// and either curr char isnt space or we are inside quotes(quote is non-zero)
 char	*extract_word(int *i, char *input)
 {
 	int start = *i;
-	char quote = 0;
+	char quote = 0; // (quote tracker (0 = NO open quote)
 
 	while (input[*i] && (input[*i] != ' ' || quote))
 	{
-		if ((input[*i] == '\'' || input[*i] == '"') && !quote)
-			quote = input[*i]; // Open quote
-		else if (input[*i] == quote)
-			quote = 0; // Close quote
+		if ((input[*i] == '\'' || input[*i] == '"'))
+		{
+			if (!quote) // If no inside quote, start quot mode
+				quote = input[*i]; // Open quote
+			else if (input[*i] == quote)
+				quote = 0; // Close quote
+		}
 		(*i)++;
+
 	}
 	// If quote is still open, return NULL to indicate syntax error
 	if (quote)

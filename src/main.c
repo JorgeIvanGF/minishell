@@ -118,13 +118,8 @@ int main(int argc, char **argv, char **env)
 		
 		/*
 		
-		// Parse tokens into command structs
-		parser(tokens, minishell);
-
-
-
 		//........... Execution Part......................
-		// ft_execution(minishell); // To Paula
+		ft_execution(minishell); // To Paula
 
 	
 		

@@ -10,10 +10,11 @@ int	syntax_check(t_lst_token *tokens)
 
 	curr = tokens->head;
 
-	// Rule 1: First token cant be PIPE
-	if (curr->type == PIPE)
+	// Rule 1: First token cant be PIPE or REDIR
+	if (curr->type == PIPE || curr->type == REDIR_IN || curr->type == REDIR_OUT
+		|| curr->type == APPEND || curr->type == HEREDOC)
 	{
-		printf(RED"Syntax error: invalid pipe usage\n"RESET);
+		printf(RED"Syntax error: invalid start with '%s'\n"RED, curr->value);
 		return (1);
 	}
 
