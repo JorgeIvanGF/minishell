@@ -86,8 +86,8 @@ void	free_token_list(t_lst_token *tokens)
 	free(tokens);
 }
 
-// Creation of the list of tokens, initialize it, lexer the input 
-// into tokens  
+// Creation of the list of tokens, initialize it, 
+// lexer the input into tokens  
 t_lst_token	*tokenize(char *input)
 {
 	t_lst_token	*tokens;

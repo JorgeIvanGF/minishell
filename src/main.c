@@ -105,7 +105,7 @@ int main(int argc, char **argv, char **env)
 
 		print_tokens(tokens); // Debugging tokens
 
-		// Check syntax using tokens list
+		// Check syntax part: using tokens list
 		if (syntax_check(tokens))
 		{
 			free_token_list(tokens);
