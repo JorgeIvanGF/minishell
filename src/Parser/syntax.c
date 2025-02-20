@@ -10,7 +10,7 @@ int	syntax_check(t_lst_token *tokens)
 
 	curr = tokens->head;
 
-	// Rule 1: First token cant be PIPE or REDIR
+	// Rule 1: First token cant be PIPE or REDIR **************************************************
 	if (curr->type == PIPE || curr->type == REDIR_IN || curr->type == REDIR_OUT
 		|| curr->type == APPEND || curr->type == HEREDOC)
 	{
@@ -29,12 +29,12 @@ int	syntax_check(t_lst_token *tokens)
 		// Rule 3: Redirections must be followed by a WORD
 		if ((curr->type == REDIR_IN || curr->type == REDIR_OUT
 				|| curr->type == APPEND || curr->type == HEREDOC)
-			&& (!curr->next || curr->next->type != WORD))
+			&& (!curr->next || curr->next->type != WORD)) //****** */ revisar por cual lado empieza a verificar
 		{
 			printf(RED"Syntax error: missing file after '%s'\n"RESET, curr->value);
 			return (1);
 		}
-		// Rule 4: Last token cannot be a PIPE or Redirection
+		// Rule 4: Last token cannot be a PIPE or Redirection ******** solo se necesita test el pipe arriba ya se hizo
 		if (!curr->next && (curr->type == PIPE || curr->type == REDIR_IN
 				|| curr->type == REDIR_OUT || curr->type == APPEND
 				|| curr->type == HEREDOC))

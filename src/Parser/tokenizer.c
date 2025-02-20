@@ -34,9 +34,11 @@ int	process_word(char *word, t_lst_token *tokens)
 	if (!add_token_to_list(word, tokens))
 	{
 		free(word);
+		word = NULL;
 		return (0);
 	}
 	free(word);
+	word = NULL;
 	return (1);
 }
 

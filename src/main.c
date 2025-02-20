@@ -55,13 +55,17 @@ int main(int argc, char **argv, char **env)
 
 
 
+
 // JORGE MAIN ------------------------------------------------------------------
+
+
 
 
 // To Test the Lexer (Tmporary function)
 void print_tokens(t_lst_token *tokens)
 {
 	t_token *curr = tokens->head;
+	printf(YELLOW"TOKEN VALUES AND TYPES\n"RESET);
 	while (curr)
 	{
 		printf("Token: %-10s | Type: %d\n", curr->value, curr->type);
@@ -83,7 +87,7 @@ int main(int argc, char **argv, char **env)
 	//minishell = malloc((sizeof(t_minishell *)));
 	while (1)
 	{
-		init_minishell(&minishell, env);
+		init_minishell(&minishell, env);// iniciar afuera env NO CAMBIA
 		input = readline(ORANGE"MINISHELL> "RESET); // Display prompt and get input
 		if (!input) // If Ctrl+D is pressed, exit
 		{
@@ -92,7 +96,7 @@ int main(int argc, char **argv, char **env)
 		}
 		if (*input) // If input is not empty, add it to history
 			add_history(input);
-		printf("--readline: %s\n", input); // to test the readline
+	
 
 		// Tokenize part
 		tokens = tokenize(input); 
@@ -115,6 +119,8 @@ int main(int argc, char **argv, char **env)
 
 		// Parsing part
 		parser(tokens, minishell);
+
+
 		free_token_list(tokens);
 		free(input);
 		
