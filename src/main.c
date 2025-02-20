@@ -2,14 +2,14 @@
 #include "../inc/minishell.h"
 #include "../inc/parsing.h"
 
-t_minishell *init_minishell (t_minishell *minishell,char **env)
+void *init_minishell (t_minishell **minishell,char **env)
 {
-	t_minishell *minishell;
+	//t_minishell *minishell;
 	
-	minishell = malloc(1 * (sizeof(t_minishell)));
+	*minishell = malloc(1 * (sizeof(t_minishell)));
 	
-	minishell->env = env;
-	minishell->list_cmd = NULL;
+	(*minishell)->env = env;
+	(*minishell)->list_cmd = NULL;
 
 	return(minishell);
 }
@@ -83,7 +83,7 @@ int main(int argc, char **argv, char **env)
 	//minishell = malloc((sizeof(t_minishell *)));
 	while (1)
 	{
-		init_minishell(minishell, env);
+		init_minishell(&minishell, env);
 		input = readline(ORANGE"MINISHELL> "RESET); // Display prompt and get input
 		if (!input) // If Ctrl+D is pressed, exit
 		{
