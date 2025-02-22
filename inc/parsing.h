@@ -8,13 +8,12 @@
 // Enum Token types___________________________
 typedef enum e_token_type
 {
-	WORD,		// Normal words
-	PIPE,		// "|"
 	REDIR_IN,	// "<"
 	REDIR_OUT,	// ">"
 	APPEND,		// ">>"
 	HEREDOC,	// "<<"
-	SPACE_		// To temporarily store spaces
+	PIPE,		// "|"
+	WORD		// Normal words
 }	t_token_type;
 
 // Token Struct______________________________
