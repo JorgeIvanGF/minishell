@@ -20,14 +20,13 @@ void	add_argument(t_cmd *cmd, char *arg)
 	int		i;
 	char	**new_args;
 
-	if (!cmd || !arg) //added to check
+	if (!cmd || !arg) //safety check
 	{
 		printf(RED"Error: add_argument() received NULL cmd or arg\n"RESET);
 		return ;
 	}
 
-	// Ensure cmd->cmd_arr is initialized before using it
-	if (!cmd->cmd_arr)
+	if (!cmd->cmd_arr) // If it's the first argument, initialize cmd_arr
 	{
 		cmd->cmd_arr = malloc(sizeof(char *) * 2);
 		if (!cmd->cmd_arr)
@@ -36,11 +35,11 @@ void	add_argument(t_cmd *cmd, char *arg)
 			return ;
 		}
 		cmd->cmd_arr[0] = ft_strdup(arg);
-
-		// to DEBUG
-		if (!cmd->cmd_arr[0])
+		if (!cmd->cmd_arr[0]) // Handle allocation failure
 		{
-			printf("Error: Failed to add arg\n");
+			printf("Error: Failed to duplicate and add arg\n");
+			free(cmd->cmd_arr); // free the command array
+			cmd->cmd_arr = NULL; // prevent accessing freed memory
 			return ;
 		}
 		cmd->cmd_arr[1] = NULL;
@@ -48,40 +47,42 @@ void	add_argument(t_cmd *cmd, char *arg)
 		return ;
 	}
 
-	// Here we access cmd->cmd_arr, but it might contain uninitialized values!
+	// Count existing arguments
 	i = 0;
-	while (cmd->cmd_arr && cmd->cmd_arr[i]) // <-- This loop depends on uninitialized memory!
+	while (cmd->cmd_arr && cmd->cmd_arr[i])
 		i++;
-	
+
+	// Allocate the new array
 	new_args = malloc(sizeof(char *) * (i + 2));
 	if (!new_args)
 	{
 		printf(RED"Error: Failed to allocate memory for new arguments.\n"RESET);
 		return;
 	}
+
+	// Copy existing pointers
 	i = 0;
-	while (cmd->cmd_arr && cmd->cmd_arr[i]) // <-- Again, we access uninitialized memory!
+	while (cmd->cmd_arr && cmd->cmd_arr[i])
 	{
 		new_args[i] = cmd->cmd_arr[i];
 		i++;
 	}
+
+	// Add new argument
 	new_args[i] = ft_strdup(arg); // Store the argument
 	if (!new_args[i])
 	{
-		printf(RED"Error: Failed to allocate memory for argument copy.\n"RESET);
-		// Need to free previously allocated memory
-		while (--i >= 0)
-			free(new_args[i]);
+		printf(RED"Error: Failed to allocate memory for argument copy.\n"RESET);		
+		while (i > 0) // Only free allocated arguments (prevent accessing uninitialized memory)
+			free(new_args[--i]);
 		free(new_args);
 		return;
 	}
-	new_args[i + 1] = NULL;
-	free(cmd->cmd_arr); // delete the old array
+	new_args[i + 1] = NULL; // ensure to be Null terminated
+	free(cmd->cmd_arr);// free old array (but not its content)
 	cmd->cmd_arr = new_args; // update the new array including the added arg
-	printf(GREEN"Added argument: %s\n"RESET, arg); // To debug
-	
+	printf(GREEN"Added argument: %s\n"RESET, arg); // To debug	
 }
-
 
 // Add the RD to the list of RDs
 // Create the instance of redir and set their fields using token's fields
@@ -159,7 +160,6 @@ void	init_lst_cmd(t_minishell *minishell)
 }
 
 
-
 /// to print List cmds TO DEBUG......................................................
 
 // Prints a single command with its arguments
@@ -217,14 +217,14 @@ void print_command_list(t_lst_cmd *cmd_list)
 		return;
 	}
 
-	printf(GREEN"\n--- Parsed Command List ---\n"RESET);
+	printf(BOLD CYAN"\n----- PARSED COMMAND LIST -----\n"RESET);
 	cmd = cmd_list->head;
 
 	while (cmd)
 	{
 		printf(GREEN"\nCommand:\n"RESET);
 		if (!cmd->cmd_arr) {
-			printf(RED"  [No command arguments]\n"RESET);
+			printf(BLUE"  [No command arguments]\n"RESET);
 		} else {
 			for (i = 0; cmd->cmd_arr[i]; i++)
 				printf(BLUE"  Arg[%d]: %s\n"RESET, i, cmd->cmd_arr[i]);
@@ -239,11 +239,8 @@ void print_command_list(t_lst_cmd *cmd_list)
 			t_rdir *redir = cmd->list_rdir->head;
 			while (redir)
 			{
-				printf(YELLOW"  Redirection: %s -> %s\n"RESET, 
-					(redir->type == RD_IN) ? "<" :
-					(redir->type == RD_OUT) ? ">" :
-					(redir->type == RD_APND) ? ">>" : "<<",
-					redir->name);
+				printf(YELLOW"  RDir: Type: %d  Name: %s\n"RESET, 
+					(int)redir->type, redir->name);
 				redir = redir->next;
 			}
 		}
@@ -253,12 +250,12 @@ void print_command_list(t_lst_cmd *cmd_list)
 		cmd = cmd->next;
 	}
 	
-	printf(GREEN"--- End of Command List ---\n"RESET);
+	printf(BOLD CYAN"\n----- END OF COMMAND LIST -----\n"RESET);
 }
+// ................. END OF PRINTING CMD LIST
 
 
-
-//Main Parser Function: Convert tokens to commands
+// Main Parser Function: Convert tokens to commands
 void	parser(t_lst_token *tokens, t_minishell *minishell)
 {
 	t_token	*curr;
@@ -279,26 +276,14 @@ void	parser(t_lst_token *tokens, t_minishell *minishell)
 	curr = tokens->head;
 	while (curr)
 	{
-		//printf(B_RED"aquí\n"RESET);
 		if (curr->type == WORD)
 		{
-
 			//TO DEBUG
 			printf(MAG"\nProcessing token: [%s] | Type: %d\n"RESET, curr->value, curr->type);
 
-			// Ensure the creation of the array cmd
-			if (!cmd->cmd_arr) // POSSIBLE ERROR: may be allocating uninitialized memory
-				cmd->cmd_arr = malloc(sizeof(char *) * 2); // 1)for the arg and 2)for NULL terminate
-			
-			// ******* HERE WAS THE PROBLEM: ******************** 
-			// cmd array was allocated but never initialized//
-			cmd->cmd_arr[0] = NULL; // Explicitly initialize the array
-			cmd->cmd_arr[1] = NULL;
-			// ********************************************************** 
+			add_argument(cmd, curr->value); // Add the argument
 
-			add_argument(cmd, curr->value);
-
-			// TO DEBUG
+			// TO DEBUG.........
 			printf(YELLOW"\nCmd Array (Current Command):\n"RESET);
 			int j = 0;
 			while (cmd->cmd_arr && cmd->cmd_arr[j])
@@ -306,14 +291,15 @@ void	parser(t_lst_token *tokens, t_minishell *minishell)
 				printf("arr[%d] = %s\n", j, cmd->cmd_arr[j]);
 				j++;
 			}
-
+			// ...... END
 		}
 		else if (curr->type >= REDIR_IN && curr->type <= HEREDOC)// it adresses all REDIRs 
 		{
 			if (!curr->next || curr->next->type != WORD)
 			{
 				printf("Syntax error: missing file after '%s'\n", curr->value);
-				// free cmd
+				free_cmd_list(minishell->list_cmd); // to free before returning 
+				minishell->list_cmd = NULL; // prevent the pointer to point to a deallocted memmory
 				return ;
 			}
 			add_redirection(cmd, curr);
@@ -322,9 +308,8 @@ void	parser(t_lst_token *tokens, t_minishell *minishell)
 		else if (curr->type == PIPE)
 		{
 			add_command(minishell->list_cmd, cmd);
-			printf(BLUE"\nAdded command before PIPE.\n"RESET); //TO DEBUG
-			
-			// TO DEBUG
+			// TO DEBUG.........
+			printf(BLUE"\nAdded command before PIPE.\n"RESET);
 			printf(YELLOW"\nCmd Array (Previous Command Before Pipe):\n"RESET);
 			int k = 0;
 			while (cmd->cmd_arr && cmd->cmd_arr[k])
@@ -332,7 +317,7 @@ void	parser(t_lst_token *tokens, t_minishell *minishell)
 				printf("arr[%d] = %s\n", k, cmd->cmd_arr[k]);
 				k++;
 			}
-
+			// ........ END
 			cmd = new_command();
 		}
 		curr = curr->next;
@@ -353,18 +338,8 @@ void	parser(t_lst_token *tokens, t_minishell *minishell)
 		return;
 	}
 
-
-	// To print the cmd array
-	printf(YELLOW"Cmd Array (Last one): \n"RESET);
-	int i = 0;
-	while (cmd->cmd_arr && cmd->cmd_arr[i])
-	{
-		printf("arr[%d] = %s\n", i, cmd->cmd_arr[i]);
-		i++;
-	}
-
-
 	print_command_list(minishell->list_cmd);
+
+	free_cmd_list(minishell->list_cmd); // Free command list after parsing
+	minishell->list_cmd = NULL; // To prevent the pointer to deallocated memmory
 }
-
-

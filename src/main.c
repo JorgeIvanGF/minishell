@@ -59,8 +59,6 @@ int main(int argc, char **argv, char **env)
 // JORGE MAIN ------------------------------------------------------------------
 
 
-
-
 // To Test the Lexer (Tmporary function)
 void print_tokens(t_lst_token *tokens)
 {
@@ -84,10 +82,10 @@ int main(int argc, char **argv, char **env)
 	(void) argv;
 	(void) env;
 
-	//minishell = malloc((sizeof(t_minishell *)));
+	init_minishell(&minishell, env);// Initialize outside the while 
+
 	while (1)
 	{
-		init_minishell(&minishell, env);// iniciar afuera env NO CAMBIA
 		input = readline(ORANGE"MINISHELL> "RESET); // Display prompt and get input
 		if (!input) // If Ctrl+D is pressed, exit
 		{
@@ -123,6 +121,7 @@ int main(int argc, char **argv, char **env)
 
 		free_token_list(tokens);
 		free(input);
+		exit_shell(minishell);
 		
 		/*
 		
@@ -136,5 +135,6 @@ int main(int argc, char **argv, char **env)
 
 		*/
 	}
+	exit_shell(minishell);
 	return 0;
 }
