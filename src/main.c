@@ -33,13 +33,13 @@ int main(int argc, char **argv, char **env)
 		}
 		if (*input) // If input is not empty, add it to history
 			add_history(input);
-		printf("--readline: %s\n", input); // to test the readline
+		// printf("--readline: %s\n", input); // to test the readline
 		// if(!syntax_check(input))
 			// process_input(input);
 		// parser(input, minishell);
 
-		//........... Execution Part......................
-		// ft_execution(minishell); // To Paula
+		// ........... Execution Part......................
+		ft_execution(minishell); // To Paula
 		
 		// ............Free Everything....................
 		free(input); // Free memory allocated by readline

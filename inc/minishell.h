@@ -70,5 +70,8 @@ typedef struct s_minishell
 	t_lst_cmd	*list_cmd;
 }t_minishell;
 
+// Execution________________________________________
+void ft_execution (t_minishell *minishell); 
+
 #endif
 
