@@ -21,7 +21,7 @@ int main(int argc, char **argv, char **env)
 	(void) argv;
 	(void) env;
 
-	minishell = NULL;
+	minishell = init_minishell(env);
 	while (1)
 	{
 		// init_minishell(minishell, env);

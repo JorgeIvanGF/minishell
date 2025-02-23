@@ -187,6 +187,54 @@ void looping_through_list_commands(t_lst_cmd *list_cmds)
 	}
 }
 
+void	execution(char **env, t_cmd *cmd) 
+{
+	char	*path;
+	char	**path_cmds;
+	char	*found_path;
+
+	path = get_path(env);
+	path_cmds = get_paths_cmds(path);
+	found_path = find_path(path_cmds, cmd->cmd_arr[0]);
+	if (execute(found_path, cmd, env) == -1)
+	{
+		ft_free_2d(path_cmds);
+		free(found_path);
+		write(2, "minishell: command not found: ", 26);
+		write(2, cmd->cmd_arr[0], ft_strlen(cmd->cmd_arr[0]));
+		write(2, "\n", 1);
+		exit(127);
+	}
+}
+
+void	execute_first_cmd(t_cmd *cmd, char **env)
+{
+	int	id;
+
+	id = fork();
+	if (id == 0)
+	{
+		execution(env, cmd);
+	}
+}
+
+// go thru entire cmd list. if command found, execute w above function 
+void checking_list_cmds_for_exec(t_lst_cmd *list_cmds, char **env)
+{
+	t_cmd *current;
+	int cmd_list_position;
+
+	cmd_list_position = 1;
+	current = list_cmds->head;
+	while(current != NULL)
+	{
+		printf("%d. COMMAND\n", cmd_list_position);
+		execute_first_cmd(current, env);
+		current = current->next;
+		cmd_list_position++;
+	}
+}
+
 void ft_execution (t_minishell *minishell)
 {
 	(void) minishell;
@@ -213,8 +261,8 @@ void ft_execution (t_minishell *minishell)
 
 	// initialize first command (head) ex.: "ls -a <out"
 	cmd_arr0 = init_cmd_array("ls -a");
-	cmd_arr1 = init_cmd_array("wc -l");
-	cmd_arr2 = init_cmd_array("ls");
+	cmd_arr1 = init_cmd_array("ls -a");
+	cmd_arr2 = init_cmd_array("ls -a");
 	// print_cmd_array(cmd_arr);
 
 	// FIRST COMMAND
@@ -275,10 +323,12 @@ void ft_execution (t_minishell *minishell)
 
 	looping_through_list_commands(list_cmds); // going through list_cmds & checking for RD_IN & file
 
-	
+	checking_list_cmds_for_exec(list_cmds, minishell->env);
 
 
-
+	// TODO
+	// command execution done
+	// missing: redirection, exit status
 
 
 

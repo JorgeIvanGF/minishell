@@ -3,8 +3,13 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-# include <fcntl.h>
+#include <fcntl.h>
 
+char	*get_path(char **env);
+char	**get_paths_cmds(char *str);
+char	*check_paths_w_cmd(char **path_cmds, char *cmd);
+char	*find_path(char **path_cmds, char *cmd);
+int		execute(char *found_path, t_cmd *cmd, char **env);
 
 // typedef struct s_list_cmds
 // {
