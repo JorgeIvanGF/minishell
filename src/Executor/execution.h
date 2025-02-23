@@ -3,9 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-
-// Execution________________________________________
-void ft_execution (t_minishell *minishell); 
+# include <fcntl.h>
 
 
 // typedef struct s_list_cmds

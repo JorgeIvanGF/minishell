@@ -1,4 +1,5 @@
 #include "../../inc/minishell.h"
+#include "execution.h"
 
 t_lst_rdir *init_list_redirection(t_rdir *head, t_rdir *tail, int size)
 {
@@ -134,6 +135,58 @@ char **init_cmd_array(char *str)
 	return(cmd_arr);
 }
 
+// check if current command has in one of their redirections, a redirection type of RD_IN and existing file
+void checking_for_rdir_type_RD_IN_plus_file(t_cmd *cmd) 
+{
+	t_rdir *current;
+	int fd_infile; 
+	int rdir_list_position;
+
+	rdir_list_position = 1;
+	current = cmd->list_rdir->head;
+	while(current != NULL)
+	{
+		printf("--------------- %d. redirection ---------------\n", rdir_list_position);
+		if (current->type == RD_IN)
+		{
+			printf("success [one]: redirection type RD_IN found.\n");
+			fd_infile = open(current->name, O_RDONLY);
+			if (fd_infile == -1)
+			{
+				printf("error: corresponding file cannot be opened.\n");
+				printf("fd infile = %d\n", fd_infile);
+			}
+			else
+			{
+				printf("success [two]: corresponding file was opened successfully.\n");
+				printf("fd infile = %d\n", fd_infile);
+			}
+		}
+		// else 
+		// {
+		// 	printf("error: neither redirection type RD_IN, nor file found.\n");
+		// }
+		rdir_list_position++;
+		current = current->next;
+	}
+}
+
+void looping_through_list_commands(t_lst_cmd *list_cmds)
+{
+	t_cmd *current;
+	int cmd_list_position;
+
+	cmd_list_position = 1;
+	current = list_cmds->head;
+	while(current != NULL)
+	{
+		printf("%d. COMMAND\n", cmd_list_position);
+		checking_for_rdir_type_RD_IN_plus_file(current);
+		current = current->next;
+		cmd_list_position++;
+	}
+}
+
 void ft_execution (t_minishell *minishell)
 {
 	(void) minishell;
@@ -144,11 +197,19 @@ void ft_execution (t_minishell *minishell)
 	char **cmd_arr0;
 	char **cmd_arr1;
 	char **cmd_arr2;
-	t_lst_rdir *list_rdir;
-	t_rdir *first_rdir;
-	t_rdir *second_rdir;
-	t_rdir *three_rdir;
-	t_rdir *four_rdir;
+	t_lst_rdir *list_rdir1;
+	t_lst_rdir *list_rdir2;
+	t_lst_rdir *list_rdir3;
+	t_rdir *first_rdir1;
+	t_rdir *second_rdir1;
+	t_rdir *three_rdir1;
+	t_rdir *four_rdir1;
+	t_rdir *five_rdir1;
+	t_rdir *first_rdir2;
+	t_rdir *second_rdir2;
+	t_rdir *first_rdir3;
+	t_rdir *second_rdir3;
+	t_rdir *three_rdir3;
 
 	// initialize first command (head) ex.: "ls -a <out"
 	cmd_arr0 = init_cmd_array("ls -a");
@@ -156,36 +217,74 @@ void ft_execution (t_minishell *minishell)
 	cmd_arr2 = init_cmd_array("ls");
 	// print_cmd_array(cmd_arr);
 
-
-	first_rdir = init_redirection(RD_OUT, "out");
+	// FIRST COMMAND
+	first_rdir1 = init_redirection(RD_IN, "out");
 	// print_redirection(first_rdir);
 
-	second_rdir = init_redirection(RD_IN, "infile1");
-	first_rdir->next = second_rdir;
+	second_rdir1 = init_redirection(RD_IN, "infile1");
+	first_rdir1->next = second_rdir1;
 
-	three_rdir = init_redirection(RD_APND, "apnd");
-	second_rdir->next = three_rdir;
+	three_rdir1 = init_redirection(RD_APND, "apnd");
+	second_rdir1->next = three_rdir1;
 
-	four_rdir = init_redirection(RD_IN, "nmsdc");
-	three_rdir->next = four_rdir;
+	four_rdir1 = init_redirection(RD_IN, "infile2");
+	three_rdir1->next = four_rdir1;
 
-	list_rdir = init_list_redirection(first_rdir, three_rdir, 3);
+	five_rdir1 = init_redirection(RD_IN, "infile3");
+	four_rdir1->next = five_rdir1;
+
+	list_rdir1 = init_list_redirection(first_rdir1, five_rdir1, 5);
 	// print_list_redirection(list_rdir);/
 
-
-	first_cmd = init_command(cmd_arr0, list_rdir);
+	first_cmd = init_command(cmd_arr0, list_rdir1);
 	// print_command(first_cmd);
-	
-	second_cmd = init_command(cmd_arr1, list_rdir);
+
+
+	// SECOND COMMAND
+	first_rdir2 = init_redirection(RD_IN, "infile2");
+
+	second_rdir2 = init_redirection(RD_OUT, "xxx");
+	first_rdir2->next = second_rdir2;
+
+	list_rdir2 = init_list_redirection(first_rdir2, second_rdir2, 2);
+
+	second_cmd = init_command(cmd_arr1, list_rdir2);
 	first_cmd->next = second_cmd;
+
+
+	// THIRD COMMAND
+	first_rdir3 = init_redirection(RD_IN, "out");
+
+	second_rdir3 = init_redirection(RD_IN, "infile1");
+	first_rdir3->next = second_rdir3;
+
+	three_rdir3 = init_redirection(RD_IN, "infile3");
+	second_rdir3->next = three_rdir3;
 	// print_command(second_cmd);
 
-	third_cmd = init_command(cmd_arr2, list_rdir);
+	list_rdir3 = init_list_redirection(first_rdir3, three_rdir3, 3);
+
+	third_cmd = init_command(cmd_arr2, list_rdir3);
 	second_cmd->next = third_cmd;
 	// print_command(third_cmd);
 
+
 	list_cmds = init_list_commands(1, first_cmd, NULL); 
 	print_list_commands(list_cmds);
+
+
+	looping_through_list_commands(list_cmds); // going through list_cmds & checking for RD_IN & file
+
+	
+
+
+
+
+
+
+
+
+
 
 
 
