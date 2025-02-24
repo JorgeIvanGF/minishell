@@ -12,6 +12,7 @@ static int	check_first_token(t_lst_token *tokens)
 	}
 	return (0);
 }
+
 // Rule 2: Double pipes are not allowed (||)
 static int	check_double_pipes(t_token *curr)
 {
@@ -42,6 +43,7 @@ static int	check_redirections(t_token *curr)
 	}
 	return (0);
 }
+
 // Rule 4: Last token cannot be an Operator
 static int	check_last_token(t_token *curr)
 {
@@ -56,8 +58,10 @@ static int	check_last_token(t_token *curr)
 	return (0);
 }
 
-int	syntax_check(t_lst_token *tokens)
+int	syntax_check(t_lst_token *tokens, t_minishell *minishell)
 {
+	t_token *curr;
+
 	if (!tokens || !tokens->head)
 		return (0); // No tokens, no syntax error
 	if (check_first_token(tokens))
@@ -68,5 +72,12 @@ int	syntax_check(t_lst_token *tokens)
 		return (1);
 	if (check_last_token(tokens->head))
 		return (1);
+	curr = tokens->head;
+	while (curr)
+	{
+		expand_variables(curr, minishell->env);
+		remove_external_quotes(curr);		
+		curr = curr->next;
+	}
 	return (0);
 }

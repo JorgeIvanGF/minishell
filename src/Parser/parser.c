@@ -340,7 +340,7 @@ void	parser(t_lst_token *tokens, t_minishell *minishell)
 		return;
 	}
 
-	clean_quotes(minishell->list_cmd);
+	//clean_quotes(minishell->list_cmd);
 
 	print_command_list(minishell->list_cmd);
 

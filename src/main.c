@@ -80,7 +80,7 @@ int main(int argc, char **argv, char **env)
 
 	(void) argc;
 	(void) argv;
-	(void) env;
+	//(void) env;
 
 	init_minishell(&minishell, env);// Initialize outside the while 
 
@@ -108,7 +108,7 @@ int main(int argc, char **argv, char **env)
 		print_tokens(tokens); // Debugging tokens
 
 		// Check syntax part: using tokens list
-		if (syntax_check(tokens))
+		if (syntax_check(tokens, minishell))
 		{
 			free_token_list(tokens);
 			free(input);
