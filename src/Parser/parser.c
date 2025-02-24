@@ -210,6 +210,7 @@ void print_command_list(t_lst_cmd *cmd_list)
 {
 	t_cmd *cmd;
 	int i;
+	int j;
 
 	if (!cmd_list || !cmd_list->head)
 	{
@@ -219,10 +220,10 @@ void print_command_list(t_lst_cmd *cmd_list)
 
 	printf(BOLD CYAN"\n----- PARSED COMMAND LIST -----\n"RESET);
 	cmd = cmd_list->head;
-
+	j = 0;
 	while (cmd)
 	{
-		printf(GREEN"\nCommand:\n"RESET);
+		printf(GREEN"\nCommand[%d]:\n"RESET, j);
 		if (!cmd->cmd_arr) {
 			printf(BLUE"  [No command arguments]\n"RESET);
 		} else {
@@ -248,6 +249,7 @@ void print_command_list(t_lst_cmd *cmd_list)
 		if (cmd->next)
 			printf(ORANGE"\n| (Pipe to next command)\n"RESET);
 		cmd = cmd->next;
+		j++;
 	}
 	
 	printf(BOLD CYAN"\n----- END OF COMMAND LIST -----\n"RESET);
@@ -338,7 +340,12 @@ void	parser(t_lst_token *tokens, t_minishell *minishell)
 		return;
 	}
 
+	clean_quotes(minishell->list_cmd);
+
 	print_command_list(minishell->list_cmd);
+
+	
+
 
 	free_cmd_list(minishell->list_cmd); // Free command list after parsing
 	minishell->list_cmd = NULL; // To prevent the pointer to deallocated memmory

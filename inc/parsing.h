@@ -54,4 +54,7 @@ void	parser(t_lst_token *tokens, t_minishell *minishell);
 void	exit_shell(t_minishell *minishell);
 void	free_cmd_list(t_lst_cmd *cmd_list);
 
+// quotes.c
+void	clean_quotes(t_lst_cmd *cmd_list);
+
 #endif

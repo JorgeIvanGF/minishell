@@ -6,7 +6,7 @@
 #    By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 17:55:02 by jorgutie          #+#    #+#              #
-#    Updated: 2025/02/22 13:35:05 by jorgutie         ###   ########.fr        #
+#    Updated: 2025/02/24 11:24:05 by jorgutie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,7 +46,8 @@ SRC_FILES   = main.c Executor/executor.c \
 				Parser/syntax.c \
 				Parser/tokenizer.c \
 				Parser/tokenize_utils.c \
-				Parser/free.c
+				Parser/free.c \
+				Parser/quotes.c
 			
 			
 
