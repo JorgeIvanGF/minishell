@@ -322,17 +322,10 @@ void ft_execution (t_minishell *minishell)
 
 
 	looping_through_list_commands(list_cmds); // going through list_cmds & checking for RD_IN & file
+	dup2(7, STDIN_FILENO); // stdin is redirected to fd 7
+	close(7); 
 
 	checking_list_cmds_for_exec(list_cmds, minishell->env);
-
-
-	// TODO
-	// command execution done
-	// missing: redirection, exit status
-
-
-
-
 
 
 
