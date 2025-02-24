@@ -1,61 +1,72 @@
 #include "minishell.h"
 #include "parsing.h"
 
-int	syntax_check(t_lst_token *tokens)
+// Rule 1: First token cant be PIPE but it could be a REDIR
+static int	check_first_token(t_lst_token *tokens)
 {
-	t_token *curr;
-
-	if (!tokens || !tokens->head)
-		return (0); // No tokens, no syntax error
-
-	curr = tokens->head;
-
-	// Rule 1: First token cant be PIPE but it could be a REDIR
-	if (curr->type == PIPE)
+	if (tokens->head->type == PIPE)
 	{
-		printf(RED"Syntax error: invalid start with '%s'\n"RED, curr->value);
+		printf(RED"Syntax error: invalid start with '%s'\n"RESET,
+				tokens->head->value);
 		return (1);
 	}
-
-	while (curr) // through all the tokens
+	return (0);
+}
+// Rule 2: Double pipes are not allowed (||)
+static int	check_double_pipes(t_token *curr)
+{
+	while (curr)
 	{
-		// Rule 2: Double pipes are not allowed (||)
 		if (curr->type == PIPE && curr->next && curr->next->type == PIPE)
 		{
 			printf(RED"Syntax error: Invalid pipe usage\n"RESET);
-			return (1);
-		}
-		// Rule 3: Redirections must be followed by a WORD
-		if ((curr->type == REDIR_IN || curr->type == REDIR_OUT
-				|| curr->type == APPEND || curr->type == HEREDOC)
-			&& (!curr->next || curr->next->type != WORD)) //****** */ revisar por cual lado empieza a verificar
-		{
-			printf(RED"Syntax error: missing file after '%s'\n"RESET, curr->value);
-			return (1);
-		}
-		// Rule 4: Last token cannot be a PIPE or Redirection ******** solo se necesita test el pipe arriba ya se hizo
-		if (!curr->next && (curr->type == PIPE || curr->type == REDIR_IN
-				|| curr->type == REDIR_OUT || curr->type == APPEND
-				|| curr->type == HEREDOC))
-		{
-			printf(RED"Syntax error: unexpected '%s'\n"RESET, curr->value);
 			return (1);
 		}
 		curr = curr->next;
 	}
 	return (0);
 }
-
-	/* if (unmatched_quotes(input))
+// Rule 3: Redirections must be followed by a WORD
+static int	check_redirections(t_token *curr)
+{
+	while (curr)
 	{
-		printf(RED"Syntax error: unmatched quotes\n"RESET);
+		if ((curr->type == REDIR_IN || curr->type == REDIR_OUT ||
+			 curr->type == APPEND || curr->type == HEREDOC) &&
+			(!curr->next || curr->next->type != WORD))
+		{
+			printf(RED"Syntax error: missing file after '%s'\n"RESET, curr->value);
+			return (1);
+		}
+		curr = curr->next;
+	}
+	return (0);
+}
+// Rule 4: Last token cannot be an Operator
+static int	check_last_token(t_token *curr)
+{
+	while (curr->next)
+		curr = curr->next;
+	if (curr->type == PIPE || curr->type == REDIR_IN || curr->type == REDIR_OUT ||
+		curr->type == APPEND || curr->type == HEREDOC)
+	{
+		printf(RED"Syntax error: unexpected '%s'\n"RESET, curr->value);
 		return (1);
 	}
-	if (check_invalid_pipes(input))
-	{
-		printf(RED"Syntax error: invalid pipe usage\n"RESET);
+	return (0);
+}
+
+int	syntax_check(t_lst_token *tokens)
+{
+	if (!tokens || !tokens->head)
+		return (0); // No tokens, no syntax error
+	if (check_first_token(tokens))
 		return (1);
-	}
-	*/
-
-
+	if (check_double_pipes(tokens->head))
+		return (1);
+	if (check_redirections(tokens->head))
+		return (1);
+	if (check_last_token(tokens->head))
+		return (1);
+	return (0);
+}

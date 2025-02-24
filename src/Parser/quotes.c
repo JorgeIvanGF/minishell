@@ -2,37 +2,43 @@
 #include "minishell.h"
 #include "parsing.h"
 
-	void	check_single(char *arr, int i)
-	{
+void	check_single(char **arr)
+{
+	char *new;
+	char *old;
 
+	if (!arr || !arr[0] || ft_strlen(arr[0]) < 2)
+		return ; //to ckeck if its only '\''
+	if ((*arr)[0] != '\'' || (*arr)[ft_strlen(*arr) - 1] != '\'')
+		return ; //ensure its quoted
+	old = *arr;
+	new = ft_substr(arr[0], 1, ft_strlen(arr[0]) - 2);
+	if (!new)
+	{
+		printf(RED"Failed malloc for new string\n'"RESET);
+		return;
 	}
+	printf("new = %s\n", new);
+	arr[0] = new;
+	free(old);
+}
 
 void	check_quotes(char **cmd_arr)
 {
 	int	i;
-	char *new;
-
+	
 	i = 0;
 	while(cmd_arr[i])
 	{
-		if(cmd_arr[i][0] == '\'')
+		if(cmd_arr[i][0] == '\'' || cmd_arr[i][0] == '"')
 		{
-			//check_single(cmd_arr[i], i);
-			new = malloc(sizeof(char) * (ft_strlen(cmd_arr[i]) - 1));
-			if (!new)
-			{
-				printf(RED"Failed malloc for new string\n'"RESET);
-				return;
-			}
-			new = ft_substr(cmd_arr[i], 1, ft_strlen(cmd_arr[i]) - 2);
-			new[ft_strlen(cmd_arr[i]) - 1] = '\0';
-			printf("new = %s\n", new);
-			cmd_arr[i] = new;
-		}
-		
+			if(cmd_arr[i][0] == '\'')
+				check_single(&cmd_arr[i]);
+			/* else
+				check_double(&cmd_arr[i]); */
+		}		
 		i++;
 	}
-	//printf("number of cmds = %d\n", i);
 }
 
 
