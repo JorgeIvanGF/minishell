@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+         #
+#    By: jorgutie <jorgutie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 17:55:02 by jorgutie          #+#    #+#              #
-#    Updated: 2025/02/24 11:24:05 by jorgutie         ###   ########.fr        #
+#    Updated: 2025/02/25 14:36:00 by jorgutie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,7 @@ SRC_FILES   = main.c Executor/executor.c \
 				Parser/tokenizer.c \
 				Parser/tokenize_utils.c \
 				Parser/free.c \
-				Parser/quotes.c
+				Parser/syntax_utils.c
 			
 			
 
