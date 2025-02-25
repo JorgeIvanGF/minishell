@@ -64,18 +64,26 @@ char	*replace_var(char *input, char *var, char *value, int pos)
 	char	*before;
 	char	*after;
 	char	*new_str;
+	char	*final_str;
 	int		var_len;
 
 	var_len = ft_strlen(var);
 	before = ft_substr(input, 0, pos);
 	after = ft_strdup(input + pos + var_len + 1);
-	new_str = ft_strjoin(before, value ? value : "");
+	if (!before || !after) // Handle memory failure
+		return (NULL);
+	if (value) // Normal case: Replace with value
+		new_str = ft_strjoin(before, value);
+	else // If value is NULL, just remove the $VAR
+		new_str = ft_strdup(before);
 	free(before);
+	final_str = ft_strjoin(new_str, after);
 	free(input);
-	input = ft_strjoin(new_str, after);
+	//here only assign a string to the LOCAL input variable
+	//input = ft_strjoin(new_str, after);
 	free(new_str);
 	free(after);
-	return (input);
+	return (final_str);
 }
 
 // Expand variables inside double quotes or outside quotes
@@ -86,6 +94,7 @@ char	*expand_env_vars(char *input, char **env)
 	char	*var;
 	char	*value;
 	int		in_single;
+	char	*new_input;
 
 	if (!input || !env)
 		return (NULL);
@@ -98,10 +107,17 @@ char	*expand_env_vars(char *input, char **env)
 		else if (input[i] == '$' && !in_single)
 		{
 			var = extract_var_name(&input[i + 1]); // one position after ´$´
-			value = get_env_value(var, env); // fetch after the '=' 
-			input = replace_var(input, var, value, i);
+			printf("var = %s\n", var);
+			value = get_env_value(var, env); // fetch after the '='
+			printf("value = %s\n", value);
+			new_input = replace_var(input, var, value, i);
+			printf("new_input = %s\n", new_input);
 			free(var);
-			free(value);
+			if (value)
+				free(value);
+			if (!new_input) // If replacement failed, return NULL
+				return (NULL);
+			input = new_input;
 			i--; // Adjust index after replacement
 		}
 		i++;
@@ -127,12 +143,18 @@ void expand_variables(t_token *token, char **env)
 		else if (token->value[i] == '$' && !in_single)
 		{
 			expanded = expand_env_vars(token->value, env);
+			printf("expanded = %s\n", expanded);
+			//printf("token_val_0 = %s\n", token->value);
 			if (expanded)
 			{
-				free(token->value);
+				//printf("token_val_1 = %s\n", token->value);
+				//free(token->value);
 				token->value = expanded;
+				printf("token_val_2 = %s\n", token->value);
+				i = -1; // to reprocess the new string formed 
+				in_single = 0; //to reset the flag
 			}
-		return;
+		//return;
 		}
 		i++;
 	}
