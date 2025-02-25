@@ -239,12 +239,15 @@ void checking_for_rdir_type_RD_IN_plus_file(t_cmd *cmd, char **env)
 				write(2, ": No such file or directory\n", 28); 
 				return;
 			}
+			dup2(fd_infile, STDIN_FILENO);
 			close(fd_infile);
 		}
 		current = current->next;
 	}
 	execute_cmd(cmd, env);
 }
+
+// void redirect_stdin(t_rdir *redirection)
 
 void looping_through_list_commands(t_lst_cmd *list_cmds, char **env)
 {
@@ -301,9 +304,9 @@ void ft_execution (t_minishell *minishell)
 
 	// printf("here00\n");
 	// initialize first command (head) ex.: "ls -a <out"
-	cmd_arr0 = init_cmd_array("ls -a");
+	cmd_arr0 = init_cmd_array("wc -l");
 	cmd_arr1 = init_cmd_array("ls -a");
-	cmd_arr2 = init_cmd_array("ls -a");
+	cmd_arr2 = init_cmd_array("wc -l");
 	// print_cmd_array(cmd_arr0);
 	// print_cmd_array(cmd_arr1);
 	// print_cmd_array(cmd_arr2);
