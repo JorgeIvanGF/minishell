@@ -208,46 +208,89 @@ void	execution(char **env, t_cmd *cmd)
 	}
 }
 
-void	execute_cmd(t_cmd *cmd, char **env) // 
+void	execute_cmd(t_cmd *cmd, char **env) // do not touch // TODO: almost finished, pipe-check
 {
 	int	id;
+	int fd[2];
 
+	pipe(fd);
 	id = fork();
 	if (id == 0) 
 	{
-		// TODO: ft for all redirections (< already done, > & >> missing)
+		close(fd[0]);
+		dup2(fd[1], STDOUT_FILENO);
+		close(fd[1]);
+		if (redirecting_stdin(cmd) == -1 || redirecting_stdout(cmd) == -1) // TODO: recheck where to call (what if no file found?)
+		{
+			return;
+		}
 		execution(env, cmd);
+	}
+	else 
+	{
+		close(fd[1]);
+		dup2(fd[0], STDIN_FILENO);
+		close(fd[0]);
 	}
 }
 
-// COPY
-void checking_for_rdir_type_RD_IN_plus_file(t_cmd *cmd, char **env) 
+int redirecting_stdout(t_cmd *cmd) // redirect output (out & apnd)
 {
 	t_rdir *current;
-	int fd_infile; 
+	int fd_outfile;
+
+	current = cmd->list_rdir->head;
+	while(current != NULL)
+	{
+		if (current->type == RD_OUT)
+		{
+			fd_outfile = open(current->name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		}
+		else if (current->type == RD_APND)
+		{
+			fd_outfile = open(current->name, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		}
+
+		if (fd_outfile == -1)
+		{
+			write(2, "minishell: ", 11); // bash
+			write(2, current->name, ft_strlen(current->name));
+			write(2, ": No such file or directory\n", 28); 
+			return (-1);
+		}
+		dup2(fd_outfile, STDOUT_FILENO);
+		close(fd_outfile);
+
+		current = current->next;
+	}
+	return (1);
+}
+
+int redirecting_stdin(t_cmd *cmd) // redirect input
+{
+	t_rdir *current;
+	int fd_infile;
 
 	current = cmd->list_rdir->head;
 	while(current != NULL)
 	{
 		if (current->type == RD_IN) // go thru all rdin first and if all their are able to open, execute 
 		{
-			fd_infile = open(current->name, O_RDONLY);
+			fd_infile = open(current->name, O_RDONLY, 0644);
 			if (fd_infile == -1)
 			{
 				write(2, "minishell: ", 11); // bash
 				write(2, current->name, ft_strlen(current->name));
 				write(2, ": No such file or directory\n", 28); 
-				return;
+				return (-1);
 			}
-			dup2(fd_infile, STDIN_FILENO);
+			dup2(fd_infile, STDIN_FILENO); 
 			close(fd_infile);
 		}
 		current = current->next;
 	}
-	execute_cmd(cmd, env);
+	return (1);
 }
-
-// void redirect_stdin(t_rdir *redirection)
 
 void looping_through_list_commands(t_lst_cmd *list_cmds, char **env)
 {
@@ -256,7 +299,11 @@ void looping_through_list_commands(t_lst_cmd *list_cmds, char **env)
 	current = list_cmds->head;
 	while(current != NULL)
 	{
-		checking_for_rdir_type_RD_IN_plus_file(current, env);
+		// if (redirecting_stdin(current) == 1 && redirecting_stdout(current) == 1)
+		// {
+		// 	// alle fd redirection redirecten stdin 
+			execute_cmd(current, env);
+		// }
 		current = current->next;
 	}
 }
@@ -304,9 +351,9 @@ void ft_execution (t_minishell *minishell)
 
 	// printf("here00\n");
 	// initialize first command (head) ex.: "ls -a <out"
-	cmd_arr0 = init_cmd_array("wc -l");
+	cmd_arr0 = init_cmd_array("ls -a");
 	cmd_arr1 = init_cmd_array("ls -a");
-	cmd_arr2 = init_cmd_array("wc -l");
+	cmd_arr2 = init_cmd_array("ls -a");
 	// print_cmd_array(cmd_arr0);
 	// print_cmd_array(cmd_arr1);
 	// print_cmd_array(cmd_arr2);
