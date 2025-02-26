@@ -6,7 +6,7 @@
 #    By: jorgutie <jorgutie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 17:55:02 by jorgutie          #+#    #+#              #
-#    Updated: 2025/02/25 14:36:00 by jorgutie         ###   ########.fr        #
+#    Updated: 2025/02/26 09:40:06 by jorgutie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,9 +47,9 @@ SRC_FILES   = main.c Executor/executor.c \
 				Parser/tokenizer.c \
 				Parser/tokenize_utils.c \
 				Parser/free.c \
-				Parser/syntax_utils.c
-			
-			
+				Parser/syntax_utils.c \
+				Parser/syntax_utils_2.c
+
 
 SRCS        = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJS        = $(addprefix $(OBJ_DIR)/, $(SRC_FILES:.c=.o))

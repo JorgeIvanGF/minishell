@@ -2,23 +2,6 @@
 #include "minishell.h"
 #include "parsing.h"
 
-// Remove external (single and double) quotes.
-void	remove_external_quotes(t_token *token)
-{
-	char	*new_value;
-	int		len;
-
-	if (!token || !token->value)
-		return;
-	len = ft_strlen(token->value);
-	if ((token->value[0] == '"' && token->value[len - 1] == '"')
-		|| (token->value[0] == '\'' && token->value[len - 1] == '\''))
-	{
-		new_value = ft_substr(token->value, 1, len - 2);
-		free(token->value);
-		token->value = new_value;
-	}
-}
 // Extract variable name (in the input string) after $
 static char	*extract_var_name(const char *str)
 {
@@ -59,7 +42,7 @@ static char	*get_env_value(char *var, char **env)
 }
 
 // The replacement of the origina str from input to the value of ENV-VAR
-char	*replace_var(char *input, char *var, char *value, int pos)
+static char	*replace_var(char *input, char *var, char *value, int pos)
 {
 	char	*before;
 	char	*after;
@@ -88,7 +71,7 @@ char	*replace_var(char *input, char *var, char *value, int pos)
 
 // Expand variables inside double quotes or outside quotes
 // extra move to verify if is inside single quotes
-char	*expand_env_vars(char *input, char **env)
+static char	*expand_env_vars(char *input, char **env)
 {
 	int		i;
 	char	*var;
