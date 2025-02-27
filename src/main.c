@@ -2,17 +2,6 @@
 #include "../inc/minishell.h"
 #include "../inc/parsing.h"
 
-void *init_minishell (t_minishell **minishell,char **env)
-{
-	//t_minishell *minishell;
-	
-	*minishell = malloc(1 * (sizeof(t_minishell)));
-	
-	(*minishell)->env = env;
-	(*minishell)->list_cmd = NULL;
-
-	return(minishell);
-}
 
 /*
 // PAULA MAIN ..............................................................
@@ -70,6 +59,19 @@ void print_tokens(t_lst_token *tokens)
 		curr = curr->next;
 	}
 }
+// To Test the copy of ENV (Tmporary function)
+void	ft_print_env(t_minishell *minishell)
+{
+	char **arr;
+
+	arr = minishell->env;
+	int i = 0;
+	while (arr[i])
+	{
+		printf("\nEnv[%d]= %s\n", i, arr[i]);
+		i++;
+	}
+}
 
 
 int main(int argc, char **argv, char **env)
@@ -80,7 +82,6 @@ int main(int argc, char **argv, char **env)
 
 	(void) argc;
 	(void) argv;
-	//(void) env;
 
 	init_minishell(&minishell, env);// Initialize outside the while 
 
@@ -94,9 +95,11 @@ int main(int argc, char **argv, char **env)
 		}
 		if (*input) // If input is not empty, add it to history
 			add_history(input);
-	
 
-		// Tokenize part
+		if (!first_checks(input))
+			continue;
+		
+		// Tokenize part___________________________________________________
 		tokens = tokenize(input); 
 		if (!tokens)
 		{
@@ -105,9 +108,9 @@ int main(int argc, char **argv, char **env)
 			continue ;
 		}
 
-		print_tokens(tokens); // Debugging tokens
+		print_tokens(tokens); // TO DEBUG
 
-		// Check syntax part: using tokens list
+		// Syntax part (using tokens list)_______________________________
 		if (syntax_check(tokens, minishell))
 		{
 			free_token_list(tokens);
@@ -115,9 +118,18 @@ int main(int argc, char **argv, char **env)
 			continue ;
 		}
 
-		// Parsing part
-		parser(tokens, minishell);
 		
+		// Parsing part__________________________________________________
+		minishell->list_cmd = parser(tokens, minishell);
+		if (!minishell->list_cmd)
+		{
+			printf(RED"Failed to Parse the tokens\n"RESET);
+			free_token_list(tokens);
+			free(input);
+			exit_shell(minishell);
+		}
+
+		print_command_list(minishell->list_cmd); // TO DEBUG
 
 		free_token_list(tokens);
 		free(input);

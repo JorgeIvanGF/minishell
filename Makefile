@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jorgutie <jorgutie@student.42.fr>          +#+  +:+       +#+         #
+#    By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 17:55:02 by jorgutie          #+#    #+#              #
-#    Updated: 2025/02/26 09:40:06 by jorgutie         ###   ########.fr        #
+#    Updated: 2025/02/27 17:22:26 by jorgutie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ LIBFT       = $(LIBFT_DIR)/libft.a
 
 # Complier and Flags
 CC          = cc
-CFLAGS      = -Wall -Wextra -Werror
+CFLAGS      = -g -Wall -Wextra -Werror
 RM          = rm -f
 
 # Colors used for terminal output.
@@ -48,7 +48,9 @@ SRC_FILES   = main.c Executor/executor.c \
 				Parser/tokenize_utils.c \
 				Parser/free.c \
 				Parser/syntax_utils.c \
-				Parser/syntax_utils_2.c
+				Parser/syntax_utils_2.c \
+				Parser/inits.c
+
 
 
 SRCS        = $(addprefix $(SRC_DIR)/, $(SRC_FILES))

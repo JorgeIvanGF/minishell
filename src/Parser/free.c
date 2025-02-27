@@ -91,6 +91,20 @@ void free_cmd_list(t_lst_cmd *cmd_list)
 	cmd_list->head = NULL; // Prevent accessing freed memory
 	free(cmd_list); // Free the command list struct
 }
+void free_env(char **env)
+{
+	int i = 0;
+
+	if (!env)
+		return;
+
+	while (env[i])
+	{
+		free(env[i]); // Free each duplicated environment variable
+		i++;
+	}
+	free(env); // Free the array itself
+}
 
 // Free everything before exiting
 void exit_shell(t_minishell *minishell)
@@ -99,6 +113,11 @@ void exit_shell(t_minishell *minishell)
 	{
 		free_cmd_list(minishell->list_cmd);
 		minishell->list_cmd = NULL;
+	}
+	if ((minishell->env))
+	{	
+		free_env(minishell->env);
+		minishell->env = NULL;
 	}
 	free(minishell);
 	exit(0);

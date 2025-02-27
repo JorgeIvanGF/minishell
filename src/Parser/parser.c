@@ -258,7 +258,7 @@ void print_command_list(t_lst_cmd *cmd_list)
 
 
 // Main Parser Function: Convert tokens to commands
-void	parser(t_lst_token *tokens, t_minishell *minishell)
+t_lst_cmd	*parser(t_lst_token *tokens, t_minishell *minishell)
 {
 	t_token	*curr;
 	t_cmd	*cmd;
@@ -266,15 +266,15 @@ void	parser(t_lst_token *tokens, t_minishell *minishell)
 	if (!tokens || !tokens->head)
 	{
 		printf(RED"No tokens to parse.\n"RESET);// TO DEBUG
-		return ;
+		return NULL;
 	}
 		
 	init_lst_cmd(minishell);
 	if (!minishell->list_cmd)
-		return ;
+		return NULL;
 	cmd = new_command(); // creates and initialize it
 	if (!cmd)
-		return ;
+		return NULL;
 	curr = tokens->head;
 	while (curr)
 	{
@@ -307,7 +307,7 @@ void	parser(t_lst_token *tokens, t_minishell *minishell)
 				printf("Syntax error: missing file after '%s'\n", curr->value);
 				free_cmd_list(minishell->list_cmd); // to free before returning 
 				minishell->list_cmd = NULL; // prevent the pointer to point to a deallocted memmory
-				return ;
+				return NULL;
 			}
 			add_redirection(cmd, curr);
 			curr = curr->next; // Skip the filename token
@@ -337,21 +337,21 @@ void	parser(t_lst_token *tokens, t_minishell *minishell)
 	if (!minishell->list_cmd)
 	{
 		printf(RED"Error: minishell->list_cmd is NULL!\n"RESET);
-		return;
+		return NULL;
 	}
 	if (!minishell->list_cmd->head)
 	{
 		printf(RED"Error: No commands were added to the list!\n"RESET);
-		return;
+		return NULL;
 	}
 
-	//clean_quotes(minishell->list_cmd);
-
-	print_command_list(minishell->list_cmd);
-
-	
 
 
-	free_cmd_list(minishell->list_cmd); // Free command list after parsing
-	minishell->list_cmd = NULL; // To prevent the pointer to deallocated memmory
+	//print_command_list(minishell->list_cmd);
+
+	return (minishell->list_cmd);
+
+
+	//free_cmd_list(minishell->list_cmd); // Free command list after parsing
+	//minishell->list_cmd = NULL; // To prevent the pointer to deallocated memmory
 }

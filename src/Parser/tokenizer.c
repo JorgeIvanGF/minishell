@@ -48,8 +48,9 @@ int	ft_lexer(char *input, t_lst_token *tokens)
 {
 	int		i;
 	char	*word;
-	//t_token	*token;
-	
+
+	if (!input || !tokens)
+		return (0);
 	i = 0;
 	while (input[i])
 	{
