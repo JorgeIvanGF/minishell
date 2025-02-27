@@ -1,193 +1,6 @@
 #include "../../inc/minishell.h"
 #include "execution.h"
 
-t_lst_rdir *init_list_redirection(t_rdir *head, t_rdir *tail, int size)
-{
-	t_lst_rdir *list_redirection;
-	
-	list_redirection = malloc(1 * sizeof(t_lst_rdir));
-	if (!list_redirection)
-	{
-		return (NULL);
-	}
-	list_redirection->head = head;
-	list_redirection->tail = tail;
-	list_redirection->size = size;
-
-	return(list_redirection);
-}
-
-t_rdir *init_redirection(int type, char *name)
-{
-	t_rdir *redirection; // objekt bzw. instance
-
-	redirection = malloc(1 * sizeof (t_rdir));
-	if (!redirection)
-	{
-		return(NULL);
-	}
-	redirection->type = type;
-	redirection->name = name;
-	redirection->next = NULL;
-
-	return(redirection);
-}
-
-void print_redirection(t_rdir *redirection)
-{
-	printf("---------------------- REDIRECTION -------------------------------\n");
-	printf("redirection type = %d\n", redirection->type);
-	printf("redirection name = %s\n", redirection->name);
-	printf("------------------------------------------------------------------\n");
-}
-
-void print_list_redirection(t_lst_rdir *list_redirection)
-{
-	t_rdir *current;
-
-	current = list_redirection->head;
-	printf("********************** LIST REDIRECTION *************************************************************************************************\n");
-	while(current != NULL)
-	{
-		print_redirection(current);
-		current = current->next;
-	}
-	printf("*****************************************************************************************************************************************\n");
-}
-
-t_cmd *init_command(char **cmd_arr, t_lst_rdir *list_rdir)
-{
-	t_cmd *cmd;
-
-	cmd = malloc(1 * sizeof(t_cmd));
-	if (!cmd)
-	{
-		return (NULL);
-	}
-	cmd->cmd_arr = cmd_arr; 
-	cmd->list_rdir = list_rdir;
-	cmd->next = NULL;
-	return(cmd);
-}
-
-t_lst_cmd *init_list_commands(int size, t_cmd *head, t_cmd *tail)
-{
-	t_lst_cmd *list_cmds;
-
-	list_cmds = malloc(1 * sizeof(list_cmds));
-	if (!list_cmds)
-	{
-		return (NULL);
-	}
-	list_cmds->size = size;
-	list_cmds->head = head;
-	list_cmds->tail = tail;
-
-	return (list_cmds);
-}
-
-void print_cmd_array(char **cmd_arr)
-{
-	int i;
-
-	printf("********************** COMMAND ARRAY *******************************\n");
-	i = 0;
-	while(cmd_arr[i] != NULL)
-	{
-		printf("command %d = %s\n", i, cmd_arr[i]);
-		i++;
-	}
-	printf("******************************************************************\n");
-}
-
-void print_command(t_cmd *cmd)
-{
-	printf("---------------------- COMMAND --------------------------------\n");
-	print_cmd_array(cmd->cmd_arr);
-	print_list_redirection(cmd->list_rdir);
-	printf("------------------------------------------------------------------\n");
-}
-
-void print_list_commands(t_lst_cmd *list_cmds)
-{
-	t_cmd *current;
-	int i;
-
-	current = list_cmds->head;
-	printf("********************** LIST COMMANDS *************************************************************************************************\n");
-	i = 0;
-	while (current != NULL)
-	{
-		printf("%d. ", i);
-		i++;
-		print_command(current);
-		current = current->next;
-	}
-	printf("***************************************************************************************************************************************\n");
-}
-
-char **init_cmd_array(char *str)
-{
-	char **cmd_arr;
-
-	cmd_arr = ft_split(str, ' ');
-
-	return(cmd_arr);
-}
-
-// ORIGINAL
-// check if current command has in one of their redirections, a redirection type of RD_IN and existing file
-// void checking_for_rdir_type_RD_IN_plus_file(t_cmd *cmd) 
-// {
-// 	t_rdir *current;
-// 	int fd_infile; 
-// 	int rdir_list_position;
-
-// 	rdir_list_position = 1;
-// 	current = cmd->list_rdir->head;
-// 	while(current != NULL)
-// 	{
-// 		printf("--------------- %d. redirection ---------------\n", rdir_list_position);
-// 		if (current->type == RD_IN)
-// 		{
-// 			printf("success [one]: redirection type RD_IN found.\n");
-// 			fd_infile = open(current->name, O_RDONLY);
-// 			if (fd_infile == -1)
-// 			{
-// 				printf("error: corresponding file cannot be opened.\n");
-// 				printf("fd infile = %d\n", fd_infile);
-// 			}
-// 			else
-// 			{
-// 				printf("success [two]: corresponding file was opened successfully.\n");
-// 				printf("fd infile = %d\n", fd_infile);
-// 			}
-// 		}
-// 		// else 
-// 		// {
-// 		// 	printf("error: neither redirection type RD_IN, nor file found.\n");
-// 		// }
-// 		rdir_list_position++;
-// 		current = current->next;
-// 	}
-// }
-
-// void looping_through_list_commands(t_lst_cmd *list_cmds)
-// {
-// 	t_cmd *current;
-// 	int cmd_list_position;
-
-// 	cmd_list_position = 1;
-// 	current = list_cmds->head;
-// 	while(current != NULL)
-// 	{
-// 		printf("%d. COMMAND\n", cmd_list_position);
-// 		checking_for_rdir_type_RD_IN_plus_file(current);
-// 		current = current->next;
-// 		cmd_list_position++;
-// 	}
-// }
-
 void	execution(char **env, t_cmd *cmd) 
 {
 	char	*path;
@@ -220,11 +33,11 @@ void	execute_cmd(t_cmd *cmd, char **env) // do not touch // TODO: almost finishe
 		close(fd[0]);
 		dup2(fd[1], STDOUT_FILENO);
 		close(fd[1]);
-		if (redirecting_stdin(cmd) == -1 || redirecting_stdout(cmd) == -1) // TODO: recheck where to call (what if no file found?)
+		if (redirecting_stdin(cmd) == 1 && redirecting_stdout(cmd) == 1) // TODO: recheck where to call (what if no file found?)
 		{
-			return;
+			execution(env, cmd);
 		}
-		execution(env, cmd);
+		exit(0); // TODO: line needs to be double checked bc of #
 	}
 	else 
 	{
@@ -266,7 +79,7 @@ int redirecting_stdout(t_cmd *cmd) // redirect output (out & apnd)
 	return (1);
 }
 
-int redirecting_stdin(t_cmd *cmd) // redirect input
+int redirecting_stdin(t_cmd *cmd) // redirect input (in)
 {
 	t_rdir *current;
 	int fd_infile;
@@ -298,12 +111,8 @@ void looping_through_list_commands(t_lst_cmd *list_cmds, char **env)
 
 	current = list_cmds->head;
 	while(current != NULL)
-	{
-		// if (redirecting_stdin(current) == 1 && redirecting_stdout(current) == 1)
-		// {
-		// 	// alle fd redirection redirecten stdin 
-			execute_cmd(current, env);
-		// }
+	{ 
+		execute_cmd(current, env); // alle fd redirection redirecten stdin, stdout
 		current = current->next;
 	}
 }
@@ -414,11 +223,18 @@ void ft_execution (t_minishell *minishell)
 	print_list_commands(list_cmds);
 
 //88888888888888888888888888888888888888888888888888888888888888888888 exec
+	// saving original of stdin & stdout
+	int copy_of_stdin_fd = dup(STDIN_FILENO);
+	int copy_of_stdout_fd = dup(STDOUT_FILENO);
 	looping_through_list_commands(list_cmds, minishell->env); // going through list_cmds & checking for RD_IN & file
-	// dup2(7, STDIN_FILENO); // stdin is redirected to fd 7
-	// close(7); 
+	// stdin & stdout has to be set back to its original (create ft for it later)
+	dup2(copy_of_stdin_fd, STDIN_FILENO);
+	close(copy_of_stdin_fd);
+	dup2(copy_of_stdout_fd, STDOUT_FILENO);
+	close(copy_of_stdout_fd);
 
-	// checking_list_cmds_for_exec(list_cmds, minishell->env); // goes thru cmd list and executes all cmds
+
+	// may be deleted: checking_list_cmds_for_exec(list_cmds, minishell->env); // goes thru cmd list and executes all cmds
 
 
  

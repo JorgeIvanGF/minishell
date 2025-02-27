@@ -6,7 +6,7 @@
 #    By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 17:55:02 by jorgutie          #+#    #+#              #
-#    Updated: 2025/02/23 03:53:15 by pdrettas         ###   ########.fr        #
+#    Updated: 2025/02/26 23:40:38 by pdrettas         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ OBJ_DIR     = obj
 INC_DIR     = inc
 
 # Source files
-SRC_FILES   = main.c Executor/executor.c Executor/executor_helper_ft.c
+SRC_FILES   = main.c Executor/executor.c Executor/executor_helper_ft.c Executor/print_ft.c Executor/init_structs.c
 			
 			
 

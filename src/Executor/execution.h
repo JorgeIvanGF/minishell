@@ -13,6 +13,21 @@ int		execute(char *found_path, t_cmd *cmd, char **env);
 int redirecting_stdin(t_cmd *cmd);
 int redirecting_stdout(t_cmd *cmd);
 
+// initializing structs
+t_lst_rdir *init_list_redirection(t_rdir *head, t_rdir *tail, int size);
+t_rdir *init_redirection(int type, char *name);
+t_cmd *init_command(char **cmd_arr, t_lst_rdir *list_rdir);
+t_lst_cmd *init_list_commands(int size, t_cmd *head, t_cmd *tail);
+char **init_cmd_array(char *str);
+
+// printing structs
+void print_redirection(t_rdir *redirection);
+void print_list_redirection(t_lst_rdir *list_redirection);
+void print_cmd_array(char **cmd_arr);
+void print_command(t_cmd *cmd);
+void print_list_commands(t_lst_cmd *list_cmds);
+
+
 // typedef struct s_list_cmds
 // {
 // 	t_cmd *head;
