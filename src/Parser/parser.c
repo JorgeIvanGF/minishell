@@ -278,6 +278,11 @@ void	parser(t_lst_token *tokens, t_minishell *minishell)
 	curr = tokens->head;
 	while (curr)
 	{
+		if (curr->value[0] == '\0') // Bypass if tok value is EMPTY
+		{
+			curr = curr->next;
+			continue ;
+		}
 		if (curr->type == WORD)
 		{
 			//TO DEBUG

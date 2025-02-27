@@ -69,24 +69,7 @@ int	ft_lexer(char *input, t_lst_token *tokens)
 	return (1);
 }
 
-// To free all the tokens in the list, and also the list itself
-void	free_token_list(t_lst_token *tokens)
-{
-	t_token *curr;
-	t_token *next;
 
-	if (!tokens)
-		return;
-	curr = tokens->head;
-	while (curr)
-	{
-		next = curr->next;
-		free(curr->value);
-		free(curr);
-		curr = next;
-	}
-	free(tokens);
-}
 
 // Creation of the list of tokens, initialize it, 
 // lexer the input into tokens  

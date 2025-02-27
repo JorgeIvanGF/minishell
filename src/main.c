@@ -117,7 +117,7 @@ int main(int argc, char **argv, char **env)
 
 		// Parsing part
 		parser(tokens, minishell);
-
+		
 
 		free_token_list(tokens);
 		free(input);

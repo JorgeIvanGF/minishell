@@ -2,6 +2,25 @@
 #include "minishell.h"
 #include "parsing.h"
 
+// To free all the tokens in the list, and also the list itself
+void	free_token_list(t_lst_token *tokens)
+{
+	t_token *curr;
+	t_token *next;
+
+	if (!tokens)
+		return;
+	curr = tokens->head;
+	while (curr)
+	{
+		next = curr->next;
+		free(curr->value);
+		free(curr);
+		curr = next;
+	}
+	free(tokens);
+}
+
 // Free the list of redirections
 void free_redirections(t_lst_rdir *list_rdir)
 {

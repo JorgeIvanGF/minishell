@@ -73,11 +73,14 @@ int	syntax_check(t_lst_token *tokens, t_minishell *minishell)
 	if (check_last_token(tokens->head))
 		return (1);
 	curr = tokens->head;
+	int i = 0;
 	while (curr)
 	{
+		printf(GREEN"\nToken [%d]...\n"RESET, i);
 		expand_variables(curr, minishell->env);
 		remove_external_quotes(curr);		
 		curr = curr->next;
+		i++;
 	}
 	return (0);
 }
