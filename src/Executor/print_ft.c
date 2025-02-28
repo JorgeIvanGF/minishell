@@ -13,14 +13,17 @@ void print_list_redirection(t_lst_rdir *list_redirection)
 {
 	t_rdir *current;
 
-	current = list_redirection->head;
-	printf("********************** LIST REDIRECTION *************************************************************************************************\n");
-	while(current != NULL)
+	if(list_redirection)
 	{
-		print_redirection(current);
-		current = current->next;
+		current = list_redirection->head;
+		printf("********************** LIST REDIRECTION *************************************************************************************************\n");
+		while(current != NULL)
+		{
+			print_redirection(current);
+			current = current->next;
+		}
+		printf("*****************************************************************************************************************************************\n");
 	}
-	printf("*****************************************************************************************************************************************\n");
 }
 
 void print_cmd_array(char **cmd_arr)

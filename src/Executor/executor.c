@@ -21,7 +21,7 @@ void	execution(char **env, t_cmd *cmd)
 	}
 }
 
-void	execute_cmd(t_cmd *cmd, char **env) // do not touch // TODO: almost finished, pipe-check
+int	execute_cmd(t_cmd *cmd, char **env) // do not touch // TODO: almost finished, pipe-check
 {
 	int	id;
 	int fd[2];
@@ -45,6 +45,7 @@ void	execute_cmd(t_cmd *cmd, char **env) // do not touch // TODO: almost finishe
 		dup2(fd[0], STDIN_FILENO);
 		close(fd[0]);
 	}
+	return(id);
 }
 
 int redirecting_stdout(t_cmd *cmd) // redirect output (out & apnd)
@@ -52,29 +53,34 @@ int redirecting_stdout(t_cmd *cmd) // redirect output (out & apnd)
 	t_rdir *current;
 	int fd_outfile;
 
-	current = cmd->list_rdir->head;
-	while(current != NULL)
+	if(cmd && cmd->list_rdir && cmd->list_rdir->head)
 	{
-		if (current->type == RD_OUT)
+		current = cmd->list_rdir->head;
+		while(current != NULL)
 		{
-			fd_outfile = open(current->name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		}
-		else if (current->type == RD_APND)
-		{
-			fd_outfile = open(current->name, O_WRONLY | O_CREAT | O_APPEND, 0644);
+			if (current->type == RD_OUT)
+			{
+				fd_outfile = open(current->name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			}
+			else if (current->type == RD_APND)
+			{
+				fd_outfile = open(current->name, O_WRONLY | O_CREAT | O_APPEND, 0644);
+			}
+
+			if (fd_outfile == -1)
+			{
+				write(2, "minishell: ", 11); // bash
+				write(2, current->name, ft_strlen(current->name));
+				write(2, ": No such file or directory\n", 28); 
+				return (-1);
+			}
+			dup2(fd_outfile, STDOUT_FILENO);
+			close(fd_outfile);
+
+			current = current->next;
 		}
 
-		if (fd_outfile == -1)
-		{
-			write(2, "minishell: ", 11); // bash
-			write(2, current->name, ft_strlen(current->name));
-			write(2, ": No such file or directory\n", 28); 
-			return (-1);
-		}
-		dup2(fd_outfile, STDOUT_FILENO);
-		close(fd_outfile);
-
-		current = current->next;
+	
 	}
 	return (1);
 }
@@ -84,23 +90,26 @@ int redirecting_stdin(t_cmd *cmd) // redirect input (in)
 	t_rdir *current;
 	int fd_infile;
 
-	current = cmd->list_rdir->head;
-	while(current != NULL)
+	if(cmd && cmd->list_rdir && cmd->list_rdir->head)
 	{
-		if (current->type == RD_IN) // go thru all rdin first and if all their are able to open, execute 
+		current = cmd->list_rdir->head;
+		while(current != NULL)
 		{
-			fd_infile = open(current->name, O_RDONLY, 0644);
-			if (fd_infile == -1)
+			if (current->type == RD_IN) // go thru all rdin first and if all their are able to open, execute 
 			{
-				write(2, "minishell: ", 11); // bash
-				write(2, current->name, ft_strlen(current->name));
-				write(2, ": No such file or directory\n", 28); 
-				return (-1);
+				fd_infile = open(current->name, O_RDONLY);
+				if (fd_infile == -1)
+				{
+					write(2, "minishell: ", 11); // bash
+					write(2, current->name, ft_strlen(current->name));
+					write(2, ": No such file or directory\n", 28); 
+					return (-1);
+				}
+				dup2(fd_infile, STDIN_FILENO); 
+				close(fd_infile);
 			}
-			dup2(fd_infile, STDIN_FILENO); 
-			close(fd_infile);
+			current = current->next;
 		}
-		current = current->next;
 	}
 	return (1);
 }
@@ -108,13 +117,18 @@ int redirecting_stdin(t_cmd *cmd) // redirect input (in)
 void looping_through_list_commands(t_lst_cmd *list_cmds, char **env)
 {
 	t_cmd *current;
+	int status;
+	int id;
 
 	current = list_cmds->head;
 	while(current != NULL)
 	{ 
-		execute_cmd(current, env); // alle fd redirection redirecten stdin, stdout
+		id = execute_cmd(current, env); // alle fd redirection redirecten stdin, stdout
 		current = current->next;
 	}
+		waitpid(id,&status, 0);
+		while (waitpid(-1, NULL, WNOHANG) != -1) //WUNTRACED
+			;
 }
 
 // go thru entire cmd list. if command found, execute w above function, if not, execution will handle

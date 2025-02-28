@@ -10,6 +10,8 @@ char	**get_paths_cmds(char *str);
 char	*check_paths_w_cmd(char **path_cmds, char *cmd);
 char	*find_path(char **path_cmds, char *cmd);
 int		execute(char *found_path, t_cmd *cmd, char **env);
+
+// redirecting
 int redirecting_stdin(t_cmd *cmd);
 int redirecting_stdout(t_cmd *cmd);
 
