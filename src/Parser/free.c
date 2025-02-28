@@ -36,7 +36,9 @@ void free_redirections(t_lst_rdir *list_rdir)
 		tmp = redir;
 		redir = redir->next;
 		free(tmp->name);  // Free the filename string
-		free(tmp);        // Free the redirection struct
+		tmp->name = NULL;
+		free(tmp); 
+		tmp = NULL;       // Free the redirection struct
 	}
 	list_rdir->head = NULL; // Set head to NULL after freeing
 	free(list_rdir);  // Free the list itself
