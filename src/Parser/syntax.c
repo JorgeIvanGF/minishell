@@ -76,7 +76,7 @@ int	syntax_check(t_lst_token *tokens, t_minishell *minishell)
 	int i = 0;
 	while (curr)
 	{
-		printf(GREEN"\nToken [%d]...\n"RESET, i);
+		//printf(GREEN"\nToken [%d]...\n"RESET, i);
 		expand_variables(curr, minishell->env);
 		remove_external_quotes(curr);		
 		curr = curr->next;

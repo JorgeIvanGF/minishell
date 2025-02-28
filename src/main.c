@@ -108,7 +108,7 @@ int main(int argc, char **argv, char **env)
 			continue ;
 		}
 
-		print_tokens(tokens); // TO DEBUG
+		//print_tokens(tokens); // TO DEBUG
 
 		// Syntax part (using tokens list)_______________________________
 		if (syntax_check(tokens, minishell))
@@ -129,23 +129,29 @@ int main(int argc, char **argv, char **env)
 			exit_shell(minishell);
 		}
 
-		print_command_list(minishell->list_cmd); // TO DEBUG
+		// int i = 0;
+		// while(minishell->env[i])
+		// {
+		// 	printf("env[%d] = %s\n", i, minishell->env[i]);
+		// 	i++;
+		// }
+		// print_command_list(minishell->list_cmd); // TO DEBUG
+		ft_execution(minishell); // To Paula
 
 		free_token_list(tokens);
 		free(input);
-		exit_shell(minishell);
+		// exit_shell(minishell);
 		
-		/*
+		
 		
 		//........... Execution Part......................
-		ft_execution(minishell); // To Paula
 
 	
 		
 		// ............Free Everything....................
-		free(input); // Free memory allocated by readline
+		// free(input); // Free memory allocated by readline
 
-		*/
+		
 	}
 	exit_shell(minishell);
 	return 0;

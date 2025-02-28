@@ -43,7 +43,7 @@ void	add_argument(t_cmd *cmd, char *arg)
 			return ;
 		}
 		cmd->cmd_arr[1] = NULL;
-		printf(GREEN"Added first argument: %s\n"RESET, arg);
+		//printf(GREEN"Added first argument: %s\n"RESET, arg);
 		return ;
 	}
 
@@ -81,7 +81,7 @@ void	add_argument(t_cmd *cmd, char *arg)
 	new_args[i + 1] = NULL; // ensure to be Null terminated
 	free(cmd->cmd_arr);// free old array (but not its content)
 	cmd->cmd_arr = new_args; // update the new array including the added arg
-	printf(GREEN"Added argument: %s\n"RESET, arg); // To debug	
+	//printf(GREEN"Added argument: %s\n"RESET, arg); // To debug	
 }
 
 // Add the RD to the list of RDs
@@ -286,18 +286,18 @@ t_lst_cmd	*parser(t_lst_token *tokens, t_minishell *minishell)
 		if (curr->type == WORD)
 		{
 			//TO DEBUG
-			printf(MAG"\nProcessing token: [%s] | Type: %d\n"RESET, curr->value, curr->type);
+			//printf(MAG"\nProcessing token: [%s] | Type: %d\n"RESET, curr->value, curr->type);
 
 			add_argument(cmd, curr->value); // Add the argument
 
 			// TO DEBUG.........
-			printf(YELLOW"\nCmd Array (Current Command):\n"RESET);
-			int j = 0;
-			while (cmd->cmd_arr && cmd->cmd_arr[j])
-			{
-				printf("arr[%d] = %s\n", j, cmd->cmd_arr[j]);
-				j++;
-			}
+			//printf(YELLOW"\nCmd Array (Current Command):\n"RESET);
+			// int j = 0;
+			// while (cmd->cmd_arr && cmd->cmd_arr[j])
+			// {
+			// 	printf("arr[%d] = %s\n", j, cmd->cmd_arr[j]);
+			// 	j++;
+			// }
 			// ...... END
 		}
 		else if (curr->type >= REDIR_IN && curr->type <= HEREDOC)// it adresses all REDIRs 
@@ -315,22 +315,23 @@ t_lst_cmd	*parser(t_lst_token *tokens, t_minishell *minishell)
 		else if (curr->type == PIPE)
 		{
 			add_command(minishell->list_cmd, cmd);
-			// TO DEBUG.........
-			printf(BLUE"\nAdded command before PIPE.\n"RESET);
-			printf(YELLOW"\nCmd Array (Previous Command Before Pipe):\n"RESET);
-			int k = 0;
-			while (cmd->cmd_arr && cmd->cmd_arr[k])
-			{
-				printf("arr[%d] = %s\n", k, cmd->cmd_arr[k]);
-				k++;
-			}
-			// ........ END
+			// // TO DEBUG.........
+			// printf(BLUE"\nAdded command before PIPE.\n"RESET);
+			// printf(YELLOW"\nCmd Array (Previous Command Before Pipe):\n"RESET);
+			// int k = 0;
+			// while (cmd->cmd_arr && cmd->cmd_arr[k])
+			// {
+			// 	printf("arr[%d] = %s\n", k, cmd->cmd_arr[k]);
+			// 	k++;
+			// }
+			// // ........ END
 			cmd = new_command();
 		}
 		curr = curr->next;
 	}
 	add_command(minishell->list_cmd, cmd);
-	printf(GREEN"\nParsing complete!\n"RESET); // TO DEBUG
+	
+	//printf(GREEN"\nParsing complete!\n"RESET); // TO DEBUG
 
 
 	// to identify if minishell->list_cmd is NULL

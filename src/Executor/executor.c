@@ -14,8 +14,8 @@ void	execution(char **env, t_cmd *cmd)
 	{
 		ft_free_2d(path_cmds);
 		free(found_path);
-		write(2, "minishell: command not found: ", 26);
-		write(2, cmd->cmd_arr[0], ft_strlen(cmd->cmd_arr[0]));
+		write(2, "minishell: command not found: ", 30);
+		write(2, cmd->cmd_arr[0], ft_strlen(cmd->cmd_arr[0])); // TODO: fix output
 		write(2, "\n", 1);
 		exit(127);
 	}
@@ -30,9 +30,17 @@ int	execute_cmd(t_cmd *cmd, char **env) // do not touch // TODO: almost finished
 	id = fork();
 	if (id == 0) 
 	{
-		close(fd[0]);
-		dup2(fd[1], STDOUT_FILENO);
-		close(fd[1]);
+		if(cmd->next != NULL)
+		{
+			close(fd[0]);
+			dup2(fd[1], STDOUT_FILENO);
+			close(fd[1]);
+		}
+		else
+		{
+			close(fd[0]);
+			close(fd[1]);
+		}
 		if (redirecting_stdin(cmd) == 1 && redirecting_stdout(cmd) == 1) // TODO: recheck where to call (what if no file found?)
 		{
 			execution(env, cmd);
@@ -150,97 +158,97 @@ void checking_list_cmds_for_exec(t_lst_cmd *list_cmds, char **env)
 
 void ft_execution (t_minishell *minishell)
 {
-	(void) minishell;
-	t_lst_cmd *list_cmds;
-	t_cmd *first_cmd;
-	t_cmd *second_cmd;
-	t_cmd *third_cmd;
-	char **cmd_arr0;
-	char **cmd_arr1;
-	char **cmd_arr2;
-	t_lst_rdir *list_rdir1;
-	t_lst_rdir *list_rdir2;
-	t_lst_rdir *list_rdir3;
-	t_rdir *first_rdir1;
-	t_rdir *second_rdir1;
-	t_rdir *three_rdir1;
-	t_rdir *four_rdir1;
-	t_rdir *five_rdir1;
-	t_rdir *first_rdir2;
-	t_rdir *second_rdir2;
-	t_rdir *first_rdir3;
-	t_rdir *second_rdir3;
-	t_rdir *three_rdir3;
+	// (void) minishell;
+	// t_lst_cmd *list_cmds;
+	// t_cmd *first_cmd;
+	// t_cmd *second_cmd;
+	// t_cmd *third_cmd;
+	// char **cmd_arr0;
+	// char **cmd_arr1;
+	// char **cmd_arr2;
+	// t_lst_rdir *list_rdir1;
+	// t_lst_rdir *list_rdir2;
+	// t_lst_rdir *list_rdir3;
+	// t_rdir *first_rdir1;
+	// t_rdir *second_rdir1;
+	// t_rdir *three_rdir1;
+	// t_rdir *four_rdir1;
+	// t_rdir *five_rdir1;
+	// t_rdir *first_rdir2;
+	// t_rdir *second_rdir2;
+	// t_rdir *first_rdir3;
+	// t_rdir *second_rdir3;
+	// t_rdir *three_rdir3;
 
-	// printf("here00\n");
-	// initialize first command (head) ex.: "ls -a <out"
-	cmd_arr0 = init_cmd_array("ls -a");
-	cmd_arr1 = init_cmd_array("ls -a");
-	cmd_arr2 = init_cmd_array("ls -a");
-	// print_cmd_array(cmd_arr0);
-	// print_cmd_array(cmd_arr1);
-	// print_cmd_array(cmd_arr2);
+	// // printf("here00\n");
+	// // initialize first command (head) ex.: "ls -a <out"
+	// cmd_arr0 = init_cmd_array("ls -a");
+	// cmd_arr1 = init_cmd_array("ls -a");
+	// cmd_arr2 = init_cmd_array("ls -a");
+	// // print_cmd_array(cmd_arr0);
+	// // print_cmd_array(cmd_arr1);
+	// // print_cmd_array(cmd_arr2);
 
-	// FIRST COMMAND
-	first_rdir1 = init_redirection(RD_IN, "infile1");
-	// print_redirection(first_rdir);
+	// // FIRST COMMAND
+	// first_rdir1 = init_redirection(RD_IN, "infile1");
+	// // print_redirection(first_rdir);
 
-	second_rdir1 = init_redirection(RD_IN, "out");
-	first_rdir1->next = second_rdir1;
+	// second_rdir1 = init_redirection(RD_IN, "out");
+	// first_rdir1->next = second_rdir1;
 
-	three_rdir1 = init_redirection(RD_APND, "apnd");
-	second_rdir1->next = three_rdir1;
+	// three_rdir1 = init_redirection(RD_APND, "apnd");
+	// second_rdir1->next = three_rdir1;
 
-	four_rdir1 = init_redirection(RD_IN, "infile2");
-	three_rdir1->next = four_rdir1;
+	// four_rdir1 = init_redirection(RD_IN, "infile2");
+	// three_rdir1->next = four_rdir1;
 
-	five_rdir1 = init_redirection(RD_IN, "infile3");
-	four_rdir1->next = five_rdir1;
+	// five_rdir1 = init_redirection(RD_IN, "infile3");
+	// four_rdir1->next = five_rdir1;
 
-	list_rdir1 = init_list_redirection(first_rdir1, five_rdir1, 5);
-	// print_list_redirection(list_rdir);/
+	// list_rdir1 = init_list_redirection(first_rdir1, five_rdir1, 5);
+	// // print_list_redirection(list_rdir);/
 
-	first_cmd = init_command(cmd_arr0, list_rdir1);
-	// print_command(first_cmd);
-
-
-	// SECOND COMMAND
-	first_rdir2 = init_redirection(RD_IN, "infile2");
-
-	second_rdir2 = init_redirection(RD_OUT, "xxx");
-	first_rdir2->next = second_rdir2;
-
-	list_rdir2 = init_list_redirection(first_rdir2, second_rdir2, 2);
-
-	second_cmd = init_command(cmd_arr1, list_rdir2);
-	first_cmd->next = second_cmd;
+	// first_cmd = init_command(cmd_arr0, list_rdir1);
+	// // print_command(first_cmd);
 
 
-	// THIRD COMMAND
-	first_rdir3 = init_redirection(RD_IN, "out");
+	// // SECOND COMMAND
+	// first_rdir2 = init_redirection(RD_IN, "infile2");
 
-	second_rdir3 = init_redirection(RD_IN, "infile1");
-	first_rdir3->next = second_rdir3;
+	// second_rdir2 = init_redirection(RD_OUT, "xxx");
+	// first_rdir2->next = second_rdir2;
 
-	three_rdir3 = init_redirection(RD_IN, "infile3");
-	second_rdir3->next = three_rdir3;
-	// print_command(second_cmd);
+	// list_rdir2 = init_list_redirection(first_rdir2, second_rdir2, 2);
 
-	list_rdir3 = init_list_redirection(first_rdir3, three_rdir3, 3);
-
-	third_cmd = init_command(cmd_arr2, list_rdir3);
-	second_cmd->next = third_cmd;
-	// print_command(third_cmd);
+	// second_cmd = init_command(cmd_arr1, list_rdir2);
+	// first_cmd->next = second_cmd;
 
 
-	list_cmds = init_list_commands(1, first_cmd, NULL); 
-	print_list_commands(list_cmds);
+	// // THIRD COMMAND
+	// first_rdir3 = init_redirection(RD_IN, "out");
+
+	// second_rdir3 = init_redirection(RD_IN, "infile1");
+	// first_rdir3->next = second_rdir3;
+
+	// three_rdir3 = init_redirection(RD_IN, "infile3");
+	// second_rdir3->next = three_rdir3;
+	// // print_command(second_cmd);
+
+	// list_rdir3 = init_list_redirection(first_rdir3, three_rdir3, 3);
+
+	// third_cmd = init_command(cmd_arr2, list_rdir3);
+	// second_cmd->next = third_cmd;
+	// // print_command(third_cmd);
+
+
+	// list_cmds = init_list_commands(1, first_cmd, NULL); 
+	// print_list_commands(minishell->list_cmd);
 
 //88888888888888888888888888888888888888888888888888888888888888888888 exec
 	// saving original of stdin & stdout
 	int copy_of_stdin_fd = dup(STDIN_FILENO);
 	int copy_of_stdout_fd = dup(STDOUT_FILENO);
-	looping_through_list_commands(list_cmds, minishell->env); // going through list_cmds & checking for RD_IN & file
+	looping_through_list_commands(minishell->list_cmd, minishell->env); // going through list_cmds & checking for RD_IN & file
 	// stdin & stdout has to be set back to its original (create ft for it later)
 	dup2(copy_of_stdin_fd, STDIN_FILENO);
 	close(copy_of_stdin_fd);
