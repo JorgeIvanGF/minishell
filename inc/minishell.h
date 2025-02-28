@@ -19,8 +19,13 @@
 # define YELLOW "\033[0;33m"
 # define WHITE "\033[0;37m"
 # define RESET "\033[0m"
+# define B_RED "\033[1;31m"// Bright Red
+# define MAG "\033[0;35m"// Magenta
+# define CYAN "\x1b[36m" //Cyan
 
-
+// Text attributes
+#define BOLD      "\x1b[1m"
+#define UNDERLINE "\x1b[4m"
 
 // Enum Redirections_________________________________
 typedef enum e_redirection_type
