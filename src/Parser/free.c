@@ -15,6 +15,7 @@ void	free_token_list(t_lst_token *tokens)
 	{
 		next = curr->next;
 		free(curr->value);
+		curr->next = NULL;
 		free(curr);
 		curr = next;
 	}
@@ -99,13 +100,25 @@ void free_env(char **env)
 
 	if (!env)
 		return;
-
 	while (env[i])
 	{
 		free(env[i]); // Free each duplicated environment variable
 		i++;
 	}
 	free(env); // Free the array itself
+}
+
+void	continue_shell(t_minishell *minishell, t_lst_token **tokens, char **input)
+{
+	if (minishell->list_cmd)
+	{
+		free_cmd_list(minishell->list_cmd);
+		minishell->list_cmd = NULL;
+	}
+	free_token_list((*tokens));
+	(*tokens) = NULL;
+	free((*input));
+	(*input) = NULL;
 }
 
 // Free everything before exiting

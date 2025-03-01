@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <fcntl.h>
+#include <sys/wait.h>
 
 char	*get_path(char **env);
 char	**get_paths_cmds(char *str);

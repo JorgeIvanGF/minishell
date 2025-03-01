@@ -138,9 +138,8 @@ int main(int argc, char **argv, char **env)
 		// print_command_list(minishell->list_cmd); // TO DEBUG
 		ft_execution(minishell); // To Paula
 
-		free_token_list(tokens);
-		free(input);
-		// exit_shell(minishell);
+		
+		continue_shell(minishell, &tokens, &input);
 		
 		
 		
@@ -154,5 +153,6 @@ int main(int argc, char **argv, char **env)
 		
 	}
 	exit_shell(minishell);
-	return 0;
+	return (0); // paula con el resultado de ft_execution;
+	
 }

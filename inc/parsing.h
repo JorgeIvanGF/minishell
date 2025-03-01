@@ -63,6 +63,7 @@ void	print_command_list(t_lst_cmd *cmd_list);
 void	exit_shell(t_minishell *minishell);
 void	free_cmd_list(t_lst_cmd *cmd_list);
 void	free_token_list(t_lst_token *tokens);
+void	continue_shell(t_minishell *minishell, t_lst_token **tokens, char **input);
 
 
 
