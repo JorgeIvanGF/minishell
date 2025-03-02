@@ -9,6 +9,13 @@ void	skip_spaces(const char *input, int *i)
 		(*i)++;
 }
 
+// Skip spaces in the input
+void	skip_spaces_2(const char *input, int **i)
+{
+	while (input[**i] == ' ')
+		(**i)++;
+}
+
 // Get the token type (based on the enum)
 t_token_type	get_token_type(char *word)
 {
@@ -22,6 +29,12 @@ t_token_type	get_token_type(char *word)
 		return APPEND;
 	if (!ft_strcmp(word, "<<"))
 		return HEREDOC;
+	if (word[0] == '\"') // Para Double Quotes
+		return DBQ;
+	if (word[0] == '\'') // Para Single Quotes
+		return DBQ;
+	if (word[0] == ' ') // Para Spaces
+		return SPC;
 	return WORD;
 }
 
@@ -42,31 +55,50 @@ t_token	*new_token(char *value, t_token_type type)
 // Extract Normal Words (Handles Quotes Too!)
 // the loop continues as long as: Not reach the end of string
 // and either curr char isnt space or we are inside quotes(quote is non-zero)
+// char	*extract_word(int *i, char *input)
+// {
+// 	int start;
+// 	char quote; 
+
+// 	start = *i;
+// 	quote = 0;// (quote tracker (0 = NO open quote)
+// 	while (input[*i] && (input[*i] != ' ' || quote))
+// 	{
+// 		if ((input[*i] == '\'' || input[*i] == '"'))
+// 		{
+// 			if (!quote) // If no inside quote, start quot mode
+// 				quote = input[*i]; // Open quote
+// 			else if (input[*i] == quote)
+// 				quote = 0; // Close quote
+// 		}
+// 		(*i)++;
+// 	}
+// 	// If quote is still open, return NULL to indicate syntax error
+// 	if (quote)
+// 	{
+// 		printf(MAG"Syntax error: Unmatched quotes\n"RESET);
+// 		return (NULL);
+// 	}
+// 	return (ft_substr(input, start, *i - start));
+// }
+
+//*************** EXTTRACT WORD MODFIED ********************
+
 char	*extract_word(int *i, char *input)
 {
-	int start = *i;
-	char quote = 0; // (quote tracker (0 = NO open quote)
+	int start;
 
-	while (input[*i] && (input[*i] != ' ' || quote))
+	start = *i; // ***REVISAR SI EL ESPACIO SE NECESITA VERIFICAR O NO 
+	while (input[*i] && (input[*i] != ' ' && input[*i] != '\'' && input[*i] != '"'
+			&& input[*i] != '|' && input[*i] != '<' && input[*i] != '>'))
 	{
-		if ((input[*i] == '\'' || input[*i] == '"'))
-		{
-			if (!quote) // If no inside quote, start quot mode
-				quote = input[*i]; // Open quote
-			else if (input[*i] == quote)
-				quote = 0; // Close quote
-		}
 		(*i)++;
-
 	}
-	// If quote is still open, return NULL to indicate syntax error
-	if (quote)
-	{
-		printf(MAG"Syntax error: Unmatched quotes\n"RESET);
-		return (NULL);
-	}
+	//printf(CYAN"word = %s\n"RESET,ft_substr(input, start, *i - start));
 	return (ft_substr(input, start, *i - start));
 }
+// *****************************************************
+
 
 // Extract operators
 char *extract_operator(int *i, char *input)

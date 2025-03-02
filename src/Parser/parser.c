@@ -276,6 +276,7 @@ t_lst_cmd	*parser(t_lst_token *tokens, t_minishell *minishell)
 	if (!cmd)
 		return NULL;
 	curr = tokens->head;
+	//if (curr->type == SPC)// to check if the fisrt cmd is space
 	while (curr)
 	{
 		if (curr->value[0] == '\0') // Bypass if tok value is EMPTY
@@ -283,23 +284,45 @@ t_lst_cmd	*parser(t_lst_token *tokens, t_minishell *minishell)
 			curr = curr->next;
 			continue ;
 		}
-		if (curr->type == WORD)
+		if (curr->type == SPC) // Bypass if tok value is SPC
 		{
-			//TO DEBUG
-			//printf(MAG"\nProcessing token: [%s] | Type: %d\n"RESET, curr->value, curr->type);
-
-			add_argument(cmd, curr->value); // Add the argument
-
-			// TO DEBUG.........
-			//printf(YELLOW"\nCmd Array (Current Command):\n"RESET);
-			// int j = 0;
-			// while (cmd->cmd_arr && cmd->cmd_arr[j])
-			// {
-			// 	printf("arr[%d] = %s\n", j, cmd->cmd_arr[j]);
-			// 	j++;
-			// }
-			// ...... END
+			curr = curr->next;
+			continue ;
 		}
+
+		if (curr->type == WORD || curr->type == DBQ || curr->type == SGQ)
+		{
+			// Start with a copy of the current token's value.
+			char *merged = ft_strdup(curr->value);
+			if (!merged)
+				return (NULL);
+			
+			// While there is a next token and it is also a WORD, DBQ, or SGQ,
+			// merge it into the current token.
+			while (curr->next && (curr->next->type == WORD ||
+				curr->next->type == DBQ || curr->next->type == SGQ))
+			{
+				char *temp = merged;
+				merged = ft_strjoin(merged, curr->next->value);
+				free(temp);
+				if (!merged)
+					return (NULL);
+				curr = curr->next;  // Move to the merged token
+			}
+			add_argument(cmd, merged);
+			free(merged);
+		}
+
+		// 	// TO DEBUG.........
+		// 	//printf(YELLOW"\nCmd Array (Current Command):\n"RESET);
+		// 	// int j = 0;
+		// 	// while (cmd->cmd_arr && cmd->cmd_arr[j])
+		// 	// {
+		// 	// 	printf("arr[%d] = %s\n", j, cmd->cmd_arr[j]);
+		// 	// 	j++;
+		// 	// }
+		// 	// ...... END
+		// }
 		else if (curr->type >= REDIR_IN && curr->type <= HEREDOC)// it adresses all REDIRs 
 		{
 			if (!curr->next || curr->next->type != WORD)
@@ -348,7 +371,7 @@ t_lst_cmd	*parser(t_lst_token *tokens, t_minishell *minishell)
 
 
 
-	//print_command_list(minishell->list_cmd);
+	print_command_list(minishell->list_cmd);
 
 	return (minishell->list_cmd);
 

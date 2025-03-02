@@ -242,7 +242,7 @@ void ft_execution (t_minishell *minishell)
 
 
 	// list_cmds = init_list_commands(1, first_cmd, NULL); 
-	// print_list_commands(minishell->list_cmd);
+	//print_list_commands(minishell->list_cmd);
 
 //88888888888888888888888888888888888888888888888888888888888888888888 exec
 	// saving original of stdin & stdout

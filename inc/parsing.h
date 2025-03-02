@@ -13,7 +13,10 @@ typedef enum e_token_type
 	APPEND,		// ">>"
 	HEREDOC,	// "<<"
 	PIPE,		// "|"
-	WORD		// Normal words
+	WORD,		// Normal words
+	DBQ,		//Double quotes
+	SGQ,			//Single quotes
+	SPC			//Space
 }	t_token_type;
 
 // Token Struct______________________________
@@ -49,6 +52,7 @@ t_token_type	get_token_type(char *word);
 t_token			*new_token(char *value, t_token_type type);
 char			*extract_operator(int *i, char *input);
 char			*extract_word(int *i, char *input);
+void			skip_spaces_2(const char *input, int **i);
 
 // syntax.c:
 int		syntax_check(t_lst_token *tokens, t_minishell *minishell);
@@ -64,8 +68,5 @@ void	exit_shell(t_minishell *minishell);
 void	free_cmd_list(t_lst_cmd *cmd_list);
 void	free_token_list(t_lst_token *tokens);
 void	continue_shell(t_minishell *minishell, t_lst_token **tokens, char **input);
-
-
-
 
 #endif

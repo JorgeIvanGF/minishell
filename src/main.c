@@ -108,7 +108,7 @@ int main(int argc, char **argv, char **env)
 			continue ;
 		}
 
-		//print_tokens(tokens); // TO DEBUG
+		print_tokens(tokens); // TO DEBUG
 
 		// Syntax part (using tokens list)_______________________________
 		if (syntax_check(tokens, minishell))
@@ -154,5 +154,5 @@ int main(int argc, char **argv, char **env)
 	}
 	exit_shell(minishell);
 	return (0); // paula con el resultado de ft_execution;
-	
+
 }
