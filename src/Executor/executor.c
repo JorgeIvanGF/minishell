@@ -15,7 +15,7 @@ void	execution(char **env, t_cmd *cmd)
 		ft_free_2d(path_cmds);
 		free(found_path);
 		write(2, "minishell: command not found: ", 30);
-		write(2, cmd->cmd_arr[0], ft_strlen(cmd->cmd_arr[0])); // TODO: fix output
+		write(2, cmd->cmd_arr[0], ft_strlen(cmd->cmd_arr[0])); // TODO: fix output (mid part)
 		write(2, "\n", 1);
 		exit(127);
 	}
@@ -43,7 +43,11 @@ int	execute_cmd(t_cmd *cmd, char **env) // do not touch // TODO: almost finished
 		}
 		if (redirecting_stdin(cmd) == 1 && redirecting_stdout(cmd) == 1) // TODO: recheck where to call (what if no file found?)
 		{
-			execution(env, cmd);
+			// builtin ausfuehren, nur wenn es builtins ist 
+			if (!is_built_in(env, cmd)) // ft: checks if command is built-in or not (rt value: 0 (false) or 1 (true))
+			{
+				execution(env, cmd);
+			}
 		}
 		exit(0); // TODO: line needs to be double checked bc of #
 	}
@@ -242,7 +246,7 @@ void ft_execution (t_minishell *minishell)
 
 
 	// list_cmds = init_list_commands(1, first_cmd, NULL); 
-	// print_list_commands(minishell->list_cmd);
+	print_list_commands(minishell->list_cmd); 
 
 //88888888888888888888888888888888888888888888888888888888888888888888 exec
 	// saving original of stdin & stdout

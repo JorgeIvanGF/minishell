@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:40:18 by jorgutie          #+#    #+#             */
-/*   Updated: 2024/12/31 13:31:11 by jorgutie         ###   ########.fr       */
+/*   Updated: 2025/03/02 00:34:07 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,14 @@
 
 int	ft_strlen(const char *str)
 {
-	int	count_movs;
+	int	i;
 
-	count_movs = 0;
-	while (*str)
+	i = 0;
+	while (str[i] != '\0')
 	{
-		count_movs++;
-		str++;
+		i++;
 	}
-	return (count_movs);
+	return (i);
 }
 /*
 int main(void)

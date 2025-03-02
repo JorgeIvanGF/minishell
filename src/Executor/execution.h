@@ -11,6 +11,9 @@ char	*check_paths_w_cmd(char **path_cmds, char *cmd);
 char	*find_path(char **path_cmds, char *cmd);
 int		execute(char *found_path, t_cmd *cmd, char **env);
 
+// built ins
+int is_built_in(char **env, t_cmd *cmd);
+
 // redirecting
 int redirecting_stdin(t_cmd *cmd);
 int redirecting_stdout(t_cmd *cmd);
@@ -28,6 +31,7 @@ void print_list_redirection(t_lst_rdir *list_redirection);
 void print_cmd_array(char **cmd_arr);
 void print_command(t_cmd *cmd);
 void print_list_commands(t_lst_cmd *list_cmds);
+
 
 
 // typedef struct s_list_cmds

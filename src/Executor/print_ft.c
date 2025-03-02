@@ -34,7 +34,7 @@ void print_cmd_array(char **cmd_arr)
 	i = 0;
 	while(cmd_arr[i] != NULL)
 	{
-		printf("command %d = %s\n", i, cmd_arr[i]);
+		printf("command array [%d] = %s\n", i, cmd_arr[i]);
 		i++;
 	}
 	printf("******************************************************************\n");
