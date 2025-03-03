@@ -84,6 +84,11 @@ char	*extract_dq(int *i, char *input)// aqui check y extract new
 	{
 		(*i)++;
 	}
+	if (input[*i] != '"')
+	{
+		printf(RED"Syntax error: Unmatched double quotes\n"RESET);
+		return (NULL);
+	}
 	(*i)++;
 	word = ft_substr(input, start, *i - start);
 	return (word);
@@ -100,6 +105,11 @@ char	*extract_sq(int *i, char *input)// aqui check y extract new
 	while (input[*i] && input[*i] != '\'')
 	{
 		(*i)++;
+	}
+	if (input[*i] != '\'')
+	{
+		printf(RED"Syntax error: Unmatched single quotes\n"RESET);
+		return (NULL);
 	}
 	(*i)++;
 	word = ft_substr(input, start, *i - start);
@@ -141,19 +151,10 @@ int	ft_lexer(char *input, t_lst_token *tokens)
 		i++;
 	while (input[i])
 	{
-		// if (input[0] == ' ')
-		// 	skip_spaces(input, &i);
-		printf(ORANGE"i = %d\n"RESET, i);
-		printf(ORANGE"word = %c\n"RESET, input[i]);
-		if (!input[i]) 
+		if (!input[i])
 			break;
-		if (input[i] == ' ')
-		{
-			printf(ORANGE"ENTRA ESPACE\n"RESET);
+		if (input[i] == ' ') // Space char
 			word = extract_spc(&i, input);
-			printf(ORANGE"word = %s\n"RESET, word);
-		}
-			
 		else if (input[i] == '|' || input[i] == '<' || input[i] == '>') //Special character
 			word = extract_operator(&i, input);
 		else if (input[i] == '"' ) //Doublel character
@@ -165,7 +166,7 @@ int	ft_lexer(char *input, t_lst_token *tokens)
 		if (!word)
 			return (0);
 		//token = new_token(word, get_token_type(word)); //Add token
-		printf(GREEN"word = %s\n"RESET, word);
+		//printf(GREEN"word = %s\n"RESET, word);
 		if (!process_word(word, tokens))
 			return (0);
 	}

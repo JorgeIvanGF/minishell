@@ -103,7 +103,7 @@ int main(int argc, char **argv, char **env)
 		tokens = tokenize(input); 
 		if (!tokens)
 		{
-			printf(RED"Error: Tokenization failed.\n"RESET);
+			//printf(RED"Error: Tokenization failed.\n"RESET);
 			free(input);
 			continue ;
 		}

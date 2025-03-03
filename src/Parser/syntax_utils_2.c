@@ -55,13 +55,6 @@ void	remove_external_quotes(t_token *token)
 		new_value = ft_substr(token->value, 1, len - 2);
 		free(token->value);
 		token->value = new_value;
-		// printf(BLUE"tok val after outer = %s\n"RESET, token->value);// TO DEBUG
-		// if (ft_strcmp(token->value, "\"|\"") == 0)
-		// {
-		// 	printf(GREEN"igual a \"|\"\n"RESET);
-		// }
 	}
-	
-	printf(MAG"tok val after removal = %s\n"RESET, token->value); // TO DEBUG
-
+	//printf(MAG"tok val after removal = %s\n"RESET, token->value); // TO DEBUG
 }
