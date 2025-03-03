@@ -84,9 +84,46 @@ void	add_argument(t_cmd *cmd, char *arg)
 	//printf(GREEN"Added argument: %s\n"RESET, arg); // To debug	
 }
 
-// Add the RD to the list of RDs
-// Create the instance of redir and set their fields using token's fields
-// if it's the first set as it
+// // Add the RD to the list of RDs
+// // Create the instance of redir and set their fields using token's fields
+// // if it's the first set as it
+// void	add_redirection(t_cmd *cmd, t_token *token)
+// {
+// 	t_rdir	*redir;
+
+// 	// check if not initialized
+// 	if (!cmd->list_rdir)  // Prevent invalid memory access
+// 	{
+// 		cmd->list_rdir = malloc(sizeof(t_lst_rdir));
+// 		if (!cmd->list_rdir)
+// 			return ;
+// 		cmd->list_rdir->size = 0;
+// 		cmd->list_rdir->head = NULL;
+// 		cmd->list_rdir->tail = NULL;
+// 	}
+
+// 	redir = malloc(sizeof(t_rdir));
+// 	if (!redir)
+// 		return ;
+// 	redir->type = (t_rdir_type)token->type; //************ 
+// 	redir->name = ft_strdup(token->next->value);
+// 	//freee
+// 	if (!redir->name)
+// 		return (free(redir));
+// 	redir->next = NULL;
+// 	if (!cmd->list_rdir->head)
+// 		cmd->list_rdir->head = redir;
+// 	else
+// 		cmd->list_rdir->tail->next = redir; // make the curr tail->Next to point to the new node
+// 	cmd->list_rdir->tail = redir; // tail node updated to point to the new node
+// 	cmd->list_rdir->size++; // update the size of the list after added the new node
+
+// 	//printf(YELLOW"Added redirection: %s -> %s\n"RESET, token->value, redir->name); // To debug
+// }
+
+
+// **************** MODIFY *********************************
+
 void	add_redirection(t_cmd *cmd, t_token *token)
 {
 	t_rdir	*redir;
@@ -106,8 +143,17 @@ void	add_redirection(t_cmd *cmd, t_token *token)
 	if (!redir)
 		return ;
 	redir->type = (t_rdir_type)token->type; //************ 
-	redir->name = ft_strdup(token->next->value);
-	//freee
+	// printf(GREEN"REDI CHECK\n"RESET);
+	// printf("token type = %d\n", (int)token->type);
+	// printf("token value = %s\n", token->value);
+	if (token->next->type == SPC)
+	{
+		//printf("token next next value = %s\n", (token->next)->next->value);
+		if ((token->next)->next)
+			redir->name = ft_strdup((token->next)->next->value);
+	}
+	else
+		redir->name = ft_strdup(token->next->value);
 	if (!redir->name)
 		return (free(redir));
 	redir->next = NULL;
@@ -120,6 +166,7 @@ void	add_redirection(t_cmd *cmd, t_token *token)
 
 	//printf(YELLOW"Added redirection: %s -> %s\n"RESET, token->value, redir->name); // To debug
 }
+
 
 // Create a new command object and initialize its members
 t_cmd	*new_command(void)
@@ -325,7 +372,7 @@ t_lst_cmd	*parser(t_lst_token *tokens, t_minishell *minishell)
 		// }
 		else if (curr->type >= REDIR_IN && curr->type <= HEREDOC)// it adresses all REDIRs 
 		{
-			if (!curr->next || curr->next->type != WORD)
+			if (!curr->next || (curr->next->type != WORD && curr->next->type != SPC))
 			{
 				printf("Syntax error: missing file after '%s'\n", curr->value);
 				free_cmd_list(minishell->list_cmd); // to free before returning 
@@ -333,7 +380,13 @@ t_lst_cmd	*parser(t_lst_token *tokens, t_minishell *minishell)
 				return NULL;
 			}
 			add_redirection(cmd, curr);
-			curr = curr->next; // Skip the filename token
+			if (((curr->next)->next) && (curr->next)->type == SPC)
+			{
+				//printf(BLUE"entra a REDIR SPC next\n"RESET);
+				curr = (curr->next)->next;// Skip twice (the space and the filename token)
+			}
+			else
+				curr = curr->next; // Skip the filename token
 		}
 		else if (curr->type == PIPE)
 		{

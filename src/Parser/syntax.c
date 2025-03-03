@@ -27,22 +27,52 @@ static int	check_double_pipes(t_token *curr)
 	}
 	return (0);
 }
-// Rule 3: Redirections must be followed by a WORD
+// // Rule 3: Redirections must be followed by a WORD
+// static int	check_redirections(t_token *curr)
+// {
+// 	while (curr)
+// 	{
+// 		if ((curr->type == REDIR_IN || curr->type == REDIR_OUT ||
+// 			 curr->type == APPEND || curr->type == HEREDOC) &&
+// 			(!curr->next || (curr->next->type != WORD && curr->next->type != SPC)))//handle space too
+// 		{
+// 			printf(RED"Syntax error: missing file after '%s'\n"RESET, curr->value);
+// 			return (1);
+// 		}
+// 		curr = curr->next;
+// 	}
+// 	return (0);
+// }
+
+
+// **************** MODIFY REDIR ****************
+
 static int	check_redirections(t_token *curr)
 {
+	t_token *next;
+
 	while (curr)
 	{
-		if ((curr->type == REDIR_IN || curr->type == REDIR_OUT ||
-			 curr->type == APPEND || curr->type == HEREDOC) &&
-			(!curr->next || curr->next->type != WORD))
+		if (curr->type == REDIR_IN || curr->type == REDIR_OUT ||
+			curr->type == APPEND || curr->type == HEREDOC)
 		{
-			printf(RED"Syntax error: missing file after '%s'\n"RESET, curr->value);
-			return (1);
+			next = curr->next;
+			// Skip over any SPC tokens
+			while (next && next->type == SPC)
+				next = next->next;
+			if (!next || next->type != WORD)
+			{
+				printf(RED"Syntax error: missing file after '%s'\n"RESET,
+					curr->value);
+				return (1);
+			}
 		}
 		curr = curr->next;
 	}
 	return (0);
 }
+
+
 
 // Rule 4: Last token cannot be an Operator
 static int	check_last_token(t_token *curr)
