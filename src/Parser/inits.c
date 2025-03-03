@@ -5,14 +5,15 @@
 // Check if imput only is ENTER or spaces)
 int	first_checks(char *input)
 {
-	int i = 0;
+	int	i;
 
-	if (input[i] == '\0' || input[i] == ' ') 
+	i = 0;
+	if (input[i] == '\0' || input[i] == ' ')
 	{
 		if (input[i] == ' ')
 		{
 			while (input[i] == ' ')
-			i++;
+				i++;
 			if (input[i] != '\0')
 				return (1);
 		}
@@ -35,7 +36,7 @@ static char	**copy_env(char **env)
 	if (!copy)
 		return (NULL);
 	i = 0;
-	while(env[i])
+	while (env[i])
 	{
 		copy[i] = ft_strdup(env[i]);
 		if (!copy[i])
@@ -52,8 +53,8 @@ static char	**copy_env(char **env)
 }
 
 // Initialization of minishell
-void *init_minishell (t_minishell **minishell,char **env)
-{	
+void	*init_minishell(t_minishell **minishell, char **env)
+{
 	if (!minishell || !env)
 	{
 		printf(RED"Nothing to initialize\n"RESET);
@@ -73,6 +74,5 @@ void *init_minishell (t_minishell **minishell,char **env)
 		printf(RED"Failed to copy ENV-VAR\n"RESET);
 	}
 	(*minishell)->list_cmd = NULL;
-	return(minishell);
+	return (minishell);
 }
-

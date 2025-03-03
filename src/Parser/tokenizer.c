@@ -42,102 +42,7 @@ int	process_word(char *word, t_lst_token *tokens)
 	return (1);
 }
 
-// // Lexer in action: Skip spaces, extract operator or "word" then
-// // add to token list acoording to its type
-// int	ft_lexer(char *input, t_lst_token *tokens)
-// {
-// 	int		i;
-// 	char	*word;
-
-// 	if (!input || !tokens)
-// 		return (0);
-// 	i = 0;
-// 	while (input[i])
-// 	{
-// 		skip_spaces(input, &i);
-// 		if (!input[i]) 
-// 			break;
-// 		if (input[i] == '|' || input[i] == '<' || input[i] == '>') //Special character
-// 			word = extract_operator(&i, input);
-// 		else
-// 			word = extract_word(&i, input); // Normal command/arg
-// 		if (!word)
-// 			return (0);
-// 		//token = new_token(word, get_token_type(word)); //Add token
-// 		if (!process_word(word, tokens))
-// 			return (0);
-// 	}
-// 	return (1);
-// }
-
-// ******************************MODIFICATION OF LEXER LOGIC****************************
-
-// Double quotes: 
-char	*extract_dq(int *i, char *input)// aqui check y extract new
-{
-	int start;
-	char *word;
-
-	start = *i;
-	(*i)++;
-	while (input[*i] && input[*i] != '"')
-	{
-		(*i)++;
-	}
-	if (input[*i] != '"')
-	{
-		printf(RED"Syntax error: Unmatched double quotes\n"RESET);
-		return (NULL);
-	}
-	(*i)++;
-	word = ft_substr(input, start, *i - start);
-	return (word);
-}
-
-// Single quotes: 
-char	*extract_sq(int *i, char *input)// aqui check y extract new
-{
-	int start;
-	char *word;
-
-	start = *i;
-	(*i)++;
-	while (input[*i] && input[*i] != '\'')
-	{
-		(*i)++;
-	}
-	if (input[*i] != '\'')
-	{
-		printf(RED"Syntax error: Unmatched single quotes\n"RESET);
-		return (NULL);
-	}
-	(*i)++;
-	word = ft_substr(input, start, *i - start);
-	return (word);
-}
-
-// char *extract_spc(int *i, char *input)
-// {
-// 	char *word;
-
-// 	word = ft_strdup(" ");  // Allocate memory for the space string
-// 	skip_spaces_2(input, &i);
-// 	return (word);
-// }
-
-char	*extract_spc(int *i, char *input)
-{
-	char *word;
-
-	// Create a token for space (using strdup so that it can be freed later)
-	word = ft_strdup(" ");
-	// Advance i past all spaces (this compresses contiguous spaces into one token)
-	while (input[*i] && input[*i] == ' ')
-		(*i)++;
-	return (word);
-}
-
-// LEXER MODIFIED
+// LEXER LOGIC MODIFIED
 int	ft_lexer(char *input, t_lst_token *tokens)
 {
 	int		i;
@@ -153,16 +58,7 @@ int	ft_lexer(char *input, t_lst_token *tokens)
 	{
 		if (!input[i])
 			break;
-		if (input[i] == ' ') // Space char
-			word = extract_spc(&i, input);
-		else if (input[i] == '|' || input[i] == '<' || input[i] == '>') //Special character
-			word = extract_operator(&i, input);
-		else if (input[i] == '"' ) //Doublel character
-			word = extract_dq(&i, input);// aqui check y extract new token
-		else if (input[i] == '\'' ) // Single quotes
-			word = extract_sq(&i, input);// aqui check y extract new token
-		else
-			word = extract_word(&i, input); // Normal command/arg
+		word = extractor(&i, input);
 		if (!word)
 			return (0);
 		//token = new_token(word, get_token_type(word)); //Add token
@@ -172,6 +68,45 @@ int	ft_lexer(char *input, t_lst_token *tokens)
 	}
 	return (1);
 }
+
+
+
+
+// // LEXER LOGIC MODIFIED
+// int	ft_lexer(char *input, t_lst_token *tokens)
+// {
+// 	int		i;
+// 	char	*word;
+
+// 	if (!input || !tokens)
+// 		return (0);
+// 	i = 0;
+// 	// Skip initial spaces only
+// 	while (input[i] && input[i] == ' ')
+// 		i++;
+// 	while (input[i])
+// 	{
+// 		if (!input[i])
+// 			break;
+// 		if (input[i] == ' ') // Space char
+// 			word = extract_spc(&i, input);
+// 		else if (input[i] == '|' || input[i] == '<' || input[i] == '>') //Special character
+// 			word = extract_operator(&i, input);
+// 		else if (input[i] == '"' ) //Doublel character
+// 			word = extract_dq(&i, input);// aqui check y extract new token
+// 		else if (input[i] == '\'' ) // Single quotes
+// 			word = extract_sq(&i, input);// aqui check y extract new token
+// 		else
+// 			word = extract_word(&i, input); // Normal command/arg
+// 		if (!word)
+// 			return (0);
+// 		//token = new_token(word, get_token_type(word)); //Add token
+// 		//printf(GREEN"word = %s\n"RESET, word);
+// 		if (!process_word(word, tokens))
+// 			return (0);
+// 	}
+// 	return (1);
+// }
 
 
 
