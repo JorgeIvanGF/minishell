@@ -14,9 +14,9 @@ typedef enum e_token_type
 	HEREDOC,	// "<<"
 	PIPE,		// "|"
 	WORD,		// Normal words
-	DBQ,		//Double quotes
-	SGQ,			//Single quotes
-	SPC			//Space
+	DBQ,		// Double quotes
+	SGQ,		// Single quotes
+	SPC			// Space
 }	t_token_type;
 
 // Token Struct______________________________

@@ -279,11 +279,11 @@ t_lst_cmd	*parser(t_lst_token *tokens, t_minishell *minishell)
 	//if (curr->type == SPC)// to check if the fisrt cmd is space
 	while (curr)
 	{
-		if (curr->value[0] == '\0') // Bypass if tok value is EMPTY
-		{
-			curr = curr->next;
-			continue ;
-		}
+		// if (curr->value[0] == '\0') // Bypass if tok value is EMPTY
+		// {
+		// 	curr = curr->next;
+		// 	continue ;
+		// }
 		if (curr->type == SPC) // Bypass if tok value is SPC
 		{
 			curr = curr->next;

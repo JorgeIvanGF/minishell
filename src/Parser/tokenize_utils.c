@@ -32,7 +32,7 @@ t_token_type	get_token_type(char *word)
 	if (word[0] == '\"') // Para Double Quotes
 		return DBQ;
 	if (word[0] == '\'') // Para Single Quotes
-		return DBQ;
+		return SGQ;
 	if (word[0] == ' ') // Para Spaces
 		return SPC;
 	return WORD;

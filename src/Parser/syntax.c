@@ -74,10 +74,21 @@ int	syntax_check(t_lst_token *tokens, t_minishell *minishell)
 		return (1);
 	curr = tokens->head;
 	int i = 0;
+
+	// while (curr)
+	// {
+	// 	//printf(GREEN"\nToken [%d]...\n"RESET, i);
+	// 	expand_variables(curr, minishell->env);
+	// 	remove_external_quotes(curr);		
+	// 	curr = curr->next;
+	// 	i++;
+	// }
+
 	while (curr)
 	{
 		//printf(GREEN"\nToken [%d]...\n"RESET, i);
-		expand_variables(curr, minishell->env);
+		if (curr->type == DBQ || curr->type == WORD)
+			expand_variables(curr, minishell->env);
 		remove_external_quotes(curr);		
 		curr = curr->next;
 		i++;

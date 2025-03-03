@@ -69,80 +69,157 @@ static char	*replace_var(char *input, char *var, char *value, int pos)
 	return (final_str);
 }
 
-// Expand variables inside double quotes or outside quotes
-// extra move to verify if is inside single quotes
-static char	*expand_env_vars(char *input, char **env)
+// // Expand variables inside double quotes or outside quotes
+// // extra move to verify if is inside single quotes
+// static char	*expand_env_vars(char *input, char **env)
+// {
+// 	int		i;
+// 	char	*var;
+// 	char	*value;
+// 	int		in_single;
+// 	char	*new_input;
+
+// 	if (!input || !env)
+// 		return (NULL);
+// 	i = 0;
+// 	in_single = 0;
+// 	while (input[i])
+// 	{
+// 		if (input[i] == '\'') // Flag to verify if is inside single quotes
+// 			in_single = !in_single;
+// 		else if (input[i] == '$' && !in_single)
+// 		{
+// 			var = extract_var_name(&input[i + 1]); // one position after ´$´
+// 			printf("var = %s\n", var);
+// 			value = get_env_value(var, env); // fetch after the '='
+// 			printf("value = %s\n", value);
+// 			new_input = replace_var(input, var, value, i);
+// 			printf("new_input = %s\n", new_input);
+// 			free(var);
+// 			if (value)
+// 				free(value);
+// 			if (!new_input) // If replacement failed, return NULL
+// 				return (NULL);
+// 			input = new_input;
+// 			i--; // Adjust index after replacement
+// 		}
+// 		i++;
+// 	}
+// 	return (input);
+// }
+
+// // expand environment variables, but ignore inside single quotes
+// void expand_variables(t_token *token, char **env)
+// {
+// 	char	*expanded;
+// 	int		i;
+// 	int		in_single;
+
+// 	if (!token || !token->value)
+// 		return;
+// 	i = 0;
+// 	in_single = 0; // flag to verify if inside single quotes
+// 	while (token->value[i])
+// 	{
+// 		if (token->value[i] == '\'')
+// 			in_single = !in_single;
+// 		else if (token->value[i] == '$' && !in_single)
+// 		{
+// 			expanded = expand_env_vars(token->value, env);
+// 			printf("expanded = %s\n", expanded);
+// 			//printf("token_val_0 = %s\n", token->value);
+// 			if (expanded)
+// 			{
+// 				//printf("token_val_1 = %s\n", token->value);
+// 				//free(token->value);
+// 				token->value = expanded;
+// 				printf("token_val_2 = %s\n", token->value);
+// 				i = -1; // to reprocess the new string formed 
+// 				in_single = 0; //to reset the flag
+// 			}
+// 		//return;
+// 		}
+// 		i++;
+// 	}
+// }
+
+// ****************************************************
+// ********** MODIFIED EXPANDED  **********************
+
+// When a '$' at index i, extracts the name
+// retrieves its value from the ENV,
+// replaces "$VAR" in the input string with the value, 
+// frees temp memory,and returns the updated string
+static char	*handle_dollar(char *input, int i, char **env)
 {
-	int		i;
 	char	*var;
 	char	*value;
+	char	*new_input;
+
+	var = extract_var_name(&input[i + 1]);
+	value = get_env_value(var, env);
+	new_input = replace_var(input, var, value, i);
+	free(var);
+	if (value)
+		free(value);
+	return (new_input);
+}
+
+// If the token is NOT originally DBQ, it toggles an in_single flag
+// on encountering SGQ. When a '$' is found outside single quotes,
+// it calls handle_dollar to expand the variable.
+// Returns the updated input string after processing.
+static char	*process_input(char *input, int is_dbq, char **env)
+{
+	int		i;
 	int		in_single;
 	char	*new_input;
 
-	if (!input || !env)
-		return (NULL);
 	i = 0;
 	in_single = 0;
 	while (input[i])
 	{
-		if (input[i] == '\'') // Flag to verify if is inside single quotes
+		if (!is_dbq && input[i] == '\'') // if is DBQ this NEVER ENTER
 			in_single = !in_single;
 		else if (input[i] == '$' && !in_single)
 		{
-			var = extract_var_name(&input[i + 1]); // one position after ´$´
-			printf("var = %s\n", var);
-			value = get_env_value(var, env); // fetch after the '='
-			printf("value = %s\n", value);
-			new_input = replace_var(input, var, value, i);
-			printf("new_input = %s\n", new_input);
-			free(var);
-			if (value)
-				free(value);
-			if (!new_input) // If replacement failed, return NULL
+			new_input = handle_dollar(input, i, env);
+			if (!new_input)
 				return (NULL);
 			input = new_input;
-			i--; // Adjust index after replacement
 		}
-		i++;
+		else
+			i++;
 	}
 	return (input);
 }
 
-// expand environment variables, but ignore inside single quotes
+static char	*expand_env_vars(char *input, char **env)
+{
+	int		len;
+	int		is_dbq;
+
+	if (!input || !env)
+		return (NULL);
+	len = ft_strlen(input);
+	if (len >= 2 && input[0] == '"' && input[len - 1] == '"')
+		is_dbq = 1;
+	else
+		is_dbq = 0;
+	return (process_input(input, is_dbq, env));
+}
+
+// Expands environment variables for tokens that are double-quoted (DBQ) or unquoted (WORD).
 void expand_variables(t_token *token, char **env)
 {
-	char	*expanded;
-	int		i;
-	int		in_single;
+	char *expanded;
 
 	if (!token || !token->value)
 		return;
-	i = 0;
-	in_single = 0; // flag to verify if inside single quotes
-	while (token->value[i])
+	if (token->type == DBQ || token->type == WORD)
 	{
-		if (token->value[i] == '\'')
-			in_single = !in_single;
-		else if (token->value[i] == '$' && !in_single)
-		{
-			expanded = expand_env_vars(token->value, env);
-			printf("expanded = %s\n", expanded);
-			//printf("token_val_0 = %s\n", token->value);
-			if (expanded)
-			{
-				//printf("token_val_1 = %s\n", token->value);
-				//free(token->value);
-				token->value = expanded;
-				printf("token_val_2 = %s\n", token->value);
-				i = -1; // to reprocess the new string formed 
-				in_single = 0; //to reset the flag
-			}
-		//return;
-		}
-		i++;
+		expanded = expand_env_vars(token->value, env);
+		if (expanded)
+			token->value = expanded;
 	}
 }
-
-
-
-
