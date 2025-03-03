@@ -27,26 +27,9 @@ static int	check_double_pipes(t_token *curr)
 	}
 	return (0);
 }
-// // Rule 3: Redirections must be followed by a WORD
-// static int	check_redirections(t_token *curr)
-// {
-// 	while (curr)
-// 	{
-// 		if ((curr->type == REDIR_IN || curr->type == REDIR_OUT ||
-// 			 curr->type == APPEND || curr->type == HEREDOC) &&
-// 			(!curr->next || (curr->next->type != WORD && curr->next->type != SPC)))//handle space too
-// 		{
-// 			printf(RED"Syntax error: missing file after '%s'\n"RESET, curr->value);
-// 			return (1);
-// 		}
-// 		curr = curr->next;
-// 	}
-// 	return (0);
-// }
 
-
-// **************** MODIFY REDIR ****************
-
+// Rule 3: Redirections must be followed by a WORD or SPC
+// also skipped other SPCs
 static int	check_redirections(t_token *curr)
 {
 	t_token *next;
@@ -71,8 +54,6 @@ static int	check_redirections(t_token *curr)
 	}
 	return (0);
 }
-
-
 
 // Rule 4: Last token cannot be an Operator
 static int	check_last_token(t_token *curr)
@@ -103,8 +84,7 @@ int	syntax_check(t_lst_token *tokens, t_minishell *minishell)
 	if (check_last_token(tokens->head))
 		return (1);
 	curr = tokens->head;
-	int i = 0;
-
+	//int i = 0;
 	// while (curr)
 	// {
 	// 	//printf(GREEN"\nToken [%d]...\n"RESET, i);
@@ -121,7 +101,6 @@ int	syntax_check(t_lst_token *tokens, t_minishell *minishell)
 			expand_variables(curr, minishell->env);
 		remove_external_quotes(curr);		
 		curr = curr->next;
-		i++;
 	}
 	return (0);
 }

@@ -2,43 +2,33 @@
 #include "minishell.h"
 #include "parsing.h"
 
-// static void	init_vars(int *i, int *j, int *in_single,
-// 						int *in_double)
-// {
-// 	*i = 0;
-// 	*j = 0;
-// 	*in_single = 0;
-// 	*in_double = 0;
-// }
-// 
-// static char *remove_inner_quotes(char *input)
-// {
-// 	int		i;
-// 	int		j;
-// 	int		in_single;
-// 	int		in_double;
-// 	char	*new_str;
+// The replacement of the origina str from input to the value of ENV-VAR
+char	*replace_var(char *input, char *var, char *value, int pos)
+{
+	char	*before;
+	char	*after;
+	char	*new_str;
+	char	*final_str;
+	int		var_len;
 
-// 	if (!input)
-// 		return (NULL);
-// 	new_str = malloc(ft_strlen(input) + 1);
-// 	if (!new_str)
-// 		return (NULL);
-// 	init_vars(&i, &j, &in_single, &in_double);
-// 	while (input[i])
-// 	{
-// 		if (input[i] == '\'' && !in_double) // Single quotes toggle
-// 			in_single = !in_single;
-// 		else if (input[i] == '"' && !in_single) // Double quotes toggle
-// 			in_double = !in_double;
-// 		else
-// 			new_str[j++] = input[i]; // Copy character normally
-// 		i++;
-// 	}
-// 	new_str[j] = '\0';
-// 	free(input); // Free the original input
-// 	return (new_str);
-// }
+	var_len = ft_strlen(var);
+	before = ft_substr(input, 0, pos);
+	after = ft_strdup(input + pos + var_len + 1);
+	if (!before || !after) // Handle memory failure
+		return (NULL);
+	if (value) // Normal case: Replace with value
+		new_str = ft_strjoin(before, value);
+	else // If value is NULL, just remove the $VAR
+		new_str = ft_strdup(before);
+	free(before);
+	final_str = ft_strjoin(new_str, after);
+	free(input);
+	//here only assign a string to the LOCAL input variable
+	//input = ft_strjoin(new_str, after);
+	free(new_str);
+	free(after);
+	return (final_str);
+}
 
 // Removal of the external quotes (single and double)
 void	remove_external_quotes(t_token *token)

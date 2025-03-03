@@ -61,8 +61,11 @@ char	*extractor(int *i, char *input);
 
 // syntax.c:
 int		syntax_check(t_lst_token *tokens, t_minishell *minishell);
-void	remove_external_quotes(t_token *token);
 void	expand_variables(t_token *token, char **env);
+
+// syntax_uyils_2.c:
+char	*replace_var(char *input, char *var, char *value, int pos);
+void	remove_external_quotes(t_token *token);
 
 // parser.c
 t_lst_cmd	*parser(t_lst_token *tokens, t_minishell *minishell);

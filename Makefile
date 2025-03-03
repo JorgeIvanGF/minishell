@@ -6,7 +6,7 @@
 #    By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 17:55:02 by jorgutie          #+#    #+#              #
-#    Updated: 2025/03/03 22:43:26 by jorgutie         ###   ########.fr        #
+#    Updated: 2025/03/04 00:00:53 by jorgutie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,15 +43,15 @@ INC_DIR     = inc
 # Source files
 	
 SRC_FILES   = main.c \
-			Parser/parser.c \
-			Parser/syntax.c \
+			Parser/inits.c \
 			Parser/tokenizer.c \
 			Parser/tokenizer_utils.c \
 			Parser/tokenizer_utils_2.c \
-			Parser/free.c \
+			Parser/syntax.c \
 			Parser/syntax_utils.c \
 			Parser/syntax_utils_2.c \
-			Parser/inits.c \
+			Parser/parser.c \
+			Parser/free.c \
 			Executor/executor.c \
 			Executor/executor_helper_ft.c \
 			Executor/print_ft.c \
