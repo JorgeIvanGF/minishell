@@ -82,3 +82,51 @@ char	*get_redir_name(t_token *token)
 		name = ft_strdup(token->next->value);
 	return (name);
 }
+
+// Initializes the cmd->cmd_arr array with the first argument.
+// Returns 1 on success, 0 on failure.
+int	init_cmd_arr(t_cmd *cmd, char *arg)
+{
+	cmd->cmd_arr = malloc(sizeof(char *) * 2);
+	if (!cmd->cmd_arr)
+	{
+		printf(RED "Error: Failed to allocate memory for cmd_arr\n" RESET);
+		return (0);
+	}
+	cmd->cmd_arr[0] = ft_strdup(arg);
+	if (!cmd->cmd_arr[0])
+	{
+		printf(RED"Error: Failed to duplicate and add arg\n"RESET);
+		free(cmd->cmd_arr);
+		cmd->cmd_arr = NULL;
+		return (0);
+	}
+	cmd->cmd_arr[1] = NULL;
+	return (1);
+}
+
+// Expands the existing `cmd->cmd_arr` by appending a new argument.
+// Allocates memory for a new array, copies the old arguments,
+// and appends the new argument.Returns the new array on success, 
+// or NULL on failure.
+char	**expand_cmd_arr(char **old_arr, char *arg)
+{
+	int		count;
+	char	**new_arr;
+	int		i;
+
+	count = 0;
+	while (old_arr[count])
+		count++;
+	new_arr = malloc(sizeof(char *) * (count + 2));
+	if (!new_arr)
+		return (printf(RED"Error: Failed to alloc memory.\n"RESET), NULL);
+	i = -1;
+	while (++i < count)
+		new_arr[i] = old_arr[i];
+	new_arr[i] = ft_strdup(arg);
+	if (!new_arr[i])
+		return (printf(RED"Error: Duplic arg.\n"RESET), free(new_arr), NULL);
+	new_arr[i + 1] = NULL;
+	return (new_arr);
+}

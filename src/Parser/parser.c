@@ -5,7 +5,7 @@
 void	add_command(t_lst_cmd *cmd_list, t_cmd *cmd)
 {
 	if (!cmd_list || !cmd)
-		return;
+		return ;
 	if (!cmd_list->head)
 		cmd_list->head = cmd;
 	else
@@ -14,74 +14,31 @@ void	add_command(t_lst_cmd *cmd_list, t_cmd *cmd)
 	cmd_list->size++;
 }
 
-// Add the arg to cmd array
+
+
+// Adds an argument to the command's argument array (cmd_arr).
+// If cmd_arr is not initialized, it initializes it; 
+// otherwise, it expands the array.
 void	add_argument(t_cmd *cmd, char *arg)
 {
-	int		i;
 	char	**new_args;
 
-	if (!cmd || !arg) //safety check
+	if (!cmd || !arg)
 	{
-		printf(RED"Error: add_argument() received NULL cmd or arg\n"RESET);
+		printf(RED"Error: NULL cmd or arg\n"RESET);
 		return ;
 	}
-
-	if (!cmd->cmd_arr) // If it's the first argument, initialize cmd_arr
+	if (!cmd->cmd_arr)
 	{
-		cmd->cmd_arr = malloc(sizeof(char *) * 2);
-		if (!cmd->cmd_arr)
-		{
-			printf(RED"Error: Failed to allocate memory for cmd_arr\n"RESET);
+		if (!init_cmd_arr(cmd, arg))
 			return ;
-		}
-		cmd->cmd_arr[0] = ft_strdup(arg);
-		if (!cmd->cmd_arr[0]) // Handle allocation failure
-		{
-			printf("Error: Failed to duplicate and add arg\n");
-			free(cmd->cmd_arr); // free the command array
-			cmd->cmd_arr = NULL; // prevent accessing freed memory
-			return ;
-		}
-		cmd->cmd_arr[1] = NULL;
-		//printf(GREEN"Added first argument: %s\n"RESET, arg);
 		return ;
 	}
-
-	// Count existing arguments
-	i = 0;
-	while (cmd->cmd_arr && cmd->cmd_arr[i])
-		i++;
-
-	// Allocate the new array
-	new_args = malloc(sizeof(char *) * (i + 2));
+	new_args = expand_cmd_arr(cmd->cmd_arr, arg);
 	if (!new_args)
-	{
-		printf(RED"Error: Failed to allocate memory for new arguments.\n"RESET);
-		return;
-	}
-
-	// Copy existing pointers
-	i = 0;
-	while (cmd->cmd_arr && cmd->cmd_arr[i])
-	{
-		new_args[i] = cmd->cmd_arr[i];
-		i++;
-	}
-
-	// Add new argument
-	new_args[i] = ft_strdup(arg); // Store the argument
-	if (!new_args[i])
-	{
-		printf(RED"Error: Failed to allocate memory for argument copy.\n"RESET);		
-		while (i > 0) // Only free allocated arguments (prevent accessing uninitialized memory)
-			free(new_args[--i]);
-		free(new_args);
-		return;
-	}
-	new_args[i + 1] = NULL; // ensure to be Null terminated
-	free(cmd->cmd_arr);// free old array (but not its content)
-	cmd->cmd_arr = new_args; // update the new array including the added arg
-	//printf(GREEN"Added argument: %s\n"RESET, arg); // To debug	
+		return ;
+	free(cmd->cmd_arr);
+	cmd->cmd_arr = new_args;
 }
 
 // Add the RD to the list of RDs
@@ -96,7 +53,7 @@ void	add_redirection(t_cmd *cmd, t_token *token)
 	redir = malloc(sizeof(t_rdir));
 	if (!redir)
 		return ;
-	redir->type = (t_rdir_type)token->type; //************ 
+	redir->type = (t_rdir_type)token->type;
 	redir->name = get_redir_name(token);
 	if (!redir->name)
 	{
@@ -113,7 +70,6 @@ void	add_redirection(t_cmd *cmd, t_token *token)
 
 	//printf(YELLOW"Added redirection: %s -> %s\n"RESET, token->value, redir->name); // To debug
 }
-
 
 // Create a new command object and initialize its members
 t_cmd	*new_command(void)

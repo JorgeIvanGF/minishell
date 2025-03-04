@@ -74,7 +74,9 @@ void	print_command_list(t_lst_cmd *cmd_list);
 // parser_utils.c
 void	print_command_list(t_lst_cmd *cmd_list);
 char	*get_redir_name(t_token *token);
-int	init_redirection_list(t_cmd *cmd);
+int		init_redirection_list(t_cmd *cmd);
+int		init_cmd_arr(t_cmd *cmd, char *arg);
+char	**expand_cmd_arr(char **old_arr, char *arg);
 
 // free.c
 void	exit_shell(t_minishell *minishell);
