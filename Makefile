@@ -6,7 +6,7 @@
 #    By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 17:55:02 by jorgutie          #+#    #+#              #
-#    Updated: 2025/03/04 00:00:53 by jorgutie         ###   ########.fr        #
+#    Updated: 2025/03/04 00:50:54 by jorgutie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,6 +51,7 @@ SRC_FILES   = main.c \
 			Parser/syntax_utils.c \
 			Parser/syntax_utils_2.c \
 			Parser/parser.c \
+			Parser/parser_utils.c \
 			Parser/free.c \
 			Executor/executor.c \
 			Executor/executor_helper_ft.c \

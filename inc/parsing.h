@@ -42,11 +42,11 @@ typedef struct s_token_list
 void	*init_minishell (t_minishell **minishell,char **env);
 int		first_checks(char *input);
 
-// tokenizer.c:
+// tokenizer.c
 t_lst_token	*tokenize(char *input);
 void		free_token_list(t_lst_token *tokens);
 
-// tokenizer_utils.c:
+// tokenizer_utils.c
 void			skip_spaces(const char *input, int *i);
 t_token_type	get_token_type(char *word);
 t_token			*new_token(char *value, t_token_type type);
@@ -63,13 +63,18 @@ char	*extractor(int *i, char *input);
 int		syntax_check(t_lst_token *tokens, t_minishell *minishell);
 void	expand_variables(t_token *token, char **env);
 
-// syntax_uyils_2.c:
+// syntax_uyils_2.c
 char	*replace_var(char *input, char *var, char *value, int pos);
 void	remove_external_quotes(t_token *token);
 
 // parser.c
 t_lst_cmd	*parser(t_lst_token *tokens, t_minishell *minishell);
 void	print_command_list(t_lst_cmd *cmd_list);
+
+// parser_utils.c
+void	print_command_list(t_lst_cmd *cmd_list);
+char	*get_redir_name(t_token *token);
+int	init_redirection_list(t_cmd *cmd);
 
 // free.c
 void	exit_shell(t_minishell *minishell);

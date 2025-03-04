@@ -84,78 +84,25 @@ void	add_argument(t_cmd *cmd, char *arg)
 	//printf(GREEN"Added argument: %s\n"RESET, arg); // To debug	
 }
 
-// // Add the RD to the list of RDs
-// // Create the instance of redir and set their fields using token's fields
-// // if it's the first set as it
-// void	add_redirection(t_cmd *cmd, t_token *token)
-// {
-// 	t_rdir	*redir;
-
-// 	// check if not initialized
-// 	if (!cmd->list_rdir)  // Prevent invalid memory access
-// 	{
-// 		cmd->list_rdir = malloc(sizeof(t_lst_rdir));
-// 		if (!cmd->list_rdir)
-// 			return ;
-// 		cmd->list_rdir->size = 0;
-// 		cmd->list_rdir->head = NULL;
-// 		cmd->list_rdir->tail = NULL;
-// 	}
-
-// 	redir = malloc(sizeof(t_rdir));
-// 	if (!redir)
-// 		return ;
-// 	redir->type = (t_rdir_type)token->type; //************ 
-// 	redir->name = ft_strdup(token->next->value);
-// 	//freee
-// 	if (!redir->name)
-// 		return (free(redir));
-// 	redir->next = NULL;
-// 	if (!cmd->list_rdir->head)
-// 		cmd->list_rdir->head = redir;
-// 	else
-// 		cmd->list_rdir->tail->next = redir; // make the curr tail->Next to point to the new node
-// 	cmd->list_rdir->tail = redir; // tail node updated to point to the new node
-// 	cmd->list_rdir->size++; // update the size of the list after added the new node
-
-// 	//printf(YELLOW"Added redirection: %s -> %s\n"RESET, token->value, redir->name); // To debug
-// }
-
-
-// **************** MODIFY *********************************
-
+// Add the RD to the list of RDs
+// Create the instance of redir and set their fields using token's fields
+// if it's the first set as it
 void	add_redirection(t_cmd *cmd, t_token *token)
 {
 	t_rdir	*redir;
 
-	// check if not initialized
-	if (!cmd->list_rdir)  // Prevent invalid memory access
-	{
-		cmd->list_rdir = malloc(sizeof(t_lst_rdir));
-		if (!cmd->list_rdir)
-			return ;
-		cmd->list_rdir->size = 0;
-		cmd->list_rdir->head = NULL;
-		cmd->list_rdir->tail = NULL;
-	}
-
+	if (!cmd->list_rdir && !init_redirection_list(cmd))
+		return ;
 	redir = malloc(sizeof(t_rdir));
 	if (!redir)
 		return ;
 	redir->type = (t_rdir_type)token->type; //************ 
-	// printf(GREEN"REDI CHECK\n"RESET);
-	// printf("token type = %d\n", (int)token->type);
-	// printf("token value = %s\n", token->value);
-	if (token->next->type == SPC)
-	{
-		//printf("token next next value = %s\n", (token->next)->next->value);
-		if ((token->next)->next)
-			redir->name = ft_strdup((token->next)->next->value);
-	}
-	else
-		redir->name = ft_strdup(token->next->value);
+	redir->name = get_redir_name(token);
 	if (!redir->name)
-		return (free(redir));
+	{
+		free(redir);
+		return ;
+	}
 	redir->next = NULL;
 	if (!cmd->list_rdir->head)
 		cmd->list_rdir->head = redir;
@@ -205,104 +152,6 @@ void	init_lst_cmd(t_minishell *minishell)
 	minishell->list_cmd->tail = NULL;
 	minishell->list_cmd->size = 0;
 }
-
-
-/// to print List cmds TO DEBUG......................................................
-
-// Prints a single command with its arguments
-void print_command_jorge(t_cmd *cmd)
-{
-	int i = 0;
-	
-	printf(GREEN"\nCommand: "RESET);
-	if (!cmd->cmd_arr)
-		printf(RED"[No command arguments]\n"RESET);
-	else
-	{
-		while (cmd->cmd_arr[i])
-		{
-			printf(BLUE"%s "RESET, cmd->cmd_arr[i]);
-			i++;
-		}
-		printf("\n");
-	}
-}
-
-// Print RDs
-void print_redirections(t_lst_rdir *list_rdir)
-{
-	t_rdir *redir;
-
-	if (!list_rdir || !list_rdir->head)
-	{
-		printf(YELLOW"  [No redirections]\n"RESET);
-		return;
-	}
-	
-	redir = list_rdir->head;
-	while (redir)
-	{
-		printf(YELLOW"  Redirection: %s -> %s\n"RESET, 
-			   (redir->type == RD_IN) ? "<" :
-			   (redir->type == RD_OUT) ? ">" :
-			   (redir->type == RD_APND) ? ">>" : "<<",
-			   redir->name);
-		redir = redir->next;
-	}
-}
-
-
-// Prints the full command list from minishell struct
-void print_command_list(t_lst_cmd *cmd_list)
-{
-	t_cmd *cmd;
-	int i;
-	int j;
-
-	if (!cmd_list || !cmd_list->head)
-	{
-		printf(RED"No commands parsed.\n"RESET);
-		return;
-	}
-
-	printf(BOLD CYAN"\n----- PARSED COMMAND LIST -----\n"RESET);
-	cmd = cmd_list->head;
-	j = 0;
-	while (cmd)
-	{
-		printf(GREEN"\nCommand[%d]:\n"RESET, j);
-		if (!cmd->cmd_arr) {
-			printf(BLUE"  [No command arguments]\n"RESET);
-		} else {
-			for (i = 0; cmd->cmd_arr[i]; i++)
-				printf(BLUE"  Arg[%d]: %s\n"RESET, i, cmd->cmd_arr[i]);
-		}
-
-		// Check if redirections exist before printing
-		if (!cmd->list_rdir) {
-			printf(YELLOW"  [No redirections list]\n"RESET);
-		} else if (!cmd->list_rdir->head) {
-			printf(YELLOW"  [No redirections]\n"RESET);
-		} else {
-			t_rdir *redir = cmd->list_rdir->head;
-			while (redir)
-			{
-				printf(YELLOW"  RDir: Type: %d  Name: %s\n"RESET, 
-					(int)redir->type, redir->name);
-				redir = redir->next;
-			}
-		}
-
-		if (cmd->next)
-			printf(ORANGE"\n| (Pipe to next command)\n"RESET);
-		cmd = cmd->next;
-		j++;
-	}
-	
-	printf(BOLD CYAN"\n----- END OF COMMAND LIST -----\n"RESET);
-}
-// ................. END OF PRINTING CMD LIST
-
 
 // Main Parser Function: Convert tokens to commands
 t_lst_cmd	*parser(t_lst_token *tokens, t_minishell *minishell)
