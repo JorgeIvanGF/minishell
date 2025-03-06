@@ -21,6 +21,27 @@ void	execution(char **env, t_cmd *cmd)
 	}
 }
 
+int is_pipe(t_cmd *cmd) // if pipe found (1), or not (0)
+{
+	// int i;
+
+	// i = 0;
+	// while (cmd->cmd_arr[i] != NULL)
+	// {
+	// 	if (ft_strchr(cmd->cmd_arr[i], '|') != NULL)
+	// 	{
+	// 		return (1); // pipe found
+	// 	}
+	// 	i++;
+	// }
+	if (cmd->next != NULL)
+	{
+		return (1); // pipe found
+	}
+
+	return (0); // pipe not found
+}
+
 int	execute_cmd(t_cmd *cmd, char **env) // do not touch // TODO: almost finished, pipe-check
 {
 	int	id;
@@ -28,7 +49,7 @@ int	execute_cmd(t_cmd *cmd, char **env) // do not touch // TODO: almost finished
 
 	pipe(fd);
 	id = fork();
-	if (id == 0) 
+	if (id == 0) // TODO: wenn ein builtin keine pipe danach hat, darf es nicht im child ausgefuehrt werden (parent instead)
 	{
 		if(cmd->next != NULL)
 		{
@@ -41,18 +62,47 @@ int	execute_cmd(t_cmd *cmd, char **env) // do not touch // TODO: almost finished
 			close(fd[0]);
 			close(fd[1]);
 		}
-		if (redirecting_stdin(cmd) == 1 && redirecting_stdout(cmd) == 1) // TODO: recheck where to call (what if no file found?)
+		// pipe check: IF pipe found, go ahead
+		// if (redirecting_stdin(cmd) == 1 && redirecting_stdout(cmd) == 1) // TODO: recheck where to call (what if no file found?)
+		// {
+		// 	// builtin ausfuehren, nur wenn es builtins ist 
+		// 	if (!is_built_in(env, cmd)) // ft: checks if command is built-in or not (rt value: 0 (false) or 1 (true))
+		// 	{
+		// 		execution(env, cmd);
+		// 	}
+		// }
+	
+		if (redirecting_stdin(cmd) == 1 && redirecting_stdout(cmd) == 1)
 		{
-			// builtin ausfuehren, nur wenn es builtins ist 
-			if (!is_built_in(env, cmd)) // ft: checks if command is built-in or not (rt value: 0 (false) or 1 (true))
+			if (is_pipe(cmd) == 1 && is_built_in(env, cmd) == 1) // TODO: remove duplicate exit & adjust
 			{
-				execution(env, cmd);
+				exit(0);
+			}
+			else
+			{
+				execution(env, cmd); // TODO: builtins should come this far (executed once in exec and once in builtins but only ONCE) !! thursday
 			}
 		}
+
 		exit(0); // TODO: line needs to be double checked bc of #
 	}
 	else 
 	{
+		// pipe check: IF pipe not found, go ahead
+		// if (is_pipe(cmd) == 0 && is_built_in(env, cmd) == 1)
+		// {
+		// 	if (redirecting_stdin(cmd) == 1 && redirecting_stdout(cmd) == 1) // new
+		// 	{
+		// 		is_built_in(env, cmd);
+		// 	}
+		// }
+		if (redirecting_stdin(cmd) == 1 && redirecting_stdout(cmd) == 1) // new
+		{
+			if (is_pipe(cmd) == 0)
+			{
+				is_built_in(env, cmd);
+			}
+		}
 		close(fd[1]);
 		dup2(fd[0], STDIN_FILENO);
 		close(fd[0]);
