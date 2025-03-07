@@ -23,17 +23,6 @@ void	execution(char **env, t_cmd *cmd)
 
 int is_pipe(t_cmd *cmd) // if pipe found (1), or not (0)
 {
-	// int i;
-
-	// i = 0;
-	// while (cmd->cmd_arr[i] != NULL)
-	// {
-	// 	if (ft_strchr(cmd->cmd_arr[i], '|') != NULL)
-	// 	{
-	// 		return (1); // pipe found
-	// 	}
-	// 	i++;
-	// }
 	if (cmd->next != NULL)
 	{
 		return (1); // pipe found
@@ -46,12 +35,15 @@ int	execute_cmd(t_cmd *cmd, char **env) // do not touch // TODO: almost finished
 {
 	int	id;
 	int fd[2];
+	int is_builtin_result;
+	// int is_pipe_result;
 
+	is_builtin_result = is_builtin(env, cmd);
 	pipe(fd);
 	id = fork();
 	if (id == 0) // TODO: wenn ein builtin keine pipe danach hat, darf es nicht im child ausgefuehrt werden (parent instead)
 	{
-		if(cmd->next != NULL)
+		if(is_pipe(cmd) == 1) // pipecheck is_pipe(cmd) == 1
 		{
 			close(fd[0]);
 			dup2(fd[1], STDOUT_FILENO);
@@ -62,45 +54,28 @@ int	execute_cmd(t_cmd *cmd, char **env) // do not touch // TODO: almost finished
 			close(fd[0]);
 			close(fd[1]);
 		}
-		// pipe check: IF pipe found, go ahead
-		// if (redirecting_stdin(cmd) == 1 && redirecting_stdout(cmd) == 1) // TODO: recheck where to call (what if no file found?)
-		// {
-		// 	// builtin ausfuehren, nur wenn es builtins ist 
-		// 	if (!is_built_in(env, cmd)) // ft: checks if command is built-in or not (rt value: 0 (false) or 1 (true))
-		// 	{
-		// 		execution(env, cmd);
-		// 	}
-		// }
-	
-		if (redirecting_stdin(cmd) == 1 && redirecting_stdout(cmd) == 1)
+		// pipe check: IF pipe found, go ahead (for builtins)
+		if (redirecting_stdin(cmd) == 1 && redirecting_stdout(cmd) == 1) // TODO: recheck where to call (what if no file found?)
 		{
-			if (is_pipe(cmd) == 1 && is_built_in(env, cmd) == 1) // TODO: remove duplicate exit & adjust
+			if (is_pipe(cmd) == 1 && is_builtin_result == 1) // TODO: fix builtin w/out pipe still being executed twice 
 			{
-				exit(0);
+				is_builtin(env, cmd);
 			}
-			else
+			else if (is_builtin_result == 0)
 			{
-				execution(env, cmd); // TODO: builtins should come this far (executed once in exec and once in builtins but only ONCE) !! thursday
+				execution(env, cmd);
 			}
 		}
-
 		exit(0); // TODO: line needs to be double checked bc of #
 	}
 	else 
 	{
-		// pipe check: IF pipe not found, go ahead
-		// if (is_pipe(cmd) == 0 && is_built_in(env, cmd) == 1)
-		// {
-		// 	if (redirecting_stdin(cmd) == 1 && redirecting_stdout(cmd) == 1) // new
-		// 	{
-		// 		is_built_in(env, cmd);
-		// 	}
-		// }
-		if (redirecting_stdin(cmd) == 1 && redirecting_stdout(cmd) == 1) // new
+		// pipe check: IF pipe not found, go ahead (for builtins)
+		if (redirecting_stdin(cmd) == 1 && redirecting_stdout(cmd) == 1) 
 		{
-			if (is_pipe(cmd) == 0)
+			if (is_pipe(cmd) == 0 && is_builtin_result == 1)
 			{
-				is_built_in(env, cmd);
+				is_builtin(env, cmd);
 			}
 		}
 		close(fd[1]);
@@ -176,7 +151,7 @@ int redirecting_stdin(t_cmd *cmd) // redirect input (in)
 	return (1);
 }
 
-void looping_through_list_commands(t_lst_cmd *list_cmds, char **env)
+void looping_through_list_commands(t_lst_cmd *list_cmds, char **env) // TODO: change name of ft
 {
 	t_cmd *current;
 	int status;
@@ -194,7 +169,7 @@ void looping_through_list_commands(t_lst_cmd *list_cmds, char **env)
 }
 
 // go thru entire cmd list. if command found, execute w above function, if not, execution will handle
-void checking_list_cmds_for_exec(t_lst_cmd *list_cmds, char **env)
+void checking_list_cmds_for_exec(t_lst_cmd *list_cmds, char **env) // TODO: delete later
 {
 	t_cmd *current;
 	int cmd_list_position;

@@ -12,7 +12,7 @@ char	*find_path(char **path_cmds, char *cmd);
 int		execute(char *found_path, t_cmd *cmd, char **env);
 
 // built ins
-int is_built_in(char **env, t_cmd *cmd);
+int is_builtin(char **env, t_cmd *cmd);
 
 // redirecting
 int redirecting_stdin(t_cmd *cmd);

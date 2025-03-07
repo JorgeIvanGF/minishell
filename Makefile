@@ -6,7 +6,7 @@
 #    By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 17:55:02 by jorgutie          #+#    #+#              #
-#    Updated: 2025/03/02 00:26:00 by pauladretta      ###   ########.fr        #
+#    Updated: 2025/03/07 18:30:34 by pauladretta      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,7 +55,7 @@ SRC_FILES   = main.c \
 			Executor/executor_helper_ft.c \
 			Executor/print_ft.c \
 			Executor/init_structs.c \
-			Executor/built_ins.c
+			Executor/builtins.c
 
 
 

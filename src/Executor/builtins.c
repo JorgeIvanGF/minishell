@@ -68,7 +68,7 @@ int execute_cd(char **env, t_cmd *cmd) // chdir. als input mit ~ testen auch don
     //     }
     // }
 
-    if (chdir(cmd->cmd_arr[1]) == -1) // update environment?
+    if (chdir(cmd->cmd_arr[1]) == -1)
     {
         perror("cd error");
         return (1);
@@ -79,46 +79,50 @@ int execute_cd(char **env, t_cmd *cmd) // chdir. als input mit ~ testen auch don
 }
 
 // unset with no options
-// int execute_unset()
-// {
+int execute_unset()
+{
+    
+    // return (1); // error
 
+    return (0); // success
+}
 
-//     return ();
-// }
-
-int is_built_in(char **env, t_cmd *cmd) // TODO: reduce return (1) to one time !! thursday
+int is_builtin(char **env, t_cmd *cmd) 
 {
 	(void) env;
 
 	if (ft_strcmp(cmd->cmd_arr[0], "echo") == 0)
     {
         execute_echo(env, cmd);
-		return (1);
     }
 	else if (ft_strcmp(cmd->cmd_arr[0], "cd") == 0)
 	{
         execute_cd(env, cmd);
-        return (1);
     }	
 	else if (ft_strcmp(cmd->cmd_arr[0], "pwd") == 0)
     {
         execute_pwd();
-		return (1);
     }
 	else if (ft_strcmp(cmd->cmd_arr[0], "export") == 0)
     {
         // TODO: J
-		return (1);
     }
 	else if (ft_strcmp(cmd->cmd_arr[0], "unset") == 0)
     {
         // execute_unset();
-		return (1);
     }
 	else if (ft_strcmp(cmd->cmd_arr[0], "env") == 0)
-		return (1);
+    {
+        // execute_env();
+    }
 	else if (ft_strcmp(cmd->cmd_arr[0], "exit") == 0)
-		return (1);
+    {
+        // execute_exit();
+    }
+    else
+    {
+        return (0);
+    }
 	
-	return (0);
+	return (1);
 }
