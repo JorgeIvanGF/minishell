@@ -31,19 +31,16 @@ int is_pipe(t_cmd *cmd) // if pipe found (1), or not (0)
 	return (0); // pipe not found
 }
 
-int	execute_cmd(t_cmd *cmd, char **env) // do not touch // TODO: almost finished, pipe-check
+int	execute_cmd(t_cmd *cmd, char **env) // do not touch // TODO: create more smaller functions to reduce lines
 {
 	int	id;
 	int fd[2];
-	int is_builtin_result;
-	// int is_pipe_result;
 
-	is_builtin_result = is_builtin(env, cmd);
 	pipe(fd);
 	id = fork();
-	if (id == 0) // TODO: wenn ein builtin keine pipe danach hat, darf es nicht im child ausgefuehrt werden (parent instead)
+	if (id == 0) 
 	{
-		if(is_pipe(cmd) == 1) // pipecheck is_pipe(cmd) == 1
+		if(is_pipe(cmd) == 1)
 		{
 			close(fd[0]);
 			dup2(fd[1], STDOUT_FILENO);
@@ -54,14 +51,14 @@ int	execute_cmd(t_cmd *cmd, char **env) // do not touch // TODO: almost finished
 			close(fd[0]);
 			close(fd[1]);
 		}
-		// pipe check: IF pipe found, go ahead (for builtins)
+	
 		if (redirecting_stdin(cmd) == 1 && redirecting_stdout(cmd) == 1) // TODO: recheck where to call (what if no file found?)
 		{
-			if (is_pipe(cmd) == 1 && is_builtin_result == 1) // TODO: fix builtin w/out pipe still being executed twice 
+			if (is_builtin(env, cmd) == 1 && is_pipe(cmd) == 1) // pipe check: IF pipe found, go ahead (for builtins)
 			{
-				is_builtin(env, cmd);
+				execute_builtin(env, cmd);
 			}
-			else if (is_builtin_result == 0)
+			else if (is_builtin(env, cmd) == 0)
 			{
 				execution(env, cmd);
 			}
@@ -70,12 +67,11 @@ int	execute_cmd(t_cmd *cmd, char **env) // do not touch // TODO: almost finished
 	}
 	else 
 	{
-		// pipe check: IF pipe not found, go ahead (for builtins)
 		if (redirecting_stdin(cmd) == 1 && redirecting_stdout(cmd) == 1) 
 		{
-			if (is_pipe(cmd) == 0 && is_builtin_result == 1)
+			if (is_builtin(env, cmd) == 1 && is_pipe(cmd) == 0) // pipe check: IF pipe not found, go ahead (for builtins)
 			{
-				is_builtin(env, cmd);
+				execute_builtin(env, cmd);
 			}
 		}
 		close(fd[1]);

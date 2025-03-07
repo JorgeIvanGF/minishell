@@ -1,10 +1,4 @@
 
  
-THURS/FRI (git)
-- still in progress: execute_cmd pipecheck logic
-- reduced amount of return values in is_builtin ft
-- 
-
-
-
-
+FRI (git)
+- FIX(exec): finished fixing execution logic (builtins, all other commands) in execute_cmd & had to divide is_builtin into two ft (checking & executing)

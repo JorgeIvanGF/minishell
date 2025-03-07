@@ -13,8 +13,9 @@ int		execute(char *found_path, t_cmd *cmd, char **env);
 
 // built ins
 int is_builtin(char **env, t_cmd *cmd);
+int execute_builtin(char **env, t_cmd *cmd);
 
-// redirecting
+// redirections
 int redirecting_stdin(t_cmd *cmd);
 int redirecting_stdout(t_cmd *cmd);
 

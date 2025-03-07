@@ -87,7 +87,7 @@ int execute_unset()
     return (0); // success
 }
 
-int is_builtin(char **env, t_cmd *cmd) 
+int execute_builtin(char **env, t_cmd *cmd) // executes builtin
 {
 	(void) env;
 
@@ -125,4 +125,22 @@ int is_builtin(char **env, t_cmd *cmd)
     }
 	
 	return (1);
+}
+
+int is_builtin(char **env, t_cmd *cmd) // checks if a builtin
+{
+	(void) env;
+
+	if ((ft_strcmp(cmd->cmd_arr[0], "echo") == 0) || 
+        (ft_strcmp(cmd->cmd_arr[0], "cd") == 0) || 
+        (ft_strcmp(cmd->cmd_arr[0], "pwd") == 0) || 
+        (ft_strcmp(cmd->cmd_arr[0], "export") == 0) || 
+        (ft_strcmp(cmd->cmd_arr[0], "unset") == 0) || 
+        (ft_strcmp(cmd->cmd_arr[0], "env") == 0) || 
+        (ft_strcmp(cmd->cmd_arr[0], "exit") == 0))
+    {
+        return (1);
+    }
+
+    return (0);
 }
