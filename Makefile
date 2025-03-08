@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+         #
+#    By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 17:55:02 by jorgutie          #+#    #+#              #
-#    Updated: 2025/03/07 18:30:34 by pauladretta      ###   ########.fr        #
+#    Updated: 2025/03/08 19:12:43 by pdrettas         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,7 +55,9 @@ SRC_FILES   = main.c \
 			Executor/executor_helper_ft.c \
 			Executor/print_ft.c \
 			Executor/init_structs.c \
-			Executor/builtins.c
+			Executor/builtins.c \
+			Executor/redirections.c \
+			Executor/pipe.c
 
 
 

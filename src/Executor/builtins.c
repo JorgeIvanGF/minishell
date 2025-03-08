@@ -73,7 +73,7 @@ int execute_cd(char **env, t_cmd *cmd) // chdir. als input mit ~ testen auch don
         perror("cd error");
         return (1);
     }
-    execute_pwd(); // delete later
+    execute_pwd(); // TODO: delete later (only for printing purposes)
 
     return (0);
 }

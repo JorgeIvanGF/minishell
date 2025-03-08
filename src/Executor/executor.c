@@ -21,51 +21,6 @@ void	execution(char **env, t_cmd *cmd)
 	}
 }
 
-int is_pipe(t_cmd *cmd) // if pipe found (1), or not (0)
-{
-	if (cmd->next != NULL)
-	{
-		return (1); // pipe found
-	}
-
-	return (0); // pipe not found
-}
-
-void setup_pipe(int fd[2]) 
-{
-    pipe(fd);
-}
-
-/*
-redirection of pipe according to type of process. 
-child process: if pipe found, output redirected to pipe, else pipe closed. 
-parent process: input redirected to pipe. 
-*/ 
-void pipe_redirection(t_cmd *cmd, int fd[2], int process_type)
-{
-	if (process_type == CHILD_PROCESS)
-	{
-		if(is_pipe(cmd) == 1)
-		{
-			close(fd[0]);
-			dup2(fd[1], STDOUT_FILENO);
-			close(fd[1]);
-		}
-		else
-		{
-			close(fd[0]);
-			close(fd[1]);
-		}
-	}
-	
-	if (process_type == PARENT_PROCESS)
-	{
-		close(fd[1]);
-		dup2(fd[0], STDIN_FILENO);
-		close(fd[0]);
-	}
-}
-
 int	execute_cmd(t_cmd *cmd, char **env)
 {
 	int	id;
@@ -91,80 +46,16 @@ int	execute_cmd(t_cmd *cmd, char **env)
 	}
 	else 
 	{
-		if (redirecting_stdin(cmd) == 1 && redirecting_stdout(cmd) == 1) 
+		pipe_redirection(cmd, fd, PARENT_PROCESS); 
+		if (is_builtin(env, cmd) == 1 && is_pipe(cmd) == 0) // pipe check: IF pipe not found, go ahead (for builtins)
 		{
-			if (is_builtin(env, cmd) == 1 && is_pipe(cmd) == 0) // pipe check: IF pipe not found, go ahead (for builtins)
+			if (redirecting_stdin(cmd) == 1 && redirecting_stdout(cmd) == 1) 
 			{
 				execute_builtin(env, cmd);
 			}
 		}
-		pipe_redirection(cmd, fd, PARENT_PROCESS);
 	}
 	return(id);
-}
-
-int redirecting_stdout(t_cmd *cmd) // redirect output (out & apnd)
-{
-	t_rdir *current;
-	int fd_outfile;
-
-	if(cmd && cmd->list_rdir && cmd->list_rdir->head)
-	{
-		current = cmd->list_rdir->head;
-		while(current != NULL)
-		{
-			if (current->type == RD_OUT)
-			{
-				fd_outfile = open(current->name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			}
-			else if (current->type == RD_APND)
-			{
-				fd_outfile = open(current->name, O_WRONLY | O_CREAT | O_APPEND, 0644);
-			}
-
-			if (fd_outfile == -1)
-			{
-				write(2, "minishell: ", 11); // bash
-				write(2, current->name, ft_strlen(current->name));
-				write(2, ": No such file or directory\n", 28); 
-				return (-1);
-			}
-			dup2(fd_outfile, STDOUT_FILENO);
-			close(fd_outfile);
-
-			current = current->next;
-		}
-	}
-	return (1);
-}
-
-int redirecting_stdin(t_cmd *cmd) // redirect input (in)
-{
-	t_rdir *current;
-	int fd_infile;
-
-	if(cmd && cmd->list_rdir && cmd->list_rdir->head)
-	{
-		current = cmd->list_rdir->head;
-		while(current != NULL)
-		{
-			if (current->type == RD_IN) // go thru all rdin first and if all their are able to open, execute 
-			{
-				fd_infile = open(current->name, O_RDONLY);
-				if (fd_infile == -1)
-				{
-					write(2, "minishell: ", 11); // bash
-					write(2, current->name, ft_strlen(current->name));
-					write(2, ": No such file or directory\n", 28); 
-					return (-1);
-				}
-				dup2(fd_infile, STDIN_FILENO); 
-				close(fd_infile);
-			}
-			current = current->next;
-		}
-	}
-	return (1);
 }
 
 void looping_through_list_commands(t_lst_cmd *list_cmds, char **env) // TODO: change name of ft
@@ -294,7 +185,7 @@ void ft_execution (t_minishell *minishell)
 	int copy_of_stdin_fd = dup(STDIN_FILENO);
 	int copy_of_stdout_fd = dup(STDOUT_FILENO);
 	looping_through_list_commands(minishell->list_cmd, minishell->env); // going through list_cmds & checking for RD_IN & file
-	// stdin & stdout has to be set back to its original (create ft for it later)
+	// stdin & stdout has to be set back to its original TODO: (create ft for it later)
 	dup2(copy_of_stdin_fd, STDIN_FILENO);
 	close(copy_of_stdin_fd);
 	dup2(copy_of_stdout_fd, STDOUT_FILENO);

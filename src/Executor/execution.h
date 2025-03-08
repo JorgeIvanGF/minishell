@@ -9,7 +9,7 @@
 #include <fcntl.h>
 
 
-
+// execution helper 
 char	*get_path(char **env);
 char	**get_paths_cmds(char *str);
 char	*check_paths_w_cmd(char **path_cmds, char *cmd);
@@ -23,6 +23,11 @@ int execute_builtin(char **env, t_cmd *cmd);
 // redirections
 int redirecting_stdin(t_cmd *cmd);
 int redirecting_stdout(t_cmd *cmd);
+
+// pipe
+void setup_pipe(int fd[2]);
+int is_pipe(t_cmd *cmd);
+void pipe_redirection(t_cmd *cmd, int fd[2], int process_type);
 
 // initializing structs
 t_lst_rdir *init_list_redirection(t_rdir *head, t_rdir *tail, int size);
