@@ -31,14 +31,19 @@ int is_pipe(t_cmd *cmd) // if pipe found (1), or not (0)
 	return (0); // pipe not found
 }
 
-int	execute_cmd(t_cmd *cmd, char **env) // do not touch // TODO: create more smaller functions to reduce lines
+void setup_pipe(int fd[2]) 
 {
-	int	id;
-	int fd[2];
+    pipe(fd);
+}
 
-	pipe(fd);
-	id = fork();
-	if (id == 0) 
+/*
+redirection of pipe according to type of process. 
+child process: if pipe found, output redirected to pipe, else pipe closed. 
+parent process: input redirected to pipe. 
+*/ 
+void pipe_redirection(t_cmd *cmd, int fd[2], int process_type)
+{
+	if (process_type == CHILD_PROCESS)
 	{
 		if(is_pipe(cmd) == 1)
 		{
@@ -51,7 +56,26 @@ int	execute_cmd(t_cmd *cmd, char **env) // do not touch // TODO: create more sma
 			close(fd[0]);
 			close(fd[1]);
 		}
+	}
 	
+	if (process_type == PARENT_PROCESS)
+	{
+		close(fd[1]);
+		dup2(fd[0], STDIN_FILENO);
+		close(fd[0]);
+	}
+}
+
+int	execute_cmd(t_cmd *cmd, char **env)
+{
+	int	id;
+	int fd[2];
+	
+	setup_pipe(fd);
+	id = fork();
+	if (id == 0) 
+	{
+		pipe_redirection(cmd, fd, CHILD_PROCESS);
 		if (redirecting_stdin(cmd) == 1 && redirecting_stdout(cmd) == 1) // TODO: recheck where to call (what if no file found?)
 		{
 			if (is_builtin(env, cmd) == 1 && is_pipe(cmd) == 1) // pipe check: IF pipe found, go ahead (for builtins)
@@ -74,9 +98,7 @@ int	execute_cmd(t_cmd *cmd, char **env) // do not touch // TODO: create more sma
 				execute_builtin(env, cmd);
 			}
 		}
-		close(fd[1]);
-		dup2(fd[0], STDIN_FILENO);
-		close(fd[0]);
+		pipe_redirection(cmd, fd, PARENT_PROCESS);
 	}
 	return(id);
 }
@@ -112,8 +134,6 @@ int redirecting_stdout(t_cmd *cmd) // redirect output (out & apnd)
 
 			current = current->next;
 		}
-
-	
 	}
 	return (1);
 }

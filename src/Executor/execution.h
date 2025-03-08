@@ -1,9 +1,14 @@
 #ifndef EXECUTION_H
 # define EXECUTION_H
 
+#define CHILD_PROCESS 0
+#define PARENT_PROCESS 1
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <fcntl.h>
+
+
 
 char	*get_path(char **env);
 char	**get_paths_cmds(char *str);
