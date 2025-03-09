@@ -64,3 +64,8 @@ int redirecting_stdin(t_cmd *cmd) // redirect input (in)
 	}
 	return (1);
 }
+
+int redirecting_io(t_cmd *cmd)
+{
+	return (redirecting_stdin(cmd) && redirecting_stdout(cmd)); // TODO: memorize 
+}

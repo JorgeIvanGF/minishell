@@ -26,30 +26,34 @@ int	execute_cmd(t_cmd *cmd, char **env)
 	int	id;
 	int fd[2];
 	
-	setup_pipe(fd);
+	// setup_pipe(fd);
+	 pipe(fd);
 	id = fork();
 	if (id == 0) 
 	{
-		pipe_redirection(cmd, fd, CHILD_PROCESS);
-		if (redirecting_stdin(cmd) == 1 && redirecting_stdout(cmd) == 1) // TODO: recheck where to call (what if no file found?)
+		if (!(is_builtin(env, cmd) == 1 && has_pipe(cmd) == 0)) 
 		{
-			if (is_builtin(env, cmd) == 1 && is_pipe(cmd) == 1) // pipe check: IF pipe found, go ahead (for builtins)
+			handle_pipe_redirection(cmd, fd, CHILD_PROCESS); 
+			if (redirecting_io(cmd) == 1) // TODO: recheck where to call (what if no file found?)
 			{
-				execute_builtin(env, cmd);
-			}
-			else if (is_builtin(env, cmd) == 0)
-			{
-				execution(env, cmd);
+				if (is_builtin(env, cmd) == 1) // pipe check: IF pipe found, go ahead (for builtins)
+				{
+					execute_builtin(env, cmd);
+				}
+				else 
+				{
+					execution(env, cmd);
+				}
 			}
 		}
 		exit(0); // TODO: line needs to be double checked bc of #
 	}
 	else 
 	{
-		pipe_redirection(cmd, fd, PARENT_PROCESS); 
-		if (is_builtin(env, cmd) == 1 && is_pipe(cmd) == 0) // pipe check: IF pipe not found, go ahead (for builtins)
+		handle_pipe_redirection(cmd, fd, PARENT_PROCESS); 
+		if (is_builtin(env, cmd) == 1 && has_pipe(cmd) == 0) // pipe check: IF pipe not found, go ahead (for builtins)
 		{
-			if (redirecting_stdin(cmd) == 1 && redirecting_stdout(cmd) == 1) 
+			if (redirecting_io(cmd) == 1)
 			{
 				execute_builtin(env, cmd);
 			}
