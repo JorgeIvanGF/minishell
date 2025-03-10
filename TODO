@@ -1,7 +1,9 @@
 
  
-SAT (git)
-- DONE: make execute_cmd function smaller 
-- FIX(exec): fixed error (execute_cmd ft): redirected stdin & stdout too soon (before checking if its a builtin) in parent process 
-- builtins: unset, env, exit 
+MON (git)
+- builtins: unset, env, exit
 
+
+FIX (general errors noticed (parser/execution))
+- MINISHELL (orange) sometimes shows up twice next to each other in terminal
+- env paths not displayed correctly like in bash

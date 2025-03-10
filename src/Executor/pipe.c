@@ -11,11 +11,6 @@ int has_pipe(t_cmd *cmd) // if pipe found (1), or not (0)
 	return (1); // pipe found
 }
 
-void setup_pipe(int fd[2]) // TOOD: delete (not needed)
-{
-    pipe(fd);
-}
-
 /*
 redirection of pipe according to type of process. 
 child process: if pipe found, output redirected to pipe, else pipe closed. 
