@@ -109,7 +109,7 @@ void	init_lst_cmd(t_minishell *minishell)
 	minishell->list_cmd->size = 0;
 }
 
-// Main Parser Function: Convert tokens to commands
+// Initialize parser and check tokens
 t_lst_cmd	*parser(t_lst_token *tokens, t_minishell *minishell)
 {
 	t_token	*curr;
@@ -117,123 +117,15 @@ t_lst_cmd	*parser(t_lst_token *tokens, t_minishell *minishell)
 
 	if (!tokens || !tokens->head)
 	{
-		printf(RED"No tokens to parse.\n"RESET);// TO DEBUG
-		return NULL;
+		printf(RED"No tokens to parse.\n"RESET);
+		return (NULL);
 	}
-		
 	init_lst_cmd(minishell);
 	if (!minishell->list_cmd)
-		return NULL;
-	cmd = new_command(); // creates and initialize it
+		return (NULL);
+	cmd = new_command();
 	if (!cmd)
-		return NULL;
+		return (NULL);
 	curr = tokens->head;
-	//if (curr->type == SPC)// to check if the fisrt cmd is space
-	while (curr)
-	{
-		// if (curr->value[0] == '\0') // Bypass if tok value is EMPTY
-		// {
-		// 	curr = curr->next;
-		// 	continue ;
-		// }
-		if (curr->type == SPC) // Bypass if tok value is SPC
-		{
-			curr = curr->next;
-			continue ;
-		}
-
-		if (curr->type == WORD || curr->type == DBQ || curr->type == SGQ)
-		{
-			// Start with a copy of the current token's value.
-			char *merged = ft_strdup(curr->value);
-			if (!merged)
-				return (NULL);
-			
-			// While there is a next token and it is also a WORD, DBQ, or SGQ,
-			// merge it into the current token.
-			while (curr->next && (curr->next->type == WORD ||
-				curr->next->type == DBQ || curr->next->type == SGQ))
-			{
-				char *temp = merged;
-				merged = ft_strjoin(merged, curr->next->value);
-				free(temp);
-				if (!merged)
-					return (NULL);
-				curr = curr->next;  // Move to the merged token
-			}
-			add_argument(cmd, merged);
-			free(merged);
-		}
-
-		// 	// TO DEBUG.........
-		// 	//printf(YELLOW"\nCmd Array (Current Command):\n"RESET);
-		// 	// int j = 0;
-		// 	// while (cmd->cmd_arr && cmd->cmd_arr[j])
-		// 	// {
-		// 	// 	printf("arr[%d] = %s\n", j, cmd->cmd_arr[j]);
-		// 	// 	j++;
-		// 	// }
-		// 	// ...... END
-		// }
-		else if (curr->type >= REDIR_IN && curr->type <= HEREDOC)// it adresses all REDIRs 
-		{
-			if (!curr->next || (curr->next->type != WORD && curr->next->type != SPC))
-			{
-				printf("Syntax error: missing file after '%s'\n", curr->value);
-				free_cmd_list(minishell->list_cmd); // to free before returning 
-				minishell->list_cmd = NULL; // prevent the pointer to point to a deallocted memmory
-				return NULL;
-			}
-			add_redirection(cmd, curr);
-			if (((curr->next)->next) && (curr->next)->type == SPC)
-			{
-				//printf(BLUE"entra a REDIR SPC next\n"RESET);
-				curr = (curr->next)->next;// Skip twice (the space and the filename token)
-			}
-			else
-				curr = curr->next; // Skip the filename token
-		}
-		else if (curr->type == PIPE)
-		{
-			add_command(minishell->list_cmd, cmd);
-			// // TO DEBUG.........
-			// printf(BLUE"\nAdded command before PIPE.\n"RESET);
-			// printf(YELLOW"\nCmd Array (Previous Command Before Pipe):\n"RESET);
-			// int k = 0;
-			// while (cmd->cmd_arr && cmd->cmd_arr[k])
-			// {
-			// 	printf("arr[%d] = %s\n", k, cmd->cmd_arr[k]);
-			// 	k++;
-			// }
-			// // ........ END
-			cmd = new_command();
-		}
-		curr = curr->next;
-	}
-	add_command(minishell->list_cmd, cmd);
-	
-	//printf(GREEN"\nParsing complete!\n"RESET); // TO DEBUG
-
-
-	// to identify if minishell->list_cmd is NULL
-	if (!minishell->list_cmd)
-	{
-		printf(RED"Error: minishell->list_cmd is NULL!\n"RESET);
-		return NULL;
-	}
-	if (!minishell->list_cmd->head)
-	{
-		printf(RED"Error: No commands were added to the list!\n"RESET);
-		return NULL;
-	}
-
-
-
-	print_command_list(minishell->list_cmd);
-
-	return (minishell->list_cmd);
-
-
-	//free_cmd_list(minishell->list_cmd); // Free command list after parsing
-	//minishell->list_cmd = NULL; // To prevent the pointer to deallocated memmory
+	return (process_tokens(curr, cmd, minishell));
 }

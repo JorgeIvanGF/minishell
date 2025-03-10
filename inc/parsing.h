@@ -69,7 +69,11 @@ void	remove_external_quotes(t_token *token);
 
 // parser.c
 t_lst_cmd	*parser(t_lst_token *tokens, t_minishell *minishell);
-void	print_command_list(t_lst_cmd *cmd_list);
+void		print_command_list(t_lst_cmd *cmd_list);
+void		add_redirection(t_cmd *cmd, t_token *token);
+void		add_argument(t_cmd *cmd, char *arg);
+void		add_command(t_lst_cmd *cmd_list, t_cmd *cmd);
+t_cmd		*new_command(void);
 
 // parser_utils.c
 void	print_command_list(t_lst_cmd *cmd_list);
@@ -77,6 +81,13 @@ char	*get_redir_name(t_token *token);
 int		init_redirection_list(t_cmd *cmd);
 int		init_cmd_arr(t_cmd *cmd, char *arg);
 char	**expand_cmd_arr(char **old_arr, char *arg);
+
+// parser_utils_2.c
+t_lst_cmd	*finalize_parsing(t_minishell *minishell);
+t_token		*skip_spaces_(t_token *token);
+t_token		*handle_redirection(t_token *curr, t_cmd *cmd, t_minishell *minishell);
+t_token		*handle_word_token(t_token *curr, t_cmd *cmd);
+t_lst_cmd	*process_tokens(t_token *curr, t_cmd *cmd, t_minishell *minishell);
 
 // free.c
 void	exit_shell(t_minishell *minishell);
