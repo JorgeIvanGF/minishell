@@ -13,7 +13,7 @@ t_lst_cmd	*finalize_parsing(t_minishell *minishell)
 		printf(RED"Error: No commands were added to the list!\n"RESET);
 		return (NULL);
 	}
-	print_command_list(minishell->list_cmd);
+	//print_command_list(minishell->list_cmd);
 	return (minishell->list_cmd);
 }
 

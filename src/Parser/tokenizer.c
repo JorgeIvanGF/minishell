@@ -42,34 +42,159 @@ int	process_word(char *word, t_lst_token *tokens)
 	return (1);
 }
 
-// LEXER LOGIC MODIFIED
-int	ft_lexer(char *input, t_lst_token *tokens)
-{
-	int		i;
-	char	*word;
+// ************** NEW EXTRAXT REDIR FILENAME *********************
 
-	if (!input || !tokens)
-		return (0);
-	i = 0;
-	// Skip initial spaces only
-	while (input[i] && input[i] == ' ')
-		i++;
-	while (input[i])
+// This function extracts a complete redirection filename by concatenating unquoted and quoted segments.
+char *extract_redir_filename(int *i, char *input)
+{
+	char *result;
+	char *segment;
+	int start;
+
+	// Start with an empty string.
+	result = ft_strdup("");
+	if (!result)
+		return (NULL);
+		
+	// Continue until a delimiter is encountered.
+	while (input[*i] && input[*i] != ' ' && input[*i] != '|' &&
+		   input[*i] != '<' && input[*i] != '>')
 	{
-		if (!input[i])
-			break;
-		word = extractor(&i, input);
+	}
+	return (result);
+}
+
+// *************************** MODSSSSS ****************************************************
+
+// Function to skip initial spaces
+static void skip_initial_spaces(char *input, int *i)
+{
+	while (input[*i] && input[*i] == ' ')
+		(*i)++;
+}
+
+// Function to process an operator token
+static int process_operator(char *input, int *i, t_lst_token *tokens)
+{
+	char *word;
+	t_token_type type;
+
+	word = extract_operator(i, input);
+	if (!word)
+		return (0);
+	if (!process_word(word, tokens))
+		return (0);
+
+	type = get_token_type(tokens->tail->value);
+	if (type == REDIR_IN || type == REDIR_OUT || type == APPEND || type == HEREDOC)
+	{
+		skip_spaces(input, i);
+		word = extract_redir_filename(i, input);
 		if (!word)
 			return (0);
-		//token = new_token(word, get_token_type(word)); //Add token
-		//printf(GREEN"word = %s\n"RESET, word);
 		if (!process_word(word, tokens))
 			return (0);
 	}
 	return (1);
 }
 
+// Function to process a standard token
+static int process_standard_token(char *input, int *i, t_lst_token *tokens)
+{
+	char *word;
 
+	word = extractor(i, input);
+	if (!word)
+		return (0);
+	if (!process_word(word, tokens))
+		return (0);
+	return (1);
+}
+
+// Main lexer function
+int ft_lexer(char *input, t_lst_token *tokens)
+{
+	int i;
+
+	if (!input || !tokens)
+		return (0);
+	i = 0;
+	skip_initial_spaces(input, &i);
+	while (input[i])
+	{
+		if (!input[i])
+			break;
+		if (input[i] == '|' || input[i] == '<' || input[i] == '>')
+		{
+			if (!process_operator(input, &i, tokens))
+				return (0);
+		}
+		else
+		{
+			if (!process_standard_token(input, &i, tokens))
+				return (0);
+		}
+	}
+	return (1);
+}
+// ********************************************** MODS ****************************************
+
+
+
+// // ***** NEW *****  LEXER LOGIC MODIFIED ***************************
+// int	ft_lexer(char *input, t_lst_token *tokens)
+// {
+// 	int				i;
+// 	char			*word;
+// 	t_token_type	type;
+
+// 	if (!input || !tokens)
+// 		return (0);
+// 	i = 0;
+// 	// Skip initial spaces only
+// 	while (input[i] && input[i] == ' ')
+// 		i++;
+// 	while (input[i])
+// 	{
+// 		if (!input[i])
+// 			break;
+// 		// If current char is an operator.
+// 		if (input[i] == '|' || input[i] == '<' || input[i] == '>')
+// 		{
+// 			// Extract the operator token.
+// 			word = extract_operator(&i, input);
+// 			if (!word)
+// 				return (0);
+// 			if (!process_word(word, tokens))
+// 				return (0);
+			
+			
+// 			// Check if the operator is a redirection.
+// 			type = get_token_type(tokens->tail->value);
+// 			if (type == REDIR_IN || type == REDIR_OUT || type == APPEND || type == HEREDOC)
+// 			{
+// 				// Skip any spaces after the operator.
+// 				skip_spaces(input, &i);
+// 				// Extract the entire redirection filename.
+// 				word = extract_redir_filename(&i, input);
+// 				if (!word)
+// 					return (0);
+// 				if (!process_word(word, tokens))
+// 					return (0);
+// 			}
+// 		}
+// 		else
+// 		{
+// 			// Otherwise, use the standard extractor.
+// 			word = extractor(&i, input);
+// 			if (!word)
+// 				return (0);
+// 			if (!process_word(word, tokens))
+// 				return (0);
+// 		}
+// 	}
+// 	return (1);
+// }
 
 
 // // LEXER LOGIC MODIFIED
@@ -88,16 +213,7 @@ int	ft_lexer(char *input, t_lst_token *tokens)
 // 	{
 // 		if (!input[i])
 // 			break;
-// 		if (input[i] == ' ') // Space char
-// 			word = extract_spc(&i, input);
-// 		else if (input[i] == '|' || input[i] == '<' || input[i] == '>') //Special character
-// 			word = extract_operator(&i, input);
-// 		else if (input[i] == '"' ) //Doublel character
-// 			word = extract_dq(&i, input);// aqui check y extract new token
-// 		else if (input[i] == '\'' ) // Single quotes
-// 			word = extract_sq(&i, input);// aqui check y extract new token
-// 		else
-// 			word = extract_word(&i, input); // Normal command/arg
+// 		word = extractor(&i, input);
 // 		if (!word)
 // 			return (0);
 // 		//token = new_token(word, get_token_type(word)); //Add token
@@ -107,7 +223,6 @@ int	ft_lexer(char *input, t_lst_token *tokens)
 // 	}
 // 	return (1);
 // }
-
 
 
 // Creation of the list of tokens, initialize it, 
@@ -127,3 +242,6 @@ t_lst_token	*tokenize(char *input)
 	}	
 	return (tokens);
 }
+
+
+
