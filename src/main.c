@@ -55,7 +55,11 @@ int main(int argc, char **argv, char **env)
 			add_history(input);
 
 		if (!first_checks(input))
+		{
+			free(input);
 			continue;
+		}
+			
 		
 		// Tokenize part___________________________________________________
 		tokens = tokenize(input); 

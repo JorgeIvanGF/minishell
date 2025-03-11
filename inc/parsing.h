@@ -81,6 +81,7 @@ char	*get_redir_name(t_token *token);
 int		init_redirection_list(t_cmd *cmd);
 int		init_cmd_arr(t_cmd *cmd, char *arg);
 char	**expand_cmd_arr(char **old_arr, char *arg);
+void	init_lst_cmd(t_minishell *minishell);
 
 // parser_utils_2.c
 t_lst_cmd	*finalize_parsing(t_minishell *minishell);

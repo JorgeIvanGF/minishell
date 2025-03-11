@@ -14,8 +14,6 @@ void	add_command(t_lst_cmd *cmd_list, t_cmd *cmd)
 	cmd_list->size++;
 }
 
-
-
 // Adds an argument to the command's argument array (cmd_arr).
 // If cmd_arr is not initialized, it initializes it; 
 // otherwise, it expands the array.
@@ -93,20 +91,6 @@ t_cmd	*new_command(void)
 	cmd->list_rdir->tail = NULL;
 	cmd->next = NULL;
 	return (cmd);
-}
-
-// initialize list of commands
-void	init_lst_cmd(t_minishell *minishell)
-{
-	minishell->list_cmd = malloc(sizeof(t_lst_cmd));
-	if (!minishell->list_cmd)
-	{
-		//minishell->list_cmd = NULL;
-		return ;
-	}
-	minishell->list_cmd->head = NULL;
-	minishell->list_cmd->tail = NULL;
-	minishell->list_cmd->size = 0;
 }
 
 // Initialize parser and check tokens

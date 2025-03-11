@@ -54,6 +54,21 @@ void    print_command_list(t_lst_cmd *cmd_list)
 }
 // ................................................... END OF PRINTING CMD LIST
 
+
+// initialize list of commands
+void	init_lst_cmd(t_minishell *minishell)
+{
+	minishell->list_cmd = malloc(sizeof(t_lst_cmd));
+	if (!minishell->list_cmd)
+	{
+		//minishell->list_cmd = NULL;
+		return ;
+	}
+	minishell->list_cmd->head = NULL;
+	minishell->list_cmd->tail = NULL;
+	minishell->list_cmd->size = 0;
+}
+
 // Initialize the Rdir List
 int	init_redirection_list(t_cmd *cmd)
 {
