@@ -1,35 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_free.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
+/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/08 13:40:18 by jorgutie          #+#    #+#             */
-/*   Updated: 2025/03/02 00:34:07 by pauladretta      ###   ########.fr       */
+/*   Created: 2025/03/10 20:04:05 by pdrettas          #+#    #+#             */
+/*   Updated: 2025/03/10 20:05:15 by pdrettas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_strlen(const char *str)
+void ft_free(char *str)
 {
-	int	i;
-
-	i = 0;
-	while (str[i] != '\0')
+	if (str != NULL)
 	{
-		i++;
+		free(str);
+		str = NULL;
 	}
-	return (i);
 }
-/*
-int main(void)
-{
-	int	r;
-	char str[] = "Holas mi querida";
-	char* p = str;
-	
-	r = ft_strlen(p);
-	printf("%d", r);
-}	*/

@@ -1,14 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: jorgutie <jorgutie@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/02/10 17:55:02 by jorgutie          #+#    #+#              #
-#    Updated: 2025/03/10 22:28:45 by jorgutie         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
 
 # Library Name
 NAME        = minishell
@@ -57,7 +46,10 @@ SRC_FILES   = main.c \
 			Executor/executor.c \
 			Executor/executor_helper_ft.c \
 			Executor/print_ft.c \
-			Executor/init_structs.c
+			Executor/init_structs.c \
+			Executor/builtins.c \
+			Executor/redirections.c \
+			Executor/pipe.c
 
 
 

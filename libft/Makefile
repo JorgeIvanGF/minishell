@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+         #
+#    By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/12 16:25:40 by jorgutie          #+#    #+#              #
-#    Updated: 2025/02/16 23:52:44 by pauladretta      ###   ########.fr        #
+#    Updated: 2025/03/10 20:49:50 by pdrettas         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +30,7 @@ SRCS = ft_atoi.c \
 	   ft_bzero.c \
 	   ft_calloc.c \
 	   ft_free_2d.c \
+	   ft_free.c \
 	   ft_isalnum.c \
 	   ft_isalpha.c \
 	   ft_isascii.c \

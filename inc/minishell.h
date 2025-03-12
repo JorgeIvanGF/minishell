@@ -23,8 +23,8 @@
 # define MAG "\033[0;35m"// Magenta
 # define CYAN "\x1b[36m" //Cyan
 
-// Text attributes
-#define BOLD      "\x1b[1m"
+// Text attributes 
+#define BOLD      "\x1b[1m" 
 #define UNDERLINE "\x1b[4m"
 
 // Enum Redirections_________________________________
