@@ -6,7 +6,11 @@ void	execution(char **env, t_cmd *cmd)
 	char	*path;
 	char	**path_cmds;
 	char	*found_path;
+	char 	*saved_cmd;
 
+	saved_cmd = ft_strdup(cmd->cmd_arr[0]);  // create a copy b4 freeing
+    if (!saved_cmd)
+        exit(1);
 	path = get_path(env);
 	path_cmds = get_paths_cmds(path);
 	found_path = find_path(path_cmds, cmd->cmd_arr[0]);
@@ -15,7 +19,7 @@ void	execution(char **env, t_cmd *cmd)
 		ft_free_2d(path_cmds);
 		free(found_path);
 		write(2, "minishell: command not found: ", 30);
-		write(2, cmd->cmd_arr[0], ft_strlen(cmd->cmd_arr[0])); // TODO: fix output (mid part)
+		write(2, saved_cmd, ft_strlen(saved_cmd));
 		write(2, "\n", 1);
 		exit(127);
 	}

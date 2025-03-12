@@ -82,6 +82,7 @@ int execute_cd(char **env, t_cmd *cmd) // chdir. als input mit ~ testen auch don
 int execute_unset()
 {
     
+    
     // return (1); // error
 
     return (0); // success
