@@ -75,7 +75,10 @@ static char	*process_input(char *input, int is_dbq, char **env)
 	while (input[i])
 	{
 		if (!is_dbq && input[i] == '\'') // if is DBQ this NEVER ENTER
+		{
 			in_single = !in_single;
+			i++;
+		}
 		else if (input[i] == '$' && !in_single)
 		{
 			new_input = handle_dollar(input, i, env);

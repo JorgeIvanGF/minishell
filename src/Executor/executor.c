@@ -54,7 +54,7 @@ int	execute_cmd(t_cmd *cmd, char **env)
 	else 
 	{
 		handle_pipe_redirection(cmd, fd, PARENT_PROCESS); 
-		if (is_builtin(env, cmd) == 1 && has_pipe(cmd) == 0) // pipe check: IF pipe not found, go ahead (for builtins)
+		if (is_builtin(env, cmd) == 1 && has_pipe(cmd) == 0) // pipe check: IF pipe not found, go ahead (for builtins) //
 		{
 			if (redirecting_io(cmd) == 1)
 			{
@@ -185,7 +185,7 @@ void ft_execution (t_minishell *minishell)
 
 
 	// list_cmds = init_list_commands(1, first_cmd, NULL); 
-	//print_list_commands(minishell->list_cmd);
+	// print_list_commands(minishell->list_cmd);
 
 //88888888888888888888888888888888888888888888888888888888888888888888 exec
 	// saving original of stdin & stdout

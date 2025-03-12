@@ -1,9 +1,16 @@
 
  
 WED (git)
-- builtins: unset, env, exit 
+- builtins: unset, exit 
 
 
-FIX (general errors noticed (parser/execution))
-- MINISHELL (orange) sometimes shows up twice next to each other in terminal
-- env paths not displayed correctly like in bash
+- heredoc
+
+- wait
+
+- exit status
+
+- builtin: export
+
+
+- add headers at end

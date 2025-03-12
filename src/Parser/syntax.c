@@ -63,7 +63,7 @@ static int	check_last_token(t_token *curr)
 	if (curr->type == PIPE || curr->type == REDIR_IN || curr->type == REDIR_OUT ||
 		curr->type == APPEND || curr->type == HEREDOC)
 	{
-		printf(RED"Syntax error: unexpected '%s'\n"RESET, curr->value);
+		// printf(RED"Syntax error: unexpected '%s'\n"RESET, curr->value);
 		return (1);
 	}
 	return (0);

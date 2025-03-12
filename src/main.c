@@ -70,7 +70,7 @@ int main(int argc, char **argv, char **env)
 			continue ;
 		}
 
-		print_tokens(tokens); // TO DEBUG
+		// print_tokens(tokens); // TO DEBUG
 
 		// Syntax part (using tokens list)_______________________________
 		if (syntax_check(tokens, minishell))
@@ -97,7 +97,7 @@ int main(int argc, char **argv, char **env)
 		// 	printf("env[%d] = %s\n", i, minishell->env[i]);
 		// 	i++;
 		// }
-		print_command_list(minishell->list_cmd); // TO DEBUG
+		// print_command_list(minishell->list_cmd); // TO DEBUG
 		ft_execution(minishell); // To Paula
 
 		

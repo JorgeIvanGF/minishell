@@ -109,12 +109,13 @@ int execute_env(char **env, t_cmd *cmd)
 
 void delete_path_from_env(char **env, char *matching_path, int line)
 {
+    (void) matching_path;
     // use ft_free to delete string path (will be set to NULL, but only matters for last string)
     // copy string from next row into the deleted one
     while (env[line] != NULL)
     {
-        ft_free(matching_path);
-        env[line] = env[line + 1]; // FIX: strdup
+        ft_free(env[line]);
+        env[line] = ft_strdup(env[line + 1]); // FIX: strdup
         line++;
     }
 }
@@ -122,23 +123,22 @@ void delete_path_from_env(char **env, char *matching_path, int line)
 int execute_unset(char **env, t_cmd *cmd)
 {
     int i;
-    int j;
+    int path;
     char **split_env_path;
-
 
     i = 1;
     while (cmd->cmd_arr && cmd->cmd_arr[i] != NULL)
     {
-        j = 0;
-        while (env[j] != NULL)
+        path = 0;
+        while (env[path] != NULL)
         {
-            split_env_path = ft_split(env[j], '=');
+            split_env_path = ft_split(env[path], '=');
             if ((ft_strcmp(split_env_path[0], cmd->cmd_arr[i]) == 0))
             {
-                delete_path_from_env(env, env[j], j); //pointer in front of env[j] bc dont want to only modify copy in ft but original
+                delete_path_from_env(env, env[path], path); // !pt
             }
             ft_free_2d(split_env_path);
-            j++;
+            path++;
         }
         i++;
     }
@@ -152,6 +152,10 @@ int execute_unset(char **env, t_cmd *cmd)
 int execute_builtin(char **env, t_cmd *cmd) // executes builtin
 {
 	(void) env;
+    if (cmd && cmd->cmd_arr && cmd->cmd_arr[0] ==  NULL)
+    {
+        return (0);
+    }
 
 	if (ft_strcmp(cmd->cmd_arr[0], "echo") == 0)
     {
@@ -192,16 +196,21 @@ int execute_builtin(char **env, t_cmd *cmd) // executes builtin
 int is_builtin(char **env, t_cmd *cmd) // checks if a builtin
 {
 	(void) env;
-
+    if (!(cmd && cmd->cmd_arr && cmd->cmd_arr[0])) // RMB: if one/two/or all of them exist, then move to next if. if all are null, enter.
+    {
+        return (0);
+    }
+    
 	if ((ft_strcmp(cmd->cmd_arr[0], "echo") == 0) || 
-        (ft_strcmp(cmd->cmd_arr[0], "cd") == 0) || 
-        (ft_strcmp(cmd->cmd_arr[0], "pwd") == 0) || 
-        (ft_strcmp(cmd->cmd_arr[0], "export") == 0) || 
-        (ft_strcmp(cmd->cmd_arr[0], "unset") == 0) || 
-        (ft_strcmp(cmd->cmd_arr[0], "env") == 0) || 
-        (ft_strcmp(cmd->cmd_arr[0], "exit") == 0))
+    (ft_strcmp(cmd->cmd_arr[0], "cd") == 0) || 
+    (ft_strcmp(cmd->cmd_arr[0], "pwd") == 0) || 
+    (ft_strcmp(cmd->cmd_arr[0], "export") == 0) || 
+    (ft_strcmp(cmd->cmd_arr[0], "unset") == 0) || 
+    (ft_strcmp(cmd->cmd_arr[0], "env") == 0) || 
+    (ft_strcmp(cmd->cmd_arr[0], "exit") == 0))
     {
         return (1);
     }
+    
     return (0);
 }
