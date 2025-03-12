@@ -36,6 +36,8 @@ SRC_FILES   = main.c \
 			Parser/tokenizer.c \
 			Parser/tokenizer_utils.c \
 			Parser/tokenizer_utils_2.c \
+			Parser/tokenizer_utils_3.c \
+			Parser/tokenizer_utils_4.c \
 			Parser/syntax.c \
 			Parser/syntax_utils.c \
 			Parser/syntax_utils_2.c \

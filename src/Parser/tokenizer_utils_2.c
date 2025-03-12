@@ -1,6 +1,22 @@
 #include "minishell.h"
 #include "parsing.h"
 
+// Process the word (create and add token and token type)
+int	process_word(char *word, t_lst_token *tokens)
+{
+	if (!word)
+		return (0);
+	if (!add_token_to_list(word, tokens))
+	{
+		free(word);
+		word = NULL;
+		return (0);
+	}
+	free(word);
+	word = NULL;
+	return (1);
+}
+
 // Double quotes: 
 char	*extract_dq(int *i, char *input)// aqui check y extract new
 {
