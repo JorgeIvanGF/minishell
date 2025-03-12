@@ -59,9 +59,9 @@ int execute_cd(char **env, t_cmd *cmd) // chdir. als input mit ~ testen auch don
 {
     (void) env; // ?
     
-    // if (cmd->cmd_arr[1] == NULL || cmd->cmd_arr[1][0] == '~') 
+    // if (cmd->cmd_arr[1] == NULL || cmd->cmd_arr[1][0] == '~') // TODO: nur mit m
     // {
-        //     if (getenv("HOME") == NULL) // ??
+        //     if (getenv("HOME") == NULL) // not meeee (but learn how to call this variable)
         //     {
             //         perror ("cd error");
             //         return (1);
@@ -114,7 +114,7 @@ void delete_path_from_env(char **env, char *matching_path, int line)
     while (env[line] != NULL)
     {
         ft_free(matching_path);
-        env[line] = env[line + 1];
+        env[line] = env[line + 1]; // FIX: strdup
         line++;
     }
 }
@@ -205,5 +205,3 @@ int is_builtin(char **env, t_cmd *cmd) // checks if a builtin
     }
     return (0);
 }
-
-// 
