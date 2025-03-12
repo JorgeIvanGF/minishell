@@ -30,8 +30,7 @@ int	execute_cmd(t_cmd *cmd, char **env)
 	int	id;
 	int fd[2];
 	
-	// setup_pipe(fd);
-	 pipe(fd);
+	pipe(fd);
 	id = fork();
 	if (id == 0) 
 	{

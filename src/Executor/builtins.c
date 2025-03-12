@@ -7,7 +7,7 @@ void execute_echo(char **env, t_cmd *cmd)
     (void) env;
     int i;
     int newline_check;
-
+    
     i = 1;
     newline_check = 1;
     // -n check first -> if -n, dont have \n at end 
@@ -45,7 +45,7 @@ int execute_pwd() // TODO: check return value (0 success, 1 failure) for all bui
     cwd = getcwd(NULL, 0); 
     if (!cwd)
     {
-        perror("pwd error"); //==>" : file not found"
+        perror("pwd"); //==>" : file not found"
         return (1);
     }
     write(1, cwd, ft_strlen(cwd));
@@ -58,35 +58,96 @@ int execute_pwd() // TODO: check return value (0 success, 1 failure) for all bui
 int execute_cd(char **env, t_cmd *cmd) // chdir. als input mit ~ testen auch dont forgettt
 {
     (void) env; // ?
-
+    
     // if (cmd->cmd_arr[1] == NULL || cmd->cmd_arr[1][0] == '~') 
     // {
-    //     if (getenv("HOME") == NULL) // ??
-    //     {
-    //         perror ("cd error");
-    //         return (1);
-    //     }
-    // }
+        //     if (getenv("HOME") == NULL) // ??
+        //     {
+            //         perror ("cd error");
+            //         return (1);
+            //     }
+            // }
+            
+            if (chdir(cmd->cmd_arr[1]) == -1)
+            {
+                perror("cd");
+                return (1);
+            }
+            execute_pwd(); // TODO: delete later (only for printing purposes)
+            
+            return (0);
+        }
 
-    if (chdir(cmd->cmd_arr[1]) == -1)
+// env with no options or arguments  
+int execute_env(char **env, t_cmd *cmd)
+{
+    int i;
+
+    if (env && cmd->cmd_arr[1]) // more than one cmd: ".. : No such file or directory"
     {
-        perror("cd error");
+        write(2, "env: ", 5);
+        write (2, cmd->cmd_arr[1], ft_strlen(cmd->cmd_arr[1]));
+        write (2, ": No such file or directory\n", 28);
+        // perror("env"); // only meant for certain functions
         return (1);
     }
-    execute_pwd(); // TODO: delete later (only for printing purposes)
+    
+    i = 0;
+    while (env[i] != NULL)
+    {
+        write(1, env[i], ft_strlen(env[i]));
+        write(1, "\n", 1);
+        i++;
+    }
 
     return (0);
 }
 
 // unset with no options
-int execute_unset()
-{
-    
-    
-    // return (1); // error
+// purpose: it removes one or more variables or functions from the shell environment (if multiple names are provided, it removes each one)
+// test: unset PATH (check w "echo $PATH" [output empty line], or "ls" [output ls: No such file or directory], or "env" [same output as ls])
 
-    return (0); // success
+void delete_path_from_env(char **env, char *matching_path, int line)
+{
+    // use ft_free to delete string path (will be set to NULL, but only matters for last string)
+    // copy string from next row into the deleted one
+    while (env[line] != NULL)
+    {
+        ft_free(matching_path);
+        env[line] = env[line + 1];
+        line++;
+    }
 }
+
+int execute_unset(char **env, t_cmd *cmd)
+{
+    int i;
+    int j;
+    char **split_env_path;
+
+
+    i = 1;
+    while (cmd->cmd_arr && cmd->cmd_arr[i] != NULL)
+    {
+        j = 0;
+        while (env[j] != NULL)
+        {
+            split_env_path = ft_split(env[j], '=');
+            if ((ft_strcmp(split_env_path[0], cmd->cmd_arr[i]) == 0))
+            {
+                delete_path_from_env(env, env[j], j); //pointer in front of env[j] bc dont want to only modify copy in ft but original
+            }
+            ft_free_2d(split_env_path);
+            j++;
+        }
+        i++;
+    }
+
+    // after array is found, move up the other arrays in env (so there is no space)
+
+    return (0);
+}
+// unset test example: "unset USER" (USER path should disappear and everything moved up, when entering "env")
 
 int execute_builtin(char **env, t_cmd *cmd) // executes builtin
 {
@@ -110,11 +171,11 @@ int execute_builtin(char **env, t_cmd *cmd) // executes builtin
     }
 	else if (ft_strcmp(cmd->cmd_arr[0], "unset") == 0)
     {
-        // execute_unset();
+        // execute_unset(env, cmd);
     }
 	else if (ft_strcmp(cmd->cmd_arr[0], "env") == 0)
     {
-        // execute_env();
+        execute_env(env, cmd);
     }
 	else if (ft_strcmp(cmd->cmd_arr[0], "exit") == 0)
     {
@@ -142,6 +203,7 @@ int is_builtin(char **env, t_cmd *cmd) // checks if a builtin
     {
         return (1);
     }
-
     return (0);
 }
+
+// 
