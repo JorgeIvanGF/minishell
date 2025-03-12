@@ -60,18 +60,41 @@ char *extract_redir_filename(int *i, char *input)
 	while (input[*i] && input[*i] != ' ' && input[*i] != '|' &&
 		   input[*i] != '<' && input[*i] != '>')
 	{
+		if (input[*i] == '\'' || input[*i] == '\"')
+		{
+			// Handle quoted segment.
+			char quote = input[*i];
+			(*i)++; // Skip the opening quote.
+			start = *i;
+			while (input[*i] && input[*i] != quote)
+				(*i)++;
+			segment = ft_substr(input, start, *i - start);
+			if (input[*i] == quote)
+				(*i)++; // Skip the closing quote.
+		}
+		else
+		{
+			// Handle unquoted segment.
+			start = *i;
+			while (input[*i] && input[*i] != ' ' && input[*i] != '|' &&
+				   input[*i] != '<' && input[*i] != '>' &&
+				   input[*i] != '\'' && input[*i] != '\"')
+				(*i)++;
+			segment = ft_substr(input, start, *i - start);
+		}
+		// Append the segment to the result.
+		{
+			char *temp = ft_strjoin(result, segment);
+			free(result);
+			result = temp;
+			free(segment);
+		}
 	}
 	return (result);
 }
 
 // *************************** MODSSSSS ****************************************************
 
-// Function to skip initial spaces
-static void skip_initial_spaces(char *input, int *i)
-{
-	while (input[*i] && input[*i] == ' ')
-		(*i)++;
-}
 
 // Function to process an operator token
 static int process_operator(char *input, int *i, t_lst_token *tokens)
@@ -119,7 +142,8 @@ int ft_lexer(char *input, t_lst_token *tokens)
 	if (!input || !tokens)
 		return (0);
 	i = 0;
-	skip_initial_spaces(input, &i);
+	while (input[i] && input[i] == ' ')// skip initial spaces
+		i++;
 	while (input[i])
 	{
 		if (!input[i])
@@ -137,6 +161,7 @@ int ft_lexer(char *input, t_lst_token *tokens)
 	}
 	return (1);
 }
+
 // ********************************************** MODS ****************************************
 
 
