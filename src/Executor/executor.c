@@ -9,8 +9,8 @@ void	execution(char **env, t_cmd *cmd)
 	char 	*saved_cmd;
 
 	saved_cmd = ft_strdup(cmd->cmd_arr[0]);  // create a copy b4 freeing
-    if (!saved_cmd)
-        exit(1);
+	if (!saved_cmd)
+		exit(1);
 	path = get_path(env);
 	path_cmds = get_paths_cmds(path);
 	found_path = find_path(path_cmds, cmd->cmd_arr[0]);

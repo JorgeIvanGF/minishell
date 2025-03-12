@@ -74,8 +74,14 @@ static char	*process_input(char *input, int is_dbq, char **env)
 	in_single = 0;
 	while (input[i])
 	{
-		if (!is_dbq && input[i] == '\'') // if is DBQ this NEVER ENTER
+		// if (!is_dbq && input[i] == '\'') // if is DBQ this NEVER ENTER
+		// 	in_single = !in_single;
+
+		if (!is_dbq && input[i] == '\'')  // single quote encountered outside of double quotes
+		{
 			in_single = !in_single;
+			i++;  // Advance past the quote to avoid processing it repeatedly
+		}
 		else if (input[i] == '$' && !in_single)
 		{
 			new_input = handle_dollar(input, i, env);
