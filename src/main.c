@@ -1,10 +1,7 @@
 
 #include "../inc/minishell.h"
 #include "../inc/parsing.h"
-
-
-// JORGE MAIN ------------------------------------------------------------------
-
+#include "../inc/signals.h"
 
 // To Test the Lexer (Tmporary function)
 void print_tokens(t_lst_token *tokens)
@@ -17,21 +14,8 @@ void print_tokens(t_lst_token *tokens)
 		curr = curr->next;
 	}
 }
-// To Test the copy of ENV (Tmporary function)
-void	ft_print_env(t_minishell *minishell)
-{
-	char **arr;
 
-	arr = minishell->env;
-	int i = 0;
-	while (arr[i])
-	{
-		printf("\nEnv[%d]= %s\n", i, arr[i]);
-		i++;
-	}
-}
-
-
+// The Main function __________________________________________________
 int main(int argc, char **argv, char **env)
 {
 	char *input;
@@ -42,6 +26,7 @@ int main(int argc, char **argv, char **env)
 	(void) argv;
 
 	init_minishell(&minishell, env);// Initialize outside the while 
+	init_signals(); // Initialize signals
 
 	while (1)
 	{
@@ -59,8 +44,6 @@ int main(int argc, char **argv, char **env)
 			free(input);
 			continue;
 		}
-			
-		
 		// Tokenize part___________________________________________________
 		tokens = tokenize(input); 
 		if (!tokens)
@@ -69,9 +52,7 @@ int main(int argc, char **argv, char **env)
 			free(input);
 			continue ;
 		}
-
 		print_tokens(tokens); // TO DEBUG
-
 		// Syntax part (using tokens list)_______________________________
 		if (syntax_check(tokens, minishell))
 		{
@@ -79,8 +60,6 @@ int main(int argc, char **argv, char **env)
 			free(input);
 			continue ;
 		}
-
-		
 		// Parsing part__________________________________________________
 		minishell->list_cmd = parser(tokens, minishell);
 		if (!minishell->list_cmd)
@@ -90,29 +69,9 @@ int main(int argc, char **argv, char **env)
 			free(input);
 			exit_shell(minishell);
 		}
-
-		// int i = 0;
-		// while(minishell->env[i])
-		// {
-		// 	printf("env[%d] = %s\n", i, minishell->env[i]);
-		// 	i++;
-		// }
 		print_command_list(minishell->list_cmd); // TO DEBUG
 		ft_execution(minishell); // To Paula
-
-		
 		continue_shell(minishell, &tokens, &input);
-		
-		
-		
-		//........... Execution Part......................
-
-	
-		
-		// ............Free Everything....................
-		// free(input); // Free memory allocated by readline
-
-		
 	}
 	exit_shell(minishell);
 	return (0); // paula con el resultado de ft_execution;

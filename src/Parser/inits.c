@@ -52,7 +52,7 @@ static char	**copy_env(char **env)
 	return (copy);
 }
 
-// Initialization of minishell
+// Initialization of minishell and creation of an ENV copy
 void	*init_minishell(t_minishell **minishell, char **env)
 {
 	if (!minishell || !env)

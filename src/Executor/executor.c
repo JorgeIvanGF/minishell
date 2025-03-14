@@ -1,5 +1,6 @@
 #include "../../inc/minishell.h"
 #include "execution.h"
+#include "signals.h"
 
 void	execution(char **env, t_cmd *cmd) 
 {
@@ -34,6 +35,7 @@ int	execute_cmd(t_cmd *cmd, char **env)
 	id = fork();
 	if (id == 0) 
 	{
+		
 		if (!(is_builtin(env, cmd) == 1 && has_pipe(cmd) == 0)) 
 		{
 			handle_pipe_redirection(cmd, fd, CHILD_PROCESS); 

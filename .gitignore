@@ -38,6 +38,4 @@ minishell
 #libft/src/ft_strcmp.c
 libft/libft.a
 
-src/signals
-signals.h
-signals.c
+
