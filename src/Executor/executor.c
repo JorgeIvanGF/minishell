@@ -90,7 +90,7 @@ void checking_list_cmds_for_exec(t_lst_cmd *list_cmds, char **env) // TODO: dele
 
 	cmd_list_position = 1;
 	current = list_cmds->head;
-	while(current != NULL)
+	while(current != NULL)  
 	{
 		printf("%d. COMMAND\n", cmd_list_position);
 		execute_cmd(current, env);

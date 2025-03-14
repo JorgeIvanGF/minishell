@@ -14,3 +14,9 @@ WED (git)
 
 
 - add headers at end
+
+
+ERRORS
+- needs FIXING (output not correct)
+-- < infile | wc
+-- ls > nonexisting file - la

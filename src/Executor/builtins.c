@@ -105,21 +105,18 @@ int execute_env(char **env, t_cmd *cmd)
 void delete_path_from_env(char ***ptr_to_env, int path_line)
 {
     char **env;
-    // char *copy_of_path_below;
 
     env = *ptr_to_env;
-    ft_free(env[path_line]);
-
-    while ((env[path_line + 1] != NULL)) // TODO: fix when two path names after unset
+    while (1) 
     {
+        free(env[path_line]);
+        if (env[path_line + 1] == NULL)
+        {
+            env[path_line] = NULL;
+            break;
+        }
         env[path_line] = ft_strdup(env[path_line + 1]);
-        ft_free(env[path_line++]);
         path_line++;
-
-        // copy_of_path_below = ft_strdup(env[path_line + 1]);
-        // env[path_line] = copy_of_path_below;
-        // path_line++;
-        // ft_free(env[path_line]);
     }
 }
 
