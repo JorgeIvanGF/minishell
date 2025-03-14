@@ -3,20 +3,22 @@
 
 #include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <sys/wait.h>
 
-// Global variable to hold the last received signal
-extern volatile sig_atomic_t g_last_signal;
+// Global variable for signal handling 
+extern int g_signum;
 
-// Initializes signal handling.
-void	init_signals(void);
+// Signal handling functions
+void	handle_signals(int signum);
+void	handle_signals_heredoc(int signum);
+void	setup_signals_interactive(void);
+void	setup_signals_heredoc(void);
+void	setup_signals_non_interactive(void);
+void	setup_signals_default(void);
 
-// Signal handler function.
-void	handle_signal(int signo);
-
-// Resets signal behavior to default in child processes.
-void	reset_child_signals(void);
 
 #endif

@@ -1,53 +1,87 @@
 #include <minishell.h>
 #include <signals.h>
 
-volatile sig_atomic_t g_last_signal = 0;
+int g_signum;
 
-void handle_signal(int signo)
+void	handle_signals(int signum)
 {
-	g_last_signal = signo;
-	if (signo == SIGINT)
+	g_signum = signum;
+	if (signum == SIGINT)
 	{
-		// For SIGINT (Ctrl-C): print a newline, clear current input and show a new prompt.
 		write(1, "\n", 1);
-		rl_replace_line("", 0);
 		rl_on_new_line();
+		rl_replace_line("", 0);
 		rl_redisplay();
 	}
-	// SIGQUIT is ignored (so this handler won't be called for it)
-} 
+}
 
-void init_signals(void)
+void	handle_signals_heredoc(int signum)
 {
-	struct sigaction sa;
+	g_signum = signum;
+	if (signum == SIGINT)
+	{
+		write(1, "\n", 1);
+		close(STDIN_FILENO);
+		rl_on_new_line();
+	}
+}
 
-	// Disable echoing control characters (like ^C) so that they are not printed.
-	system("stty -echoctl");
+void	setup_signals_interactive(void)
+{
+	struct sigaction sa_int;
+	struct sigaction sa_quit;
 
-	// Setup handler for SIGINT.
-	sa.sa_handler = handle_signal;
+	g_signum = 0;
+	
+	// Setup for SIGINT (Ctrl+C)
+	sa_int.sa_handler = handle_signals;
+	sa_int.sa_flags = 0;
+	sigemptyset(&sa_int.sa_mask);
+	sigaction(SIGINT, &sa_int, NULL);
+	
+	// Setup for SIGQUIT (Ctrl+\) - explicitly ignore
+	sa_quit.sa_handler = SIG_IGN;
+	sa_quit.sa_flags = 0;
+	sigemptyset(&sa_quit.sa_mask);
+	sigaction(SIGQUIT, &sa_quit, NULL);
+}
+
+void	setup_signals_heredoc(void)
+{
+	struct sigaction	sa;
+
+	g_signum = 0;
+	sa.sa_handler = handle_signals_heredoc;
+	sa.sa_flags = 0;
 	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_RESTART; // Automatically restart interrupted system calls.
-	if (sigaction(SIGINT, &sa, NULL) == -1)
-	{
-		perror("sigaction");
-	}
-
-	// Ignore SIGQUIT (Ctrl-\)
+	sigaction(SIGINT, &sa, NULL);
 	sa.sa_handler = SIG_IGN;
-	if (sigaction(SIGQUIT, &sa, NULL) == -1)
-	{
-		perror("sigaction");
-	}
+	sigaction(SIGQUIT, &sa, NULL);
 }
 
-void reset_child_signals(void)
+void	setup_signals_non_interactive(void)
 {
-	// Restore default behavior for SIGINT and SIGQUIT in the child process.
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
+	struct sigaction	sa;
+
+	g_signum = 0;
+	sa.sa_handler = SIG_IGN;
+	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask);
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
 }
 
+void	setup_signals_default(void)
+{
+	struct sigaction	sa;
+
+	g_signum = 0;
+	sa.sa_handler = SIG_DFL;
+	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask);
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
+}
 
 
 

@@ -26,8 +26,8 @@ int main(int argc, char **argv, char **env)
 	(void) argv;
 
 	init_minishell(&minishell, env);// Initialize outside the while 
-	init_signals(); // Initialize signals
-
+	setup_signals_interactive(); // SIGNALS: Initial setup
+	
 	while (1)
 	{
 		input = readline(ORANGE"MINISHELL> "RESET); // Display prompt and get input

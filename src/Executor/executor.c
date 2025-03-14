@@ -32,10 +32,11 @@ int	execute_cmd(t_cmd *cmd, char **env)
 	int fd[2];
 	
 	pipe(fd);
+	setup_signals_non_interactive(); // Ignore signals before fork
 	id = fork();
 	if (id == 0) 
 	{
-		
+		setup_signals_default(); // SIGNALS: Reset signals to default in child
 		if (!(is_builtin(env, cmd) == 1 && has_pipe(cmd) == 0)) 
 		{
 			handle_pipe_redirection(cmd, fd, CHILD_PROCESS); 
@@ -79,10 +80,23 @@ void looping_through_list_commands(t_lst_cmd *list_cmds, char **env) // TODO: ch
 		id = execute_cmd(current, env); // alle fd redirection redirecten stdin, stdout
 		current = current->next;
 	}
+		setup_signals_non_interactive(); // SIGNALS: Ignore signals during wait 
 		waitpid(id,&status, 0);
 		while (waitpid(-1, NULL, WNOHANG) != -1) //WUNTRACED
 			;
+		setup_signals_interactive(); // SIGNALS: Reset signals to interactive mode */
+		if (WIFSIGNALED(status))
+		{
+			if (WTERMSIG(status) == SIGINT)
+				g_signum = SIGINT;
+			else if (WTERMSIG(status) == SIGQUIT)
+			{
+				g_signum = SIGQUIT;
+				write(2, "Quit (core dumped)\n", 19);
+			}
+		}
 }
+
 
 // go thru entire cmd list. if command found, execute w above function, if not, execution will handle
 void checking_list_cmds_for_exec(t_lst_cmd *list_cmds, char **env) // TODO: delete later
@@ -193,12 +207,17 @@ void ft_execution (t_minishell *minishell)
 	// saving original of stdin & stdout
 	int copy_of_stdin_fd = dup(STDIN_FILENO);
 	int copy_of_stdout_fd = dup(STDOUT_FILENO);
+
+	setup_signals_non_interactive(); // SIGNALS: Ignore signals during execution setup
+
 	looping_through_list_commands(minishell->list_cmd, minishell->env); // going through list_cmds & checking for RD_IN & file
 	// stdin & stdout has to be set back to its original TODO: (create ft for it later)
 	dup2(copy_of_stdin_fd, STDIN_FILENO);
 	close(copy_of_stdin_fd);
 	dup2(copy_of_stdout_fd, STDOUT_FILENO);
 	close(copy_of_stdout_fd);
+
+	setup_signals_interactive(); // SIGNALS: Reset signals to interactive mode
 
 
 	// may be deleted: checking_list_cmds_for_exec(list_cmds, minishell->env); // goes thru cmd list and executes all cmds
