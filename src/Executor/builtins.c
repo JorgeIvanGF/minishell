@@ -73,8 +73,6 @@ int execute_cd(char **env, t_cmd *cmd) // chdir. als input mit ~ testen auch don
                 perror("cd");
                 return (1);
             }
-            execute_pwd(); // TODO: delete later (only for printing purposes)
-            
             return (0);
         }
 
@@ -104,55 +102,84 @@ int execute_env(char **env, t_cmd *cmd)
 }
 
 // unset with no options
-// purpose: it removes one or more variables or functions from the shell environment (if multiple names are provided, it removes each one)
-// test: unset PATH (check w "echo $PATH" [output empty line], or "ls" [output ls: No such file or directory], or "env" [same output as ls])
-
-void delete_path_from_env(char **env, char *matching_path, int line)
+void delete_path_from_env(char ***ptr_to_env, int path_line)
 {
-    (void) matching_path;
-    // use ft_free to delete string path (will be set to NULL, but only matters for last string)
-    // copy string from next row into the deleted one
-    while (env[line] != NULL)
+    char **env;
+    // char *copy_of_path_below;
+
+    env = *ptr_to_env;
+    ft_free(env[path_line]);
+
+    while ((env[path_line + 1] != NULL)) // TODO: fix when two path names after unset
     {
-        ft_free(env[line]);
-        env[line] = ft_strdup(env[line + 1]); // FIX: strdup
-        line++;
+        env[path_line] = ft_strdup(env[path_line + 1]);
+        ft_free(env[path_line++]);
+        path_line++;
+
+        // copy_of_path_below = ft_strdup(env[path_line + 1]);
+        // env[path_line] = copy_of_path_below;
+        // path_line++;
+        // ft_free(env[path_line]);
     }
 }
 
 int execute_unset(char **env, t_cmd *cmd)
 {
     int i;
-    int path;
+    int path_line;
     char **split_env_path;
 
     i = 1;
-    while (cmd->cmd_arr && cmd->cmd_arr[i] != NULL)
+    while (cmd && cmd->cmd_arr && cmd->cmd_arr[i])
     {
-        path = 0;
-        while (env[path] != NULL)
+        path_line = 0;
+        while (env[path_line] != NULL)
         {
-            split_env_path = ft_split(env[path], '=');
+            split_env_path = ft_split(env[path_line], '=');
+            if (!split_env_path)
+            {
+                return (1);
+            }
             if ((ft_strcmp(split_env_path[0], cmd->cmd_arr[i]) == 0))
             {
-                delete_path_from_env(env, env[path], path); // !pt
+                ft_free_2d(split_env_path);
+                delete_path_from_env(&env, path_line);
+                break;
             }
             ft_free_2d(split_env_path);
-            path++;
+            path_line++;
         }
         i++;
     }
-
-    // after array is found, move up the other arrays in env (so there is no space)
-
     return (0);
 }
-// unset test example: "unset USER" (USER path should disappear and everything moved up, when entering "env")
+
+// exit with no options
+// purpose: terminates the shell and returns a status code to the parent process
+// exit with no arguments should exit with the status of the last executed command
+//       In a fresh shell session, this is typically 0 (success)
+/*
+When a user types exit with no arguments, the shell should:
+Terminate the current shell process
+Return an exit status of 0 (indicating success) to the parent process
+Print "exit" to stdout (this is the behavior in bash)
+*/
+// to see status of last executed cmd: echo $?
+int execute_exit(t_cmd *cmd) // TODO: recheck
+{
+    if (!cmd->cmd_arr[1])
+    {
+        write(1, "exit\n", 5);
+        exit(0); // success // OR status of last executed command?
+    }
+
+    return (1);
+}
 
 int execute_builtin(char **env, t_cmd *cmd) // executes builtin
 {
 	(void) env;
-    if (cmd && cmd->cmd_arr && cmd->cmd_arr[0] ==  NULL)
+    if (!(cmd && cmd->cmd_arr && cmd->cmd_arr[0]))
     {
         return (0);
     }
@@ -175,7 +202,7 @@ int execute_builtin(char **env, t_cmd *cmd) // executes builtin
     }
 	else if (ft_strcmp(cmd->cmd_arr[0], "unset") == 0)
     {
-        // execute_unset(env, cmd);
+        execute_unset(env, cmd);
     }
 	else if (ft_strcmp(cmd->cmd_arr[0], "env") == 0)
     {
@@ -183,7 +210,7 @@ int execute_builtin(char **env, t_cmd *cmd) // executes builtin
     }
 	else if (ft_strcmp(cmd->cmd_arr[0], "exit") == 0)
     {
-        // execute_exit();
+        execute_exit(cmd);
     }
     else
     {
