@@ -10,6 +10,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "../libft/inc/libft.h"
+#include <termios.h>
 
 //Colors used for terminal output____________________
 # define GREEN "\033[0;32m"

@@ -31,8 +31,7 @@ void	setup_signals_interactive(void)
 	struct sigaction sa_int;
 	struct sigaction sa_quit;
 
-	g_signum = 0;
-	
+	g_signum = 0;	
 	// Setup for SIGINT (Ctrl+C)
 	sa_int.sa_handler = handle_signals;
 	sa_int.sa_flags = 0;

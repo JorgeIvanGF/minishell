@@ -32,6 +32,7 @@ INC_DIR     = inc
 # Source files
 	
 SRC_FILES   = main.c \
+			Parser/main_utils.c \
 			Parser/inits.c \
 			Parser/tokenizer.c \
 			Parser/tokenizer_utils.c \

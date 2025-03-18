@@ -32,7 +32,7 @@ int	execute_cmd(t_cmd *cmd, char **env)
 	int fd[2];
 	
 	pipe(fd);
-	setup_signals_non_interactive(); // Ignore signals before fork
+	setup_signals_non_interactive(); // SIGNALS: Ignore signals before fork
 	id = fork();
 	if (id == 0) 
 	{
@@ -85,10 +85,12 @@ void looping_through_list_commands(t_lst_cmd *list_cmds, char **env) // TODO: ch
 		while (waitpid(-1, NULL, WNOHANG) != -1) //WUNTRACED
 			;
 		setup_signals_interactive(); // SIGNALS: Reset signals to interactive mode */
-		if (WIFSIGNALED(status))
+		if (WIFSIGNALED(status)) // checks if the child process was terminated by a signal (instead of exiting normally)
 		{
-			if (WTERMSIG(status) == SIGINT)
-				g_signum = SIGINT;
+			// Returns the actual signal number that caused the termination.
+			// If the signal that killed the child was SIGINT(ex. when Ctrl C pressed)
+			if (WTERMSIG(status) == SIGINT) 
+				g_signum = SIGINT; //set the global variable g_signum to SIGINT.
 			else if (WTERMSIG(status) == SIGQUIT)
 			{
 				g_signum = SIGQUIT;

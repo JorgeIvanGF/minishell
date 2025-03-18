@@ -2,6 +2,26 @@
 #include "../inc/minishell.h"
 #include "../inc/parsing.h"
 
+// // Check if imput only is ENTER or spaces)
+// int	first_checks(char *input)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	if (input[i] == '\0' || input[i] == ' ')
+// 	{
+// 		if (input[i] == ' ')
+// 		{
+// 			while (input[i] == ' ')
+// 				i++;
+// 			if (input[i] != '\0')
+// 				return (1);
+// 		}
+// 		return (0);
+// 	}
+// 	return (1);
+// }
+
 // Check if imput only is ENTER or spaces)
 int	first_checks(char *input)
 {
@@ -14,13 +34,15 @@ int	first_checks(char *input)
 		{
 			while (input[i] == ' ')
 				i++;
-			if (input[i] != '\0')
-				return (1);
+			if (input[i] == '\0')
+				return (0);
 		}
 		return (0);
 	}
+	printf("pasa");
 	return (1);
 }
+
 
 // To create a Copy of the ENV-VARs
 static char	**copy_env(char **env)

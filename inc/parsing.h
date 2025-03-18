@@ -108,4 +108,15 @@ void			free_cmd_list(t_lst_cmd *cmd_list);
 void			free_token_list(t_lst_token *tokens);
 void			continue_shell(t_minishell *minishell, t_lst_token **tokens, char **input);
 
+// main_utils.c
+int				process_inputs(t_minishell *minishell, t_lst_token *tokens, char *input);
+int				tokenize_input(char *input, t_lst_token **tokens);
+int				handle_empty_input(char *input);
+char			*get_and_validate_input(void);
+int				handle_null_input(void);
+int				handle_only_spaces(char *input);
+
+// main.c
+void			print_tokens(t_lst_token *tokens);
+
 #endif
