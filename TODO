@@ -1,22 +1,22 @@
 
- 
-WED (git)
-- builtins: unset, exit 
-
 
 - heredoc
 
-- wait
+- wait (rewrite)
 
 - exit status
 
 - builtin: export
 
-
-- add headers at end
+- norminette
 
 
 ERRORS
 - needs FIXING (output not correct)
 -- < infile | wc
 -- ls > nonexisting file - la
+
+
+FIX STYLE
+ - ft_execution
+ - add headers everywhere

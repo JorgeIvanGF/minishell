@@ -152,30 +152,67 @@ int execute_unset(char **env, t_cmd *cmd)
 }
 
 // exit with no options
-// purpose: terminates the shell and returns a status code to the parent process
-// exit with no arguments should exit with the status of the last executed command
-//       In a fresh shell session, this is typically 0 (success)
-/*
-When a user types exit with no arguments, the shell should:
-Terminate the current shell process
-Return an exit status of 0 (indicating success) to the parent process
-Print "exit" to stdout (this is the behavior in bash)
-*/
-// to see status of last executed cmd: echo $?
-int execute_exit(t_cmd *cmd) // TODO: recheck
+// echo $? (to see exit code in bash)
+// exit code cant go higher than 255. after it starts counting from 0 again (256). formel: % 256
+int syntax_check_exit(t_cmd *cmd, t_minishell *minishell) 
 {
-    if (!cmd->cmd_arr[1])
+    int i;
+    
+    i = 0;
+    while (cmd->cmd_arr[1] && cmd->cmd_arr[1][i] != '\0' && cmd->cmd_arr[1][i] == ' ')
+    {
+        i++;
+    }
+    if (cmd->cmd_arr[1][i] == '-' || cmd->cmd_arr[1][i] == '+')
+    {
+        i++;
+    } // TODO: fix error: if sign but followed by a space then error w numeric argument (NOT: too many arguments like rn)
+    
+    while (cmd->cmd_arr[1] && cmd->cmd_arr[1][i] != '\0')
+    {
+        if (ft_isdigit(cmd->cmd_arr[1][i]) == 0)
+        {
+            ft_putendl_fd("exit", 2);
+            ft_putstr_fd("minishell: exit: ", 2);
+            ft_putstr_fd(cmd->cmd_arr[1], 2);
+            ft_putendl_fd(": numeric argument required", 2);
+            minishell->exit_code = 255;
+            return (-1); // undst // in main.c after freeing
+        }
+        i++;
+    }
+    return (1);
+}
+
+int execute_exit(t_cmd *cmd, t_minishell *minishell)
+{
+    int entered_exit_code;
+    
+    if (!cmd->cmd_arr[1]) // if sole input is exit
     {
         write(1, "exit\n", 5);
-        exit(0); // success // OR status of last executed command?
+        minishell->exit_code = 0;
+    }
+    else if (cmd->cmd_arr[1] && !cmd->cmd_arr[2]) // if input is exit + a number
+    {
+        if (syntax_check_exit(cmd, minishell) == 1)
+        {
+            entered_exit_code = ft_atoi(cmd->cmd_arr[1]);
+            minishell->exit_code = entered_exit_code % 256; // formula to calculate exit code if above 255 (module % of 256) 
+            // printf("exit code calculated = %d\n", minishell->exit_code); // just for testing
+        }
+    }
+    else if (cmd->cmd_arr[2]) // if input is exit but has too many arguments following
+    {
+        ft_putendl_fd("exit", 2);
+        ft_putendl_fd("minishell: exit: too many arguments", 2);
     }
 
     return (1);
 }
 
-int execute_builtin(char **env, t_cmd *cmd) // executes builtin
+int execute_builtin(t_cmd *cmd, t_minishell *minishell) // executes builtin
 {
-	(void) env;
     if (!(cmd && cmd->cmd_arr && cmd->cmd_arr[0]))
     {
         return (0);
@@ -183,11 +220,11 @@ int execute_builtin(char **env, t_cmd *cmd) // executes builtin
 
 	if (ft_strcmp(cmd->cmd_arr[0], "echo") == 0)
     {
-        execute_echo(env, cmd);
+        execute_echo(minishell->env, cmd);
     }
 	else if (ft_strcmp(cmd->cmd_arr[0], "cd") == 0)
 	{
-        execute_cd(env, cmd);
+        execute_cd(minishell->env, cmd);
     }	
 	else if (ft_strcmp(cmd->cmd_arr[0], "pwd") == 0)
     {
@@ -199,15 +236,15 @@ int execute_builtin(char **env, t_cmd *cmd) // executes builtin
     }
 	else if (ft_strcmp(cmd->cmd_arr[0], "unset") == 0)
     {
-        execute_unset(env, cmd);
+        execute_unset(minishell->env, cmd);
     }
 	else if (ft_strcmp(cmd->cmd_arr[0], "env") == 0)
     {
-        execute_env(env, cmd);
+        execute_env(minishell->env, cmd);
     }
 	else if (ft_strcmp(cmd->cmd_arr[0], "exit") == 0)
     {
-        execute_exit(cmd);
+        execute_exit(cmd, minishell);
     }
     else
     {
@@ -217,9 +254,8 @@ int execute_builtin(char **env, t_cmd *cmd) // executes builtin
 	return (1);
 }
 
-int is_builtin(char **env, t_cmd *cmd) // checks if a builtin
+int is_builtin(t_cmd *cmd) // checks if a builtin
 {
-	(void) env;
     if (!(cmd && cmd->cmd_arr && cmd->cmd_arr[0])) // RMB: if one/two/or all of them exist, then move to next if. if all are null, enter.
     {
         return (0);

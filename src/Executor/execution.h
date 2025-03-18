@@ -18,8 +18,8 @@ char	*find_path(char **path_cmds, char *cmd);
 int		execute(char *found_path, t_cmd *cmd, char **env);
 
 // built ins
-int is_builtin(char **env, t_cmd *cmd);
-int execute_builtin(char **env, t_cmd *cmd);
+int is_builtin(t_cmd *cmd);
+int execute_builtin(t_cmd *cmd, t_minishell *minishell);
 
 // redirections
 int redirecting_stdin(t_cmd *cmd);

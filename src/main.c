@@ -111,10 +111,11 @@ int main(int argc, char **argv, char **env)
 		
 		// ............Free Everything....................
 		// free(input); // Free memory allocated by readline
-
 		
+
 	}
 	exit_shell(minishell);
-	return (0); // paula con el resultado de ft_execution;
-
+	
+	
+	return (minishell->exit_code); /// paula con el resultado de ft_execution;
 }
