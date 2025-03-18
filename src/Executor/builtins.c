@@ -73,8 +73,6 @@ int execute_cd(char **env, t_cmd *cmd) // chdir. als input mit ~ testen auch don
                 perror("cd");
                 return (1);
             }
-            execute_pwd(); // TODO: delete later (only for printing purposes)
-            
             return (0);
         }
 
@@ -104,62 +102,129 @@ int execute_env(char **env, t_cmd *cmd)
 }
 
 // unset with no options
-// purpose: it removes one or more variables or functions from the shell environment (if multiple names are provided, it removes each one)
-// test: unset PATH (check w "echo $PATH" [output empty line], or "ls" [output ls: No such file or directory], or "env" [same output as ls])
-
-void delete_path_from_env(char **env, char *matching_path, int line)
+void delete_path_from_env(char ***ptr_to_env, int path_line)
 {
-    // use ft_free to delete string path (will be set to NULL, but only matters for last string)
-    // copy string from next row into the deleted one
-    while (env[line] != NULL)
+    char **env;
+
+    env = *ptr_to_env;
+    while (1) 
     {
-        ft_free(matching_path);
-        env[line] = env[line + 1]; // FIX: strdup
-        line++;
+        free(env[path_line]);
+        if (env[path_line + 1] == NULL)
+        {
+            env[path_line] = NULL;
+            break;
+        }
+        env[path_line] = ft_strdup(env[path_line + 1]);
+        path_line++;
     }
 }
 
 int execute_unset(char **env, t_cmd *cmd)
 {
     int i;
-    int j;
+    int path_line;
     char **split_env_path;
 
-
     i = 1;
-    while (cmd->cmd_arr && cmd->cmd_arr[i] != NULL)
+    while (cmd && cmd->cmd_arr && cmd->cmd_arr[i])
     {
-        j = 0;
-        while (env[j] != NULL)
+        path_line = 0;
+        while (env[path_line] != NULL)
         {
-            split_env_path = ft_split(env[j], '=');
+            split_env_path = ft_split(env[path_line], '=');
+            if (!split_env_path)
+            {
+                return (1);
+            }
             if ((ft_strcmp(split_env_path[0], cmd->cmd_arr[i]) == 0))
             {
-                delete_path_from_env(env, env[j], j); //pointer in front of env[j] bc dont want to only modify copy in ft but original
+                ft_free_2d(split_env_path);
+                delete_path_from_env(&env, path_line);
+                break;
             }
             ft_free_2d(split_env_path);
-            j++;
+            path_line++;
         }
         i++;
     }
-
-    // after array is found, move up the other arrays in env (so there is no space)
-
     return (0);
 }
-// unset test example: "unset USER" (USER path should disappear and everything moved up, when entering "env")
 
-int execute_builtin(char **env, t_cmd *cmd) // executes builtin
+// exit with no options
+// echo $? (to see exit code in bash)
+// exit code cant go higher than 255. after it starts counting from 0 again (256). formel: % 256
+int syntax_check_exit(t_cmd *cmd, t_minishell *minishell) 
 {
-	(void) env;
+    int i;
+    
+    i = 0;
+    while (cmd->cmd_arr[1] && cmd->cmd_arr[1][i] != '\0' && cmd->cmd_arr[1][i] == ' ')
+    {
+        i++;
+    }
+    if (cmd->cmd_arr[1][i] == '-' || cmd->cmd_arr[1][i] == '+')
+    {
+        i++;
+    } // TODO: fix error: if sign but followed by a space then error w numeric argument (NOT: too many arguments like rn)
+    
+    while (cmd->cmd_arr[1] && cmd->cmd_arr[1][i] != '\0')
+    {
+        if (ft_isdigit(cmd->cmd_arr[1][i]) == 0)
+        {
+            ft_putendl_fd("exit", 2);
+            ft_putstr_fd("minishell: exit: ", 2);
+            ft_putstr_fd(cmd->cmd_arr[1], 2);
+            ft_putendl_fd(": numeric argument required", 2);
+            minishell->exit_code = 255;
+            return (-1); // undst // in main.c after freeing
+        }
+        i++;
+    }
+    return (1);
+}
+
+int execute_exit(t_cmd *cmd, t_minishell *minishell)
+{
+    int entered_exit_code;
+    
+    if (!cmd->cmd_arr[1]) // if sole input is exit
+    {
+        write(1, "exit\n", 5);
+        minishell->exit_code = 0;
+    }
+    else if (cmd->cmd_arr[1] && !cmd->cmd_arr[2]) // if input is exit + a number
+    {
+        if (syntax_check_exit(cmd, minishell) == 1)
+        {
+            entered_exit_code = ft_atoi(cmd->cmd_arr[1]);
+            minishell->exit_code = entered_exit_code % 256; // formula to calculate exit code if above 255 (module % of 256) 
+            printf("exit code calculated = %d\n", minishell->exit_code); // just for testing
+        }
+    }
+    else if (cmd->cmd_arr[2]) // if input is exit but has too many arguments following
+    {
+        ft_putendl_fd("exit", 2);
+        ft_putendl_fd("minishell: exit: too many arguments", 2);
+    }
+
+    return (1);
+}
+
+int execute_builtin(t_cmd *cmd, t_minishell *minishell) // executes builtin
+{
+    if (!(cmd && cmd->cmd_arr && cmd->cmd_arr[0]))
+    {
+        return (0);
+    }
 
 	if (ft_strcmp(cmd->cmd_arr[0], "echo") == 0)
     {
-        execute_echo(env, cmd);
+        execute_echo(minishell->env, cmd);
     }
 	else if (ft_strcmp(cmd->cmd_arr[0], "cd") == 0)
 	{
-        execute_cd(env, cmd);
+        execute_cd(minishell->env, cmd);
     }	
 	else if (ft_strcmp(cmd->cmd_arr[0], "pwd") == 0)
     {
@@ -171,15 +236,15 @@ int execute_builtin(char **env, t_cmd *cmd) // executes builtin
     }
 	else if (ft_strcmp(cmd->cmd_arr[0], "unset") == 0)
     {
-        // execute_unset(env, cmd);
+        execute_unset(minishell->env, cmd);
     }
 	else if (ft_strcmp(cmd->cmd_arr[0], "env") == 0)
     {
-        execute_env(env, cmd);
+        execute_env(minishell->env, cmd);
     }
 	else if (ft_strcmp(cmd->cmd_arr[0], "exit") == 0)
     {
-        // execute_exit();
+        execute_exit(cmd, minishell);
     }
     else
     {
@@ -189,19 +254,23 @@ int execute_builtin(char **env, t_cmd *cmd) // executes builtin
 	return (1);
 }
 
-int is_builtin(char **env, t_cmd *cmd) // checks if a builtin
+int is_builtin(t_cmd *cmd) // checks if a builtin
 {
-	(void) env;
-
+    if (!(cmd && cmd->cmd_arr && cmd->cmd_arr[0])) // RMB: if one/two/or all of them exist, then move to next if. if all are null, enter.
+    {
+        return (0);
+    }
+    
 	if ((ft_strcmp(cmd->cmd_arr[0], "echo") == 0) || 
-        (ft_strcmp(cmd->cmd_arr[0], "cd") == 0) || 
-        (ft_strcmp(cmd->cmd_arr[0], "pwd") == 0) || 
-        (ft_strcmp(cmd->cmd_arr[0], "export") == 0) || 
-        (ft_strcmp(cmd->cmd_arr[0], "unset") == 0) || 
-        (ft_strcmp(cmd->cmd_arr[0], "env") == 0) || 
-        (ft_strcmp(cmd->cmd_arr[0], "exit") == 0))
+    (ft_strcmp(cmd->cmd_arr[0], "cd") == 0) || 
+    (ft_strcmp(cmd->cmd_arr[0], "pwd") == 0) || 
+    (ft_strcmp(cmd->cmd_arr[0], "export") == 0) || 
+    (ft_strcmp(cmd->cmd_arr[0], "unset") == 0) || 
+    (ft_strcmp(cmd->cmd_arr[0], "env") == 0) || 
+    (ft_strcmp(cmd->cmd_arr[0], "exit") == 0))
     {
         return (1);
     }
+    
     return (0);
 }

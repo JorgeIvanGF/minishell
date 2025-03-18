@@ -3,11 +3,11 @@
 
 int has_pipe(t_cmd *cmd) // if pipe found (1), or not (0)
 {
-	if (cmd->next == NULL)
+	if (cmd && cmd->next == NULL)
 	{
 		return (0); // pipe not found
 	}
-
+	
 	return (1); // pipe found
 }
 

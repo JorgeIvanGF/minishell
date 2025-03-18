@@ -112,11 +112,11 @@ void command_loop(t_minishell *minishell)
 		}
 		if (handle_empty_input(input))
 			continue;
-		if (handle_only_spaces(input))
-		{
-			//free(input);
-			continue;
-		}
+		// if (handle_only_spaces(input)) // TODO: error
+		// {
+		// 	//free(input);
+		// 	continue;
+		// }
 		if (tokenize_input(input, &tokens))
 			continue;
 		if (process_inputs(minishell, tokens, input))
@@ -138,5 +138,5 @@ int main(int argc, char **argv, char **env)
 	setup_signals_interactive();
 	command_loop(minishell);	
 	exit_shell(minishell);
-	return (0);
+	return (minishell->exit_code);
 }

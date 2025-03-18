@@ -64,24 +64,24 @@ int handle_empty_input(char *input)
 // }
 
 // Check if input consists of only spaces
-int handle_only_spaces(char *input)
-{
-	char *temp;
+// int handle_only_spaces(char *input) // TODO: error
+// {
+// 	char *temp;
 	
-	temp = input;
-	while (*input)
-	{
-		while (*input == ' ' || *input == '\t')
-			input++;
-		if (*input == '\0')
-		{
-			input = temp;
-			free(input);
-			return (1);
-		}
-	}
-	return (0);
-}
+// 	temp = input;
+// 	while (*input)
+// 	{
+// 		while (*input == ' ' || *input == '\t')
+// 			input++;
+// 		if (*input == '\0')
+// 		{
+// 			input = temp;
+// 			free(input);
+// 			return (1);
+// 		}
+// 	}
+// 	return (0);
+// }
 
 
 // Handle input readline and validation

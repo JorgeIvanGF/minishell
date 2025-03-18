@@ -1,9 +1,22 @@
 
- 
-WED (git)
-- builtins: unset, env, exit 
+
+- heredoc
+
+- wait (rewrite)
+
+- exit status
+
+- builtin: export
+
+- norminette
 
 
-FIX (general errors noticed (parser/execution))
-- MINISHELL (orange) sometimes shows up twice next to each other in terminal
-- env paths not displayed correctly like in bash
+ERRORS
+- needs FIXING (output not correct)
+-- < infile | wc
+-- ls > nonexisting file - la
+
+
+FIX STYLE
+ - ft_execution
+ - add headers everywhere
