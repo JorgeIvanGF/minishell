@@ -3,28 +3,50 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 14:15:35 by jorgutie          #+#    #+#             */
-/*   Updated: 2024/10/13 19:09:50 by jorgutie         ###   ########.fr       */
+/*   Updated: 2025/03/19 22:16:26 by pdrettas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
+static char	*ft_strcpy(char *goal, const char *start)
+{
+	char	*temp;
+
+	temp = goal;
+	while (*start != '\0')
+		*temp++ = *start++;
+	*temp = '\0';
+	return (goal);
+}
+
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	size_t	tot_len;
-	char	*ptr;
+	size_t	s1_len;
+	size_t	s2_len;
+	size_t	total_len;
+	char	*result;
 
-	tot_len = (size_t)ft_strlen(s1) + ft_strlen(s2);
-	ptr = malloc(tot_len + 1);
-	if (ptr == NULL)
+	s1_len = 0;
+	s2_len = 0;
+	if (s1 == (NULL) && s2 == (NULL))
 		return (NULL);
-	ft_strlcpy((char *restrict) ptr, (const char *restrict) s1,
-		(size_t)ft_strlen(s1) + 1);
-	ft_strlcat((char *restrict) ptr, (const char *restrict) s2, tot_len + 1);
-	return (ptr);
+	if (s1 != (NULL))
+		s1_len = ft_strlen(s1);
+	if (s2 != (NULL))
+		s2_len = ft_strlen(s2);
+	total_len = (s1_len + s2_len) + 1;
+	result = malloc(total_len * sizeof(char));
+	if (result == (NULL))
+		return (NULL);
+	if (s1 != NULL)
+		ft_strcpy(result, s1);
+	if (s2 != NULL)
+		ft_strcpy(result + s1_len, s2);
+	return (result);
 }
 
 // int main(void)

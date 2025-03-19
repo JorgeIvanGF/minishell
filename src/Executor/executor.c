@@ -7,21 +7,19 @@ void	execution(char **env, t_cmd *cmd)
 	char	*path;
 	char	**path_cmds;
 	char	*found_path;
-	char 	*saved_cmd;
-
-	saved_cmd = ft_strdup(cmd->cmd_arr[0]);  // create a copy b4 freeing
-	if (!saved_cmd)
-		exit(1);
+	
 	path = get_path(env);
 	path_cmds = get_paths_cmds(path);
 	found_path = find_path(path_cmds, cmd->cmd_arr[0]);
 	if (execute(found_path, cmd, env) == -1)
 	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(cmd->cmd_arr[0], 2);
+		ft_putendl_fd(": command not found", 2);
 		ft_free_2d(path_cmds);
 		free(found_path);
-		write(2, "minishell: command not found: ", 30);
-		write(2, saved_cmd, ft_strlen(saved_cmd));
-		write(2, "\n", 1);
+		// minishell->exit_code = 127; // TODO: put minishell as input
+		// // exit_shell();
 		exit(127);
 	}
 }
@@ -126,14 +124,14 @@ int ft_execution (t_minishell *minishell)
 {
 
 	// list_cmds = init_list_commands(1, first_cmd, NULL); 
-	// print_list_commands(minishell->list_cmd);
+	print_list_commands(minishell->list_cmd);
 
 //88888888888888888888888888888888888888888888888888888888888888888888 exec
 	// saving original of stdin & stdout
 	int copy_of_stdin_fd = dup(STDIN_FILENO);
 	int copy_of_stdout_fd = dup(STDOUT_FILENO);
 
-	setup_signals_non_interactive(); // SIGNALS: Ignore signals during execution setup
+	// setup_signals_non_interactive(); // SIGNALS: Ignore signals during execution setup
 
 	looping_through_list_commands(minishell); // going through list_cmds & checking for RD_IN & file
 	// stdin & stdout has to be set back to its original TODO: (create ft for it later)
@@ -142,7 +140,7 @@ int ft_execution (t_minishell *minishell)
 	dup2(copy_of_stdout_fd, STDOUT_FILENO);
 	close(copy_of_stdout_fd);
 
-	setup_signals_interactive(); // SIGNALS: Reset signals to interactive mode
+	// setup_signals_interactive(); // SIGNALS: Reset signals to interactive mode
 
 
 	// may be deleted: checking_list_cmds_for_exec(list_cmds, minishell->env); // goes thru cmd list and executes all cmds

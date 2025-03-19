@@ -101,7 +101,7 @@ void command_loop(t_minishell *minishell)
 	char *input;
 	t_lst_token *tokens;
 	
-	while (!(minishell->exit_requested)) // changed by Paula
+	while (1) // changed by Paula
 	{
 		input = get_and_validate_input();
 		if (input == NULL)
@@ -112,7 +112,7 @@ void command_loop(t_minishell *minishell)
 		}
 		if (handle_empty_input(input))
 			continue;
-		// if (handle_only_spaces(input)) // TODO: error
+		// if (handle_only_spaces(input)) // TODO: error" "
 		// {
 		// 	//free(input);
 		// 	continue;
@@ -150,12 +150,12 @@ int main(int argc, char **argv, char **env) // Paula new V
 	(void) argv;
 	init_minishell(&minishell, env);
 	disable_echoctl(); // Disable echoing of control characters
-	setup_signals_interactive();
+	// setup_signals_interactive();
 
 	command_loop(minishell); // parsing, execution happens here
 	// printf("exit flag in main = %d\n", minishell->exit_requested); // for testing
 
-	exit_shell(minishell); // changed name from exit_shell to free_shell
+	exit_shell(minishell); 
 	// printf("final exit code (in main) = %d\n", exit_code); // for testing
 
 	return (0);

@@ -1,5 +1,6 @@
 #include "minishell.h"
 #include "parsing.h"
+#include "signals.h"
 
 // Process the tokens and execute commands if valid
 int	process_inputs(t_minishell *minishell, t_lst_token *tokens, char *input)
@@ -21,8 +22,11 @@ int	process_inputs(t_minishell *minishell, t_lst_token *tokens, char *input)
 		// exit_shell(minishell); // TODO: recheck bc of exit code (paula) // recheck which exit code
 		minishell->exit_requested = 1; // triggers main, then frees, and exits
 	}	
-	print_command_list(minishell->list_cmd); // TO DEBUG
+	
+	// print_command_list(minishell->list_cmd); // TO DEBUG
+	// setup_signals_non_interactive(); // moved by P from ft_execution
 	ft_execution(minishell); // To Paula
+	// setup_signals_interactive(); // SIGNALS: Reset signals to interactive mode // moved
 	continue_shell(minishell, &tokens, &input);	
 	return (0);
 }
@@ -37,7 +41,7 @@ int tokenize_input(char *input, t_lst_token **tokens)
 		free(input);
 		return (1);
 	}
-	print_tokens(*tokens); // TO DEBUG
+	// print_tokens(*tokens); // TO DEBUG
 	return (0);
 }
 
@@ -65,24 +69,26 @@ int handle_empty_input(char *input)
 // }
 
 // Check if input consists of only spaces
-// int handle_only_spaces(char *input) // TODO: error
-// {
-// 	char *temp;
+int handle_only_spaces(char *input) // TODO: error
+{
+	char *temp;
 	
-// 	temp = input;
-// 	while (*input)
-// 	{
-// 		while (*input == ' ' || *input == '\t')
-// 			input++;
-// 		if (*input == '\0')
-// 		{
-// 			input = temp;
-// 			free(input);
-// 			return (1);
-// 		}
-// 	}
-// 	return (0);
-// }
+	temp = input;
+	while (*input)
+	{
+		printf("input = %s\n", input);
+		write(2, "im here\n", 8);
+		while (*input == ' ' || *input == '\t')
+			input++;
+		if (*input == '\0')
+		{
+			input = temp;
+			free(input);
+			return (1);
+		}
+	}
+	return (0);
+}
 
 
 // Handle input readline and validation

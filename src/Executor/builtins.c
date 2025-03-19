@@ -1,5 +1,6 @@
 #include "../../inc/minishell.h"
 #include "execution.h"
+#include "parsing.h"
 
 // echo w option -n
 void execute_echo(char **env, t_cmd *cmd)
@@ -158,6 +159,16 @@ int syntax_check_exit(t_cmd *cmd, t_minishell *minishell)
 {
     int i;
     
+    if (cmd && cmd->cmd_arr && cmd->cmd_arr[1] && ft_strlen(cmd->cmd_arr[1]) == 0)
+    {
+        ft_putendl_fd("exit", 2);
+        ft_putstr_fd("minishell: exit: ", 2);
+        ft_putstr_fd(cmd->cmd_arr[1], 2);
+        ft_putendl_fd(": numeric argument required", 2);
+        minishell->exit_code = 255;
+        exit_shell(minishell);
+    }
+
     i = 0;
     while (cmd->cmd_arr[1] && cmd->cmd_arr[1][i] != '\0' && cmd->cmd_arr[1][i] == ' ')
     {
@@ -166,8 +177,9 @@ int syntax_check_exit(t_cmd *cmd, t_minishell *minishell)
     if (cmd->cmd_arr[1][i] == '-' || cmd->cmd_arr[1][i] == '+')
     {
         i++;
-    } // TODO: fix error: if sign but followed by a space then error w numeric argument (NOT: too many arguments like rn)
-    
+    } 
+    // TODO: fix parsing error: if sign but followed by a space then error w numeric argument (NOT: too many arguments like rn)
+    // TODO: fix parsing error: exit +, exit - (numeric)
     while (cmd->cmd_arr[1] && cmd->cmd_arr[1][i] != '\0')
     {
         if (ft_isdigit(cmd->cmd_arr[1][i]) == 0)
@@ -177,7 +189,7 @@ int syntax_check_exit(t_cmd *cmd, t_minishell *minishell)
             ft_putstr_fd(cmd->cmd_arr[1], 2);
             ft_putendl_fd(": numeric argument required", 2);
             minishell->exit_code = 255;
-            return (-1); // undst // in main.c after freeing
+            exit_shell(minishell); // undst // in main.c after freeing
         }
         i++;
     }
@@ -192,8 +204,7 @@ int execute_exit(t_cmd *cmd, t_minishell *minishell)
     {
         write(1, "exit\n", 5);
         minishell->exit_code = 0; 
-        minishell->exit_requested = 1;
-        // exit(minishell->exit_code); // works to exit, but does NOT free before 
+        exit_shell(minishell);
     }
     else if (cmd->cmd_arr[1] && !cmd->cmd_arr[2]) // if input is exit + a number
     {
@@ -201,8 +212,8 @@ int execute_exit(t_cmd *cmd, t_minishell *minishell)
         {
             entered_exit_code = ft_atoi(cmd->cmd_arr[1]);
             minishell->exit_code = entered_exit_code % 256; // formula to calculate exit code if above 255 (module % of 256) 
-            minishell->exit_requested = 1;
             printf("exit code calculated = %d\n", minishell->exit_code); // just for testing
+            exit_shell(minishell);
         }
     }
     else if (cmd->cmd_arr[2]) // if input is exit but has too many arguments following
