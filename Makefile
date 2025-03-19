@@ -46,6 +46,7 @@ SRC_FILES   = main.c \
 			Parser/parser_utils.c \
 			Parser/parser_utils_2.c \
 			Parser/free.c \
+			Parser/free_2.c \
 			Signals/signals.c \
 			Executor/executor.c \
 			Executor/executor_helper_ft.c \

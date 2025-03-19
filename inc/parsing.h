@@ -103,10 +103,13 @@ t_token			*handle_word_token(t_token *curr, t_cmd *cmd);
 t_lst_cmd		*process_tokens(t_token *curr, t_cmd *cmd, t_minishell *minishell);
 
 // free.c
-void			exit_shell(t_minishell *minishell);
 void			free_cmd_list(t_lst_cmd *cmd_list);
 void			free_token_list(t_lst_token *tokens);
+void			free_env(char **env);
+
+// free_2.c
 void			continue_shell(t_minishell *minishell, t_lst_token **tokens, char **input);
+void			exit_shell(t_minishell *minishell);
 
 // main_utils.c
 int				process_inputs(t_minishell *minishell, t_lst_token *tokens, char *input);

@@ -1,21 +1,20 @@
 #include "minishell.h"
 #include "parsing.h"
 
-/// to print List cmds TO DEBUG......................................................
+/// to print List cmds TO DEBUG...............................
 
 // Prints the full command list from minishell struct
-void    print_command_list(t_lst_cmd *cmd_list)
+void	print_command_list(t_lst_cmd *cmd_list)
 {
-	t_cmd *cmd;
-	int i;
-	int j;
+	t_cmd	*cmd;
+	int		i;
+	int		j;
 
 	if (!cmd_list || !cmd_list->head)
 	{
 		printf(RED"No commands parsed.\n"RESET);
-		return;
+		return ;
 	}
-
 	printf(BOLD CYAN"\n----- PARSED COMMAND LIST -----\n"RESET);
 	cmd = cmd_list->head;
 	j = 0;

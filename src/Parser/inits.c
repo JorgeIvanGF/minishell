@@ -43,7 +43,6 @@ int	first_checks(char *input)
 	return (1);
 }
 
-
 // To create a Copy of the ENV-VARs
 static char	**copy_env(char **env)
 {

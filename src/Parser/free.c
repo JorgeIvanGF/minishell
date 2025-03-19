@@ -1,15 +1,14 @@
-
 #include "minishell.h"
 #include "parsing.h"
 
 // To free all the tokens in the list, and also the list itself
 void	free_token_list(t_lst_token *tokens)
 {
-	t_token *curr;
-	t_token *next;
+	t_token	*curr;
+	t_token	*next;
 
 	if (!tokens)
-		return;
+		return ;
 	curr = tokens->head;
 	while (curr)
 	{
@@ -23,117 +22,95 @@ void	free_token_list(t_lst_token *tokens)
 }
 
 // Free the list of redirections
-void free_redirections(t_lst_rdir *list_rdir)
+void	free_redirections(t_lst_rdir *list_rdir)
 {
-	t_rdir *tmp;
-	t_rdir *redir;
+	t_rdir	*tmp;
+	t_rdir	*redir;
 
 	if (!list_rdir)
-		return;
-
+		return ;
 	redir = list_rdir->head;
 	while (redir)
 	{
 		tmp = redir;
 		redir = redir->next;
-		free(tmp->name);  // Free the filename string
+		free(tmp->name);
 		tmp->name = NULL;
-		free(tmp); 
-		tmp = NULL;       // Free the redirection struct
+		free(tmp);
+		tmp = NULL;
 	}
-	list_rdir->head = NULL; // Set head to NULL after freeing
-	free(list_rdir);  // Free the list itself
+	list_rdir->head = NULL;
+	free(list_rdir);
 }
 
-// Free a single command
-void free_cmd(t_cmd *cmd)
+// Free a single command:
+// Free command arguments -> free each argument string -> Setting to NULL
+// to Prevent dangling pointers -> Free the array itself
+// Setting the array to NULL to Avoid potential double free.
+// Free redirections safely and Ensure it’s null after freeing
+// Free the command struct->Avoid use after free
+void	free_cmd(t_cmd *cmd)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	if (!cmd)
-		return;
-	
-	if (cmd->cmd_arr) // Free command arguments
+		return ;
+	if (cmd->cmd_arr)
 	{
 		while (cmd->cmd_arr[i])
 		{
-			free(cmd->cmd_arr[i]); // Free each argument string
-			cmd->cmd_arr[i] = NULL; // Prevent dangling pointers
+			free(cmd->cmd_arr[i]);
+			cmd->cmd_arr[i] = NULL;
 			i++;
 		}
-		free(cmd->cmd_arr); // Free the array itself
-		cmd->cmd_arr = NULL; // Avoid potential double free
+		free(cmd->cmd_arr);
+		cmd->cmd_arr = NULL;
 	}
-
-	// Free redirections safely
 	if (cmd->list_rdir)
 	{
 		free_redirections(cmd->list_rdir);
-		cmd->list_rdir = NULL; // Ensure it’s null after freeing
+		cmd->list_rdir = NULL;
 	}
-	free(cmd); // Free the command struct
-	cmd = NULL; // Avoid use after free
+	free(cmd);
+	cmd = NULL;
 }
 
-// Free the entire command list
-void free_cmd_list(t_lst_cmd *cmd_list)
+// Free the entire command list:
+// Free each command->Set to NULL toPrevent accessing 
+// freed memory->Free the command list struct
+void	free_cmd_list(t_lst_cmd *cmd_list)
 {
-	t_cmd *cmd;
-	t_cmd *tmp;
+	t_cmd	*cmd;
+	t_cmd	*tmp;
 
 	if (!cmd_list)
-		return;
-	
+		return ;
 	cmd = cmd_list->head;
 	while (cmd)
 	{
 		tmp = cmd;
 		cmd = cmd->next;
-		free_cmd(tmp); // Free each command
+		free_cmd(tmp);
 	}
-	cmd_list->head = NULL; // Prevent accessing freed memory
-	free(cmd_list); // Free the command list struct
+	cmd_list->head = NULL;
+	free(cmd_list);
 }
-void free_env(char **env)
-{
-	int i = 0;
 
+// Free duplicated ENV:
+// Free each duplicated environment variable
+// Free the array itself
+void	free_env(char **env)
+{
+	int	i;
+
+	i = 0;
 	if (!env)
-		return;
+		return ;
 	while (env[i])
 	{
-		free(env[i]); // Free each duplicated environment variable
+		free(env[i]);
 		i++;
 	}
-	free(env); // Free the array itself
-}
-
-void	continue_shell(t_minishell *minishell, t_lst_token **tokens, char **input)
-{
-	if (minishell->list_cmd)
-	{
-		free_cmd_list(minishell->list_cmd);
-		minishell->list_cmd = NULL;
-	}
-	free_token_list((*tokens));
-	(*tokens) = NULL;
-	free((*input));
-	(*input) = NULL;
-}
-
-// Free everything before exiting
-void exit_shell(t_minishell *minishell)
-{
-	if (minishell->list_cmd)
-	{
-		free_cmd_list(minishell->list_cmd);
-		minishell->list_cmd = NULL;
-	}
-	if ((minishell->env))
-	{	
-		free_env(minishell->env);
-		minishell->env = NULL;
-	}
-	free(minishell);
-	exit(0);
+	free(env);
 }

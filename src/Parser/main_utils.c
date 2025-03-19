@@ -1,17 +1,17 @@
 #include "minishell.h"
 #include "parsing.h"
 
-// Process the tokens and execute commands if valid
+// Process the tokens and execute commands if valid:
+// Syntax part (using tokens list)
+// Parsing part
 int	process_inputs(t_minishell *minishell, t_lst_token *tokens, char *input)
 {
-	// Syntax part (using tokens list)
 	if (syntax_check(tokens, minishell))
 	{
 		free_token_list(tokens);
 		free(input);
 		return (1);
-	}	
-	// Parsing part
+	}
 	minishell->list_cmd = parser(tokens, minishell);
 	if (!minishell->list_cmd)
 	{
@@ -22,7 +22,7 @@ int	process_inputs(t_minishell *minishell, t_lst_token *tokens, char *input)
 	}	
 	print_command_list(minishell->list_cmd); // TO DEBUG
 	ft_execution(minishell); // To Paula
-	continue_shell(minishell, &tokens, &input);	
+	continue_shell(minishell, &tokens, &input);
 	return (0);
 }
 
@@ -51,17 +51,17 @@ int handle_empty_input(char *input)
 	return (0);
 }
 
-// // Check if input consists of only spaces
-// int handle_only_spaces(char *input)
-// {
-// 	while (*input)
-// 	{
-// 		if (*input != ' ' && *input != '\t')
-// 			return (0);
-// 		input++;
-// 	}	
-// 	return (1);
-// }
+// Check if input consists of only spaces
+int handle_only_spaces(char *input)
+{
+	while (*input)
+	{
+		if (*input != ' ' && *input != '\t')
+			return (0);
+		input++;
+	}	
+	return (1);
+}
 
 // Check if input consists of only spaces
 // int handle_only_spaces(char *input) // TODO: error
