@@ -122,8 +122,27 @@ void	continue_shell(t_minishell *minishell, t_lst_token **tokens, char **input)
 }
 
 // Free everything before exiting
-void exit_shell(t_minishell *minishell)
+// void exit_shell(t_minishell *minishell) // Jorge old V
+// {
+// 	if (minishell->list_cmd)
+// 	{
+// 		free_cmd_list(minishell->list_cmd);
+// 		minishell->list_cmd = NULL;
+// 	}
+// 	if ((minishell->env))
+// 	{	
+// 		free_env(minishell->env);
+// 		minishell->env = NULL;
+// 	}
+// 	free(minishell);
+// 	exit(0);
+// }
+
+void exit_shell(t_minishell *minishell) // Paula new V (exit_shell to free_shell)
 {
+	int exit_code;
+
+	exit_code = minishell->exit_code;
 	if (minishell->list_cmd)
 	{
 		free_cmd_list(minishell->list_cmd);
@@ -135,5 +154,6 @@ void exit_shell(t_minishell *minishell)
 		minishell->env = NULL;
 	}
 	free(minishell);
-	exit(0);
+	// printf("final exit code (in exit_shell) = %d\n", exit_code); // for testing
+	exit(exit_code);
 }

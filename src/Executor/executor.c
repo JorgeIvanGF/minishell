@@ -81,9 +81,15 @@ void looping_through_list_commands(t_minishell *minishell) // TODO: change name 
 		current = current->next;
 	}
 		setup_signals_non_interactive(); // SIGNALS: Ignore signals during wait 
-		waitpid(id,&status, 0);
+		waitpid(id,&status, 0); // TODO: change wait
 		while (waitpid(-1, NULL, WNOHANG) != -1) //WUNTRACED
 			;
+		if (WIFEXITED(status))  // if child process terminated normally // updates minishell exit code/status from last ran command (paula if)
+		{
+			minishell->exit_code = WEXITSTATUS(status); // macro to extract exit code/status
+			printf("Child exited with status: %d\n", minishell->exit_code); // for testing
+		}
+
 		setup_signals_interactive(); // SIGNALS: Reset signals to interactive mode */
 		if (WIFSIGNALED(status)) // checks if the child process was terminated by a signal (instead of exiting normally)
 		{
@@ -98,7 +104,6 @@ void looping_through_list_commands(t_minishell *minishell) // TODO: change name 
 			}
 		}
 }
-
 
 // go thru entire cmd list. if command found, execute w above function, if not, execution will handle
 void checking_list_cmds_for_exec(t_minishell *minishell) // TODO: delete later

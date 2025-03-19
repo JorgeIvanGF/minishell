@@ -75,6 +75,7 @@ typedef struct s_minishell
 	char		**env;
 	t_lst_cmd	*list_cmd;
 	int 		exit_code;
+	int			exit_requested; // added by Paula
 }t_minishell;
 
 // Execution________________________________________

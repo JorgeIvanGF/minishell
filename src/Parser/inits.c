@@ -97,5 +97,6 @@ void	*init_minishell(t_minishell **minishell, char **env)
 	}
 	(*minishell)->list_cmd = NULL;
 	(*minishell)->exit_code = 0;
+	(*minishell)->exit_requested = 0;
 	return (minishell);
 }

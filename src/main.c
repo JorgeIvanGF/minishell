@@ -101,7 +101,7 @@ void command_loop(t_minishell *minishell)
 	char *input;
 	t_lst_token *tokens;
 	
-	while (1)
+	while (!(minishell->exit_requested)) // changed by Paula
 	{
 		input = get_and_validate_input();
 		if (input == NULL)
@@ -127,16 +127,36 @@ void command_loop(t_minishell *minishell)
 
 
 // The Main function 
-int main(int argc, char **argv, char **env)
+// int main(int argc, char **argv, char **env) // Jorge old V
+// {
+// 	t_minishell *minishell;
+	
+// 	(void) argc;
+// 	(void) argv;
+// 	init_minishell(&minishell, env);
+// 	disable_echoctl(); // Disable echoing of control characters
+// 	setup_signals_interactive();
+// 	command_loop(minishell); /
+// 	exit_shell(minishell); 
+// 	return (0);
+// }
+
+int main(int argc, char **argv, char **env) // Paula new V
 {
 	t_minishell *minishell;
+	// int exit_code;
 	
 	(void) argc;
 	(void) argv;
 	init_minishell(&minishell, env);
 	disable_echoctl(); // Disable echoing of control characters
 	setup_signals_interactive();
-	command_loop(minishell);	
-	exit_shell(minishell);
-	return (minishell->exit_code);
+
+	command_loop(minishell); // parsing, execution happens here
+	// printf("exit flag in main = %d\n", minishell->exit_requested); // for testing
+
+	exit_shell(minishell); // changed name from exit_shell to free_shell
+	// printf("final exit code (in main) = %d\n", exit_code); // for testing
+
+	return (0);
 }

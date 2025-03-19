@@ -184,14 +184,16 @@ int syntax_check_exit(t_cmd *cmd, t_minishell *minishell)
     return (1);
 }
 
-int execute_exit(t_cmd *cmd, t_minishell *minishell)
+int execute_exit(t_cmd *cmd, t_minishell *minishell) 
 {
     int entered_exit_code;
     
     if (!cmd->cmd_arr[1]) // if sole input is exit
     {
         write(1, "exit\n", 5);
-        minishell->exit_code = 0;
+        minishell->exit_code = 0; 
+        minishell->exit_requested = 1;
+        // exit(minishell->exit_code); // works to exit, but does NOT free before 
     }
     else if (cmd->cmd_arr[1] && !cmd->cmd_arr[2]) // if input is exit + a number
     {
@@ -199,6 +201,7 @@ int execute_exit(t_cmd *cmd, t_minishell *minishell)
         {
             entered_exit_code = ft_atoi(cmd->cmd_arr[1]);
             minishell->exit_code = entered_exit_code % 256; // formula to calculate exit code if above 255 (module % of 256) 
+            minishell->exit_requested = 1;
             printf("exit code calculated = %d\n", minishell->exit_code); // just for testing
         }
     }

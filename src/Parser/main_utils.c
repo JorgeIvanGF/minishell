@@ -18,7 +18,8 @@ int	process_inputs(t_minishell *minishell, t_lst_token *tokens, char *input)
 		printf(RED"Failed to Parse the tokens\n"RESET);
 		free_token_list(tokens);
 		free(input);
-		exit_shell(minishell);
+		// exit_shell(minishell); // TODO: recheck bc of exit code (paula) // recheck which exit code
+		minishell->exit_requested = 1; // triggers main, then frees, and exits
 	}	
 	print_command_list(minishell->list_cmd); // TO DEBUG
 	ft_execution(minishell); // To Paula
