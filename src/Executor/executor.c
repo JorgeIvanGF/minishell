@@ -88,7 +88,11 @@ void looping_through_list_commands(t_minishell *minishell) // TODO: change name 
 			printf("Child exited with status: %d\n", minishell->exit_code); // for testing
 		}
 
+
+
 		setup_signals_interactive(); // SIGNALS: Reset signals to interactive mode */
+
+		// TODO: Jorge: refactor everything below into one function to call here
 		if (WIFSIGNALED(status)) // checks if the child process was terminated by a signal (instead of exiting normally)
 		{
 			// Returns the actual signal number that caused the termination.

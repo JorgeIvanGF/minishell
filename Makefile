@@ -53,7 +53,8 @@ SRC_FILES   = main.c \
 			Executor/init_structs.c \
 			Executor/builtins.c \
 			Executor/redirections.c \
-			Executor/pipe.c
+			Executor/pipe.c \
+			Executor/builtins/exit.c
 
 
 

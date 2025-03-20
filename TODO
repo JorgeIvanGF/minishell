@@ -1,10 +1,8 @@
 
-
+LEFT
 - heredoc
 
-- wait (rewrite)
-
-- exit status
+- wait (rewrite) & exit status
 
 - builtin: export
 
@@ -12,9 +10,10 @@
 
 
 ERRORS
-- needs FIXING (output not correct)
+needs FIXING (output not correct) (printed twice)
 -- < infile | wc
 -- ls > nonexisting file - la
+-- grep 'minishell' < input.txt | sort > sorted.txt
 
 
 FIX STYLE
