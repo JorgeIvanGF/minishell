@@ -39,9 +39,11 @@ void	add_argument(t_cmd *cmd, char *arg)
 	cmd->cmd_arr = new_args;
 }
 
-// Add the RD to the list of RDs
+// Add the RD to the list of RDs:
 // Create the instance of redir and set their fields using token's fields
-// if it's the first set as it
+// if it's the first set as it.
+// Else,make the curr tail->Next to point to the new node -> tail node updated
+// to point to the new node -> update the list size after added the new node
 void	add_redirection(t_cmd *cmd, t_token *token)
 {
 	t_rdir	*redir;
@@ -62,14 +64,13 @@ void	add_redirection(t_cmd *cmd, t_token *token)
 	if (!cmd->list_rdir->head)
 		cmd->list_rdir->head = redir;
 	else
-		cmd->list_rdir->tail->next = redir; // make the curr tail->Next to point to the new node
-	cmd->list_rdir->tail = redir; // tail node updated to point to the new node
-	cmd->list_rdir->size++; // update the size of the list after added the new node
-
-	// printf(YELLOW"Added redirection: %s -> %s\n"RESET, token->value, redir->name); // To debug
+		cmd->list_rdir->tail->next = redir;
+	cmd->list_rdir->tail = redir;
+	cmd->list_rdir->size++;
 }
 
-// Create a new command object and initialize its members
+// Create a new command object and initialize its members:
+// Allocate and initialize the list of redirections properly
 t_cmd	*new_command(void)
 {
 	t_cmd	*cmd;
@@ -78,8 +79,6 @@ t_cmd	*new_command(void)
 	if (!cmd)
 		return (NULL);
 	cmd->cmd_arr = NULL;
-
-	// Allocate and initialize the list of redirections properly
 	cmd->list_rdir = malloc(sizeof(t_lst_rdir));
 	if (!cmd->list_rdir)
 	{

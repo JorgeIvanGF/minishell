@@ -37,22 +37,19 @@ void	print_command_list(t_lst_cmd *cmd_list)
 			t_rdir *redir = cmd->list_rdir->head;
 			while (redir)
 			{
-				printf(YELLOW"  RDir: Type: %d  Name: %s\n"RESET, 
+				printf(YELLOW"  RDir: Type: %d  Name: %s\n"RESET,
 					(int)redir->type, redir->name);
 				redir = redir->next;
 			}
 		}
-
 		if (cmd->next)
 			printf(ORANGE"\n| (Pipe to next command)\n"RESET);
 		cmd = cmd->next;
 		j++;
 	}
-	
 	printf(BOLD CYAN"\n----- END OF COMMAND LIST -----\n"RESET);
 }
 // ................................................... END OF PRINTING CMD LIST
-
 
 // initialize list of commands
 void	init_lst_cmd(t_minishell *minishell)
@@ -60,7 +57,6 @@ void	init_lst_cmd(t_minishell *minishell)
 	minishell->list_cmd = malloc(sizeof(t_lst_cmd));
 	if (!minishell->list_cmd)
 	{
-		//minishell->list_cmd = NULL;
 		return ;
 	}
 	minishell->list_cmd->head = NULL;

@@ -1,16 +1,14 @@
-
-
-#ifndef MINISHELL_C
-# define MINISHELL_C
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
 // Included Libraries_______________________________
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include "../libft/inc/libft.h"
-#include <termios.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include "../libft/inc/libft.h"
+# include <termios.h>
 
 //Colors used for terminal output____________________
 # define GREEN "\033[0;32m"
@@ -25,16 +23,16 @@
 # define CYAN "\x1b[36m" //Cyan
 
 // Text attributes 
-#define BOLD      "\x1b[1m" 
-#define UNDERLINE "\x1b[4m"
+# define BOLD      "\x1b[1m" 
+# define UNDERLINE "\x1b[4m"
 
 // Enum Redirections_________________________________
 typedef enum e_redirection_type
 {
-	RD_IN,		// <
-	RD_OUT,		// >
-	RD_APND,	// >>
-	RD_HDOC		// <<
+	RD_IN,
+	RD_OUT,
+	RD_APND,
+	RD_HDOC
 }	t_rdir_type;
 
 // Redirection Struct________________________________
@@ -74,11 +72,10 @@ typedef struct s_minishell
 {
 	char		**env;
 	t_lst_cmd	*list_cmd;
-	int 		exit_code;
-}t_minishell;
+	int			exit_code;
+}	t_minishell;
 
 // Execution________________________________________
-int ft_execution (t_minishell *minishell);
+int	ft_execution(t_minishell *minishell);
 
 #endif
-

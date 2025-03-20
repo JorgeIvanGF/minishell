@@ -1,8 +1,23 @@
-
 #include "minishell.h"
 #include "parsing.h"
 
-// The replacement of the origina str from input to the value of ENV-VAR
+// Extract variable name (in the input string) after $
+// skip numbers and _ 
+char	*extract_var_name(const char *str)
+{
+	int		i;
+	char	*var_name;
+
+	i = 0;
+	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
+		i++;
+	var_name = ft_substr(str, 0, i);
+	return (var_name);
+}
+
+// The replacement of the original str from input to the value of ENV-VAR
+// Handle memory failure-> Normal case: Replace with value
+// If value is NULL, just remove the $VAR
 char	*replace_var(char *input, char *var, char *value, int pos)
 {
 	char	*before;
@@ -14,17 +29,15 @@ char	*replace_var(char *input, char *var, char *value, int pos)
 	var_len = ft_strlen(var);
 	before = ft_substr(input, 0, pos);
 	after = ft_strdup(input + pos + var_len + 1);
-	if (!before || !after) // Handle memory failure
+	if (!before || !after)
 		return (NULL);
-	if (value) // Normal case: Replace with value
+	if (value)
 		new_str = ft_strjoin(before, value);
-	else // If value is NULL, just remove the $VAR
+	else
 		new_str = ft_strdup(before);
 	free(before);
 	final_str = ft_strjoin(new_str, after);
 	free(input);
-	//here only assign a string to the LOCAL input variable
-	//input = ft_strjoin(new_str, after);
 	free(new_str);
 	free(after);
 	return (final_str);
@@ -37,7 +50,7 @@ void	remove_external_quotes(t_token *token)
 	int		len;
 
 	if (!token || !token->value)
-		return;
+		return ;
 	len = ft_strlen(token->value);
 	if ((token->value[0] == '"' && token->value[len - 1] == '"')
 		|| (token->value[0] == '\'' && token->value[len - 1] == '\''))
@@ -46,5 +59,4 @@ void	remove_external_quotes(t_token *token)
 		free(token->value);
 		token->value = new_value;
 	}
-	//printf(MAG"tok val after removal = %s\n"RESET, token->value); // TO DEBUG
 }

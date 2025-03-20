@@ -1,30 +1,28 @@
+#ifndef PARSING_H
+# define PARSING_H
 
-
-#ifndef PARSING_C
-# define PARSING_C
-
-#include "minishell.h"
+# include "minishell.h"
 
 // Enum Token types___________________________
 typedef enum e_token_type
 {
-	REDIR_IN,	// "<"
-	REDIR_OUT,	// ">"
-	APPEND,		// ">>"
-	HEREDOC,	// "<<"
-	PIPE,		// "|"
-	WORD,		// Normal words
-	DBQ,		// Double quotes
-	SGQ,		// Single quotes
-	SPC			// Space
+	REDIR_IN,
+	REDIR_OUT,
+	APPEND,
+	HEREDOC,
+	PIPE,
+	WORD,
+	DBQ,
+	SGQ,
+	SPC
 }	t_token_type;
 
 // Token Struct______________________________
 typedef struct s_token
 {
 	char			*value;
-	t_token_type 	type;
-	struct s_token 	*next;
+	t_token_type	type;
+	struct s_token	*next;
 }	t_token;
 
 // Token List Struct_________________________
@@ -35,11 +33,10 @@ typedef struct s_token_list
 	int		size;
 }	t_lst_token;
 
-
-// Function Prototypes_____________________________________
+// Function Prototypes_____________________________________________________
 
 // inits.c
-void			*init_minishell (t_minishell **minishell,char **env);
+void			*init_minishell(t_minishell **minishell, char **env);
 int				first_checks(char *input);
 
 // tokenizer.c
@@ -66,7 +63,8 @@ char			*extract_quoted(int *i, char *input, char quote);
 char			*extract_unquoted(int *i, char *input);
 char			*extract_redir_filename(int *i, char *input);
 int				process_operator(char *input, int *i, t_lst_token *tokens);
-int				process_standard_token(char *input, int *i, t_lst_token *tokens);
+int				process_standard_token(char *input, int *i,
+					t_lst_token *tokens);
 
 // tokenizer_utils_4.c
 char			*append_segment(char *result, char *segment);
@@ -78,6 +76,7 @@ void			expand_variables(t_token *token, char **env);
 // syntax_uyils_2.c
 char			*replace_var(char *input, char *var, char *value, int pos);
 void			remove_external_quotes(t_token *token);
+char			*extract_var_name(const char *str);
 
 // parser.c
 t_lst_cmd		*parser(t_lst_token *tokens, t_minishell *minishell);
@@ -98,9 +97,11 @@ void			init_lst_cmd(t_minishell *minishell);
 // parser_utils_2.c
 t_lst_cmd		*finalize_parsing(t_minishell *minishell);
 t_token			*skip_spaces_(t_token *token);
-t_token			*handle_redirection(t_token *curr, t_cmd *cmd, t_minishell *minishell);
+t_token			*handle_redirection(t_token *curr, t_cmd *cmd,
+					t_minishell *minishell);
 t_token			*handle_word_token(t_token *curr, t_cmd *cmd);
-t_lst_cmd		*process_tokens(t_token *curr, t_cmd *cmd, t_minishell *minishell);
+t_lst_cmd		*process_tokens(t_token *curr, t_cmd *cmd,
+					t_minishell *minishell);
 
 // free.c
 void			free_cmd_list(t_lst_cmd *cmd_list);
@@ -108,11 +109,13 @@ void			free_token_list(t_lst_token *tokens);
 void			free_env(char **env);
 
 // free_2.c
-void			continue_shell(t_minishell *minishell, t_lst_token **tokens, char **input);
+void			continue_shell(t_minishell *minishell,
+					t_lst_token **tokens, char **input);
 void			exit_shell(t_minishell *minishell);
 
 // main_utils.c
-int				process_inputs(t_minishell *minishell, t_lst_token *tokens, char *input);
+int				process_inputs(t_minishell *minishell,
+					t_lst_token *tokens, char *input);
 int				tokenize_input(char *input, t_lst_token **tokens);
 int				handle_empty_input(char *input);
 char			*get_and_validate_input(void);

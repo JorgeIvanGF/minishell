@@ -19,7 +19,7 @@ int	process_inputs(t_minishell *minishell, t_lst_token *tokens, char *input)
 		free_token_list(tokens);
 		free(input);
 		exit_shell(minishell);
-	}	
+	}
 	print_command_list(minishell->list_cmd); // TO DEBUG
 	ft_execution(minishell); // To Paula
 	continue_shell(minishell, &tokens, &input);
@@ -27,7 +27,7 @@ int	process_inputs(t_minishell *minishell, t_lst_token *tokens, char *input)
 }
 
 // Tokenize the input and handle errors
-int tokenize_input(char *input, t_lst_token **tokens)
+int	tokenize_input(char *input, t_lst_token **tokens)
 {
 	*tokens = tokenize(input);
 	if (!*tokens)

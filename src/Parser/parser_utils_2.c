@@ -13,7 +13,6 @@ t_lst_cmd	*finalize_parsing(t_minishell *minishell)
 		printf(RED"Error: No commands were added to the list!\n"RESET);
 		return (NULL);
 	}
-	//print_command_list(minishell->list_cmd);
 	return (minishell->list_cmd);
 }
 
@@ -53,14 +52,15 @@ t_token	*handle_redirection(t_token *curr, t_cmd *cmd, t_minishell *minishell)
 t_token	*handle_word_token(t_token *curr, t_cmd *cmd)
 {
 	char	*merged;
+	char	*temp;
 
 	merged = ft_strdup(curr->value);
 	if (!merged)
 		return (NULL);
-	while (curr->next && (curr->next->type == WORD || 
-		curr->next->type == DBQ || curr->next->type == SGQ))
+	while (curr->next && (curr->next->type == WORD
+			|| curr->next->type == DBQ || curr->next->type == SGQ))
 	{
-		char *temp = merged;
+		temp = merged;
 		merged = ft_strjoin(merged, curr->next->value);
 		free(temp);
 		if (!merged)
