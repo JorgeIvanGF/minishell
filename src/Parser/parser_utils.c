@@ -21,9 +21,11 @@ void	print_command_list(t_lst_cmd *cmd_list)
 	while (cmd)
 	{
 		printf(GREEN"\nCommand[%d]:\n"RESET, j);
-		if (!cmd->cmd_arr) {
+		if (!cmd->cmd_arr)
+		{
 			printf(BLUE"  [No command arguments]\n"RESET);
-		} else {
+		}
+		else {
 			for (i = 0; cmd->cmd_arr[i]; i++)
 				printf(BLUE"  Arg[%d]: %s\n"RESET, i, cmd->cmd_arr[i]);
 		}
@@ -48,6 +50,7 @@ void	print_command_list(t_lst_cmd *cmd_list)
 		j++;
 	}
 	printf(BOLD CYAN"\n----- END OF COMMAND LIST -----\n"RESET);
+	printf("\n");
 }
 // ................................................... END OF PRINTING CMD LIST
 

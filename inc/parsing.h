@@ -122,6 +122,9 @@ char			*get_and_validate_input(void);
 int				handle_null_input(void);
 int				handle_only_spaces(char *input);
 
+// main_utils_2.c
+int				handle_null_input(void);
+
 // main.c
 void			print_tokens(t_lst_token *tokens);
 

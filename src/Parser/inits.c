@@ -1,4 +1,3 @@
-
 #include "../inc/minishell.h"
 #include "../inc/parsing.h"
 

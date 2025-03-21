@@ -1,9 +1,10 @@
 #include "minishell.h"
 #include "parsing.h"
 
-// Extract a segment from 'input' that is enclosed by the specified 'quote' character.
-// It starts right after the opening quote (advancing the index 'i'),
-// and continues until it finds the closing quote. Returns the extracted substring.
+// Extract a segment from 'input' that is enclosed by the 
+// specified 'quote' character. It starts right after the 
+// opening quote (advancing the index 'i'),and continues until 
+// it finds the closing quote. Returns the extracted substring.
 char	*extract_quoted(int *i, char *input, char quote)
 {
 	int		start;
@@ -28,9 +29,9 @@ char	*extract_unquoted(int *i, char *input)
 	char	*segment;
 
 	start = *i;
-	while (input[*i] && input[*i] != ' ' && input[*i] != '|' &&
-		input[*i] != '<' && input[*i] != '>' &&
-		input[*i] != '\'' && input[*i] != '\"')
+	while (input[*i] && input[*i] != ' ' && input[*i] != '|'
+		&& input[*i] != '<' && input[*i] != '>'
+		&& input[*i] != '\'' && input[*i] != '\"')
 		(*i)++;
 	segment = ft_substr(input, start, *i - start);
 	return (segment);
@@ -48,8 +49,8 @@ char	*extract_redir_filename(int *i, char *input)
 	result = ft_strdup("");
 	if (!result)
 		return (NULL);
-	while (input[*i] && input[*i] != ' ' && input[*i] != '|' &&
-		input[*i] != '<' && input[*i] != '>')
+	while (input[*i] && input[*i] != ' ' && input[*i] != '|'
+		&& input[*i] != '<' && input[*i] != '>')
 	{
 		if (input[*i] == '\'' || input[*i] == '\"')
 			segment = extract_quoted(i, input, input[*i]);
@@ -66,19 +67,19 @@ char	*extract_redir_filename(int *i, char *input)
 }
 
 // Function to process an operator token
-int process_operator(char *input, int *i, t_lst_token *tokens)
+int	process_operator(char *input, int *i, t_lst_token *tokens)
 {
-	char *word;
-	t_token_type type;
+	char			*word;
+	t_token_type	type;
 
 	word = extract_operator(i, input);
 	if (!word)
 		return (0);
 	if (!process_word(word, tokens))
 		return (0);
-
 	type = get_token_type(tokens->tail->value);
-	if (type == REDIR_IN || type == REDIR_OUT || type == APPEND || type == HEREDOC)
+	if (type == REDIR_IN || type == REDIR_OUT
+		|| type == APPEND || type == HEREDOC)
 	{
 		skip_spaces(input, i);
 		word = extract_redir_filename(i, input);
@@ -91,9 +92,9 @@ int process_operator(char *input, int *i, t_lst_token *tokens)
 }
 
 // Function to process a standard token
-int process_standard_token(char *input, int *i, t_lst_token *tokens)
+int	process_standard_token(char *input, int *i, t_lst_token *tokens)
 {
-	char *word;
+	char	*word;
 
 	word = extractor(i, input);
 	if (!word)

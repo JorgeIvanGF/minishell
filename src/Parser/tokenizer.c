@@ -12,7 +12,7 @@ void	init_tokens(t_lst_token *tokens)
 // Handles token creation and addition to the list
 int	add_token_to_list(char *word, t_lst_token *tokens)
 {
-	t_token *token;
+	t_token	*token;
 
 	token = new_token(word, get_token_type(word));
 	if (!token)
@@ -26,20 +26,22 @@ int	add_token_to_list(char *word, t_lst_token *tokens)
 	return (1);
 }
 
-// Main lexer function
-int ft_lexer(char *input, t_lst_token *tokens)
+// Main lexer function:
+// skip initial spaces->pass tru input->if finds operator->process it
+// else process standart token
+int	ft_lexer(char *input, t_lst_token *tokens)
 {
-	int i;
+	int	i;
 
 	if (!input || !tokens)
 		return (0);
 	i = 0;
-	while (input[i] && input[i] == ' ')// skip initial spaces
+	while (input[i] && input[i] == ' ')
 		i++;
 	while (input[i])
 	{
 		if (!input[i])
-			break;
+			break ;
 		if (input[i] == '|' || input[i] == '<' || input[i] == '>')
 		{
 			if (!process_operator(input, &i, tokens))
@@ -59,7 +61,7 @@ int ft_lexer(char *input, t_lst_token *tokens)
 t_lst_token	*tokenize(char *input)
 {
 	t_lst_token	*tokens;
-	
+
 	tokens = malloc(sizeof(t_lst_token));
 	if (!tokens)
 		return (NULL);
@@ -68,9 +70,6 @@ t_lst_token	*tokenize(char *input)
 	{
 		free_token_list(tokens);
 		return (NULL);
-	}	
+	}
 	return (tokens);
 }
-
-
-

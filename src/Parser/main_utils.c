@@ -32,7 +32,6 @@ int	tokenize_input(char *input, t_lst_token **tokens)
 	*tokens = tokenize(input);
 	if (!*tokens)
 	{
-		//printf(RED"Error: Tokenization failed.\n"RESET);
 		free(input);
 		return (1);
 	}
@@ -41,7 +40,7 @@ int	tokenize_input(char *input, t_lst_token **tokens)
 }
 
 // Handle empty input case
-int handle_empty_input(char *input)
+int	handle_empty_input(char *input)
 {
 	if (input[0] == '\0')
 	{
@@ -52,64 +51,31 @@ int handle_empty_input(char *input)
 }
 
 // Check if input consists of only spaces
-int handle_only_spaces(char *input)
+int	handle_only_spaces(char *input)
 {
 	while (*input)
 	{
 		if (*input != ' ' && *input != '\t')
 			return (0);
 		input++;
-	}	
+	}
 	return (1);
 }
 
-// Check if input consists of only spaces
-// int handle_only_spaces(char *input) // TODO: error
-// {
-// 	char *temp;
-	
-// 	temp = input;
-// 	while (*input)
-// 	{
-// 		while (*input == ' ' || *input == '\t')
-// 			input++;
-// 		if (*input == '\0')
-// 		{
-// 			input = temp;
-// 			free(input);
-// 			return (1);
-// 		}
-// 	}
-// 	return (0);
-// }
-
-
-// Handle input readline and validation
-char *get_and_validate_input(void)
+// Handle input readline and validation:
+// If Ctrl+D is pressed 'exit' is printed
+// If input is not empty, add it to history
+char	*get_and_validate_input(void)
 {
-	char *input;
-	
+	char	*input;
+
 	input = readline(ORANGE"MINISHELL> "RESET);
-	if (!input) // If Ctrl+D is pressed, exit
+	if (!input)
 	{
 		printf("exit\n");
 		return (NULL);
-	}	
-	if (*input) // If input is not empty, add it to history
+	}
+	if (*input)
 		add_history(input);
-	// if (*input && !first_checks(input))// Only check non-empty inputs
-	// {
-	// 	printf("is Null...");
-	// 	free(input);
-	// 	return (NULL);
-	// }
 	return (input);
-}
-
-// Handle NULL input (Ctrl+D case)
-int handle_null_input(void)
-{
-	if (isatty(STDIN_FILENO) && isatty(STDOUT_FILENO))
-		return (1); // Signal to break the main loop
-	return (0);
 }

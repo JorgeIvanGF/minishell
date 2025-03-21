@@ -1,4 +1,3 @@
-
 #include "minishell.h"
 #include "parsing.h"
 
@@ -60,17 +59,19 @@ char	*extract_word(int *i, char *input)
 	return (ft_substr(input, start, *i - start));
 }
 
-// Extract operators
+// Extract operators:
+// First Handle ">>" then "<<" and 
+// finally single ">" or "<" or "|"
 char	*extract_operator(int *i, char *input)
 {
 	int	start;
 
 	start = *i;
 	if (input[*i] == '>' && input[*i + 1] == '>')
-		*i += 2; // Handle ">>"
+		*i += 2;
 	else if (input[*i] == '<' && input[*i + 1] == '<')
-		*i += 2; // Handle "<<"
+		*i += 2;
 	else
-		(*i)++; // Handle single ">" or "<" or "|"
+		(*i)++;
 	return (ft_substr(input, start, *i - start));
 }

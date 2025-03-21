@@ -68,6 +68,25 @@ int	execute_cmd(t_cmd *cmd, t_minishell *minishell)
 	return(id);
 }
 
+// New function to handle signal termination:
+// Checks if the child process was terminated by a signal (instead of normally)
+// Returns the actual signal number that caused the termination.
+// If the signal that killed the child was SIGINT(ex. when Ctrl C pressed)
+// -> set the global variable g_signum to SIGINT.
+void handle_signal_termination(int status)
+{
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGINT) 
+			g_signum = SIGINT;
+		else if (WTERMSIG(status) == SIGQUIT)
+		{
+			g_signum = SIGQUIT;
+			write(2, "Quit (core dumped)\n", 19);
+		}
+	}
+}
+
 void looping_through_list_commands(t_minishell *minishell) // TODO: change name of ft
 {
 	t_cmd *current;
@@ -84,19 +103,8 @@ void looping_through_list_commands(t_minishell *minishell) // TODO: change name 
 		waitpid(id,&status, 0);
 		while (waitpid(-1, NULL, WNOHANG) != -1) //WUNTRACED
 			;
-		setup_signals_interactive(); // SIGNALS: Reset signals to interactive mode */
-		if (WIFSIGNALED(status)) // checks if the child process was terminated by a signal (instead of exiting normally)
-		{
-			// Returns the actual signal number that caused the termination.
-			// If the signal that killed the child was SIGINT(ex. when Ctrl C pressed)
-			if (WTERMSIG(status) == SIGINT) 
-				g_signum = SIGINT; //set the global variable g_signum to SIGINT.
-			else if (WTERMSIG(status) == SIGQUIT)
-			{
-				g_signum = SIGQUIT;
-				write(2, "Quit (core dumped)\n", 19);
-			}
-		}
+		setup_signals_interactive(); // SIGNALS: Reset signals to interactive mode
+		handle_signal_termination(status); // SIGNALS: Check signal termination
 }
 
 
