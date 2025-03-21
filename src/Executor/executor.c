@@ -20,7 +20,7 @@ void	execution(char **env, t_cmd *cmd)
 		free(found_path);
 		// minishell->exit_code = 127; // TODO: put minishell as input
 		// // exit_shell();
-		exit(127);
+		// exit(127);
 	}
 }
 
@@ -32,6 +32,7 @@ int	execute_cmd(t_cmd *cmd, t_minishell *minishell)
 	pipe(fd);
 	setup_signals_non_interactive(); // SIGNALS: Ignore signals before fork
 	id = fork();
+	printf("id =%d\n", id);
 	if (id == 0) 
 	{
 		setup_signals_default(); // SIGNALS: Reset signals to default in child
@@ -50,12 +51,12 @@ int	execute_cmd(t_cmd *cmd, t_minishell *minishell)
 				}
 			}
 		}
-		exit(0); // TODO: line needs to be double checked bc of #
+		// exit(127); // TODO: line needs to be double checked bc of # & free
 	}
 	else 
 	{
 		handle_pipe_redirection(cmd, fd, PARENT_PROCESS); 
-		if (is_builtin(cmd) == 1 && has_pipe(cmd) == 0) // pipe check: IF pipe not found, go ahead (for builtins) //
+		if (is_builtin(cmd) == 1 && has_pipe(cmd) == 0) // TODO: redo (eazy) m
 		{
 			if (redirecting_io(cmd) == 1)
 			{
@@ -63,7 +64,14 @@ int	execute_cmd(t_cmd *cmd, t_minishell *minishell)
 			}
 		}
 	}
-	return(id);
+
+	// {
+	// 	if (wait(NULL) == -1) // if -1, all children done
+	// 	{
+	// 		break;
+	// 	}
+	// }
+	return (id);
 }
 
 void looping_through_list_commands(t_minishell *minishell) // TODO: change name of ft
@@ -73,38 +81,41 @@ void looping_through_list_commands(t_minishell *minishell) // TODO: change name 
 	int id;
 
 	current = minishell->list_cmd->head;
-	while(current != NULL)
+	while(current != NULL) 
 	{ 
 		id = execute_cmd(current, minishell); // alle fd redirection redirecten stdin, stdout
 		current = current->next;
 	}
-		setup_signals_non_interactive(); // SIGNALS: Ignore signals during wait 
-		waitpid(id,&status, 0); // TODO: change wait
-		while (waitpid(-1, NULL, WNOHANG) != -1) //WUNTRACED
-			;
-		if (WIFEXITED(status))  // if child process terminated normally // updates minishell exit code/status from last ran command (paula if)
+	setup_signals_non_interactive(); // SIGNALS: Ignore signals during wait 
+	waitpid(id, &status, 0); 
+	while(wait(NULL) != -1)
+		;
+	
+	if (WIFEXITED(status))  // if child process terminated normally // updates minishell exit code/status from last ran command (paula if)
+	{
+		minishell->exit_code = WEXITSTATUS(status); // macro to extract exit code/status
+		printf("Child exited with status: %d\n", minishell->exit_code); // for testing
+	}
+
+
+
+	setup_signals_interactive(); // SIGNALS: Reset signals to interactive mode */
+
+	// TODO: Jorge: refactor everything below into one function to call here
+	if (WIFSIGNALED(status)) // checks if the child process was terminated by a signal (instead of exiting normally)
+	{
+		// Returns the actual signal number that caused the termination.waitpid(id,&status, 0); // TODO: change wait
+	// while (waitpid(-1, NULL, WNOHANG) != -1) //WUNTRACED
+	// 	;
+		// If the signal that killed the child was SIGINT(ex. when Ctrl C pressed)
+		if (WTERMSIG(status) == SIGINT) 
+			g_signum = SIGINT; //set the global variable g_signum to SIGINT.
+		else if (WTERMSIG(status) == SIGQUIT)
 		{
-			minishell->exit_code = WEXITSTATUS(status); // macro to extract exit code/status
-			printf("Child exited with status: %d\n", minishell->exit_code); // for testing
+			g_signum = SIGQUIT;
+			write(2, "Quit (core dumped)\n", 19);
 		}
-
-
-
-		setup_signals_interactive(); // SIGNALS: Reset signals to interactive mode */
-
-		// TODO: Jorge: refactor everything below into one function to call here
-		if (WIFSIGNALED(status)) // checks if the child process was terminated by a signal (instead of exiting normally)
-		{
-			// Returns the actual signal number that caused the termination.
-			// If the signal that killed the child was SIGINT(ex. when Ctrl C pressed)
-			if (WTERMSIG(status) == SIGINT) 
-				g_signum = SIGINT; //set the global variable g_signum to SIGINT.
-			else if (WTERMSIG(status) == SIGQUIT)
-			{
-				g_signum = SIGQUIT;
-				write(2, "Quit (core dumped)\n", 19);
-			}
-		}
+	}
 }
 
 // go thru entire cmd list. if command found, execute w above function, if not, execution will handle

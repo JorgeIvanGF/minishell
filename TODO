@@ -2,20 +2,27 @@
 LEFT
 - heredoc
 
-- wait (rewrite) & exit status
-
+- exit status (save when doing wait)
 - builtin: export
-
 - norminette
 
 
-ERRORS
-needs FIXING (output not correct) (printed twice)
--- < infile | wc
--- ls > nonexisting file - la
--- grep 'minishell' < input.txt | sort > sorted.txt
+ERRORS (TODO)
+*PAULA*
+-- * < infile | wc (FIXED)
+-- * ls > nonexisting file - la (FIXED)
+-- grep 'minishell' < input.txt | sort > sorted.txt (maybe bc of this: sort > sorted.txt) (due to file descriptor!)
+
+*JORGE*
+- minishell doesnt exit right away w control c (Jorge)
+- arrow up pressing makes minishell appear twice orange in terminal
+
 
 
 FIX STYLE
  - ft_execution
  - add headers everywhere
+
+
+ git next commit:
+ FIX(exec): redirection error fixed when file not found
