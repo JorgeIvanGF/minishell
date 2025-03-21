@@ -2,7 +2,7 @@
 LEFT
 - heredoc
 
-- exit status (save when doing wait)
+- DONE exit status (save when doing wait)
 - builtin: export
 - norminette
 
@@ -22,7 +22,3 @@ ERRORS (TODO)
 FIX STYLE
  - ft_execution
  - add headers everywhere
-
-
- git next commit:
- FIX(exec): redirection error fixed when file not found

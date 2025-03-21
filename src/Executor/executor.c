@@ -1,26 +1,26 @@
-#include "../../inc/minishell.h"
+#include "minishell.h"
 #include "execution.h"
 #include "signals.h"
+#include "parsing.h"
 
-void	execution(char **env, t_cmd *cmd) 
+void	execution(t_cmd *cmd, t_minishell *minishell) 
 {
 	char	*path;
 	char	**path_cmds;
 	char	*found_path;
 	
-	path = get_path(env);
+	path = get_path(minishell->env);
 	path_cmds = get_paths_cmds(path);
 	found_path = find_path(path_cmds, cmd->cmd_arr[0]);
-	if (execute(found_path, cmd, env) == -1)
+	if (execute(found_path, cmd, minishell->env) == -1)
 	{
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(cmd->cmd_arr[0], 2);
 		ft_putendl_fd(": command not found", 2);
 		ft_free_2d(path_cmds);
 		free(found_path);
-		// minishell->exit_code = 127; // TODO: put minishell as input
-		// // exit_shell();
-		// exit(127);
+		minishell->exit_code = 127;
+		exit_shell(minishell);
 	}
 }
 
@@ -32,7 +32,7 @@ int	execute_cmd(t_cmd *cmd, t_minishell *minishell)
 	pipe(fd);
 	setup_signals_non_interactive(); // SIGNALS: Ignore signals before fork
 	id = fork();
-	printf("id =%d\n", id);
+	// printf("id =%d\n", id); // for testing
 	if (id == 0) 
 	{
 		setup_signals_default(); // SIGNALS: Reset signals to default in child
@@ -47,11 +47,12 @@ int	execute_cmd(t_cmd *cmd, t_minishell *minishell)
 				}
 				else 
 				{
-					execution(minishell->env, cmd);
+					execution(cmd, minishell);
 				}
 			}
 		}
-		// exit(127); // TODO: line needs to be double checked bc of # & free
+		minishell->exit_code = 127;
+		exit_shell(minishell);
 	}
 	else 
 	{
@@ -94,7 +95,7 @@ void looping_through_list_commands(t_minishell *minishell) // TODO: change name 
 	if (WIFEXITED(status))  // if child process terminated normally // updates minishell exit code/status from last ran command (paula if)
 	{
 		minishell->exit_code = WEXITSTATUS(status); // macro to extract exit code/status
-		printf("Child exited with status: %d\n", minishell->exit_code); // for testing
+		// printf("Child exited with status: %d\n", minishell->exit_code); // for testing
 	}
 
 
@@ -139,7 +140,7 @@ int ft_execution (t_minishell *minishell)
 {
 
 	// list_cmds = init_list_commands(1, first_cmd, NULL); 
-	print_list_commands(minishell->list_cmd);
+	// print_list_commands(minishell->list_cmd);
 
 //88888888888888888888888888888888888888888888888888888888888888888888 exec
 	// saving original of stdin & stdout
