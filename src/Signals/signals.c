@@ -10,7 +10,7 @@ void	handle_signals(int signum)
 	{
 		write(1, "\n", 1);
 		rl_on_new_line();
-		rl_replace_line("", 0);
+		// rl_replace_line("", 0);
 		rl_redisplay();
 	}
 }
@@ -82,5 +82,21 @@ void	setup_signals_default(void)
 	sigaction(SIGQUIT, &sa, NULL);
 }
 
-
-
+// New function to handle signal termination:
+// Checks if the child process was terminated by a signal (instead of normally)
+// Returns the actual signal number that caused the termination.
+// If the signal that killed the child was SIGINT(ex. when Ctrl C pressed)
+// -> set the global variable g_signum to SIGINT.
+void handle_signal_termination(int status)
+{
+    if (WIFSIGNALED(status))
+    {
+        if (WTERMSIG(status) == SIGINT)
+            g_signum = SIGINT;
+        else if (WTERMSIG(status) == SIGQUIT)
+        {
+            g_signum = SIGQUIT;
+            write(2, "Quit (core dumped)\n", 19);
+        }
+    }
+}

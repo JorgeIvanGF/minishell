@@ -19,5 +19,6 @@ void	setup_signals_interactive(void);
 void	setup_signals_heredoc(void);
 void	setup_signals_non_interactive(void);
 void	setup_signals_default(void);
+void	handle_signal_termination(int status);
 
 #endif

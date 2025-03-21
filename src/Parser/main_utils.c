@@ -1,5 +1,6 @@
 #include "minishell.h"
 #include "parsing.h"
+#include "signals.h"
 
 // Process the tokens and execute commands if valid:
 // Syntax part (using tokens list)
@@ -19,10 +20,13 @@ int	process_inputs(t_minishell *minishell, t_lst_token *tokens, char *input)
 		free_token_list(tokens);
 		free(input);
 		exit_shell(minishell);
-	}
-	print_command_list(minishell->list_cmd); // TO DEBUG
+	}	
+	
+	// print_command_list(minishell->list_cmd); // TO DEBUG
+	setup_signals_non_interactive(); // moved by P from ft_execution
 	ft_execution(minishell); // To Paula
-	continue_shell(minishell, &tokens, &input);
+	setup_signals_interactive(); // SIGNALS: Reset signals to interactive mode // moved
+	continue_shell(minishell, &tokens, &input);	
 	return (0);
 }
 
@@ -35,7 +39,7 @@ int	tokenize_input(char *input, t_lst_token **tokens)
 		free(input);
 		return (1);
 	}
-	print_tokens(*tokens); // TO DEBUG
+	// print_tokens(*tokens); // TO DEBUG
 	return (0);
 }
 

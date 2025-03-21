@@ -20,6 +20,7 @@ int		execute(char *found_path, t_cmd *cmd, char **env);
 // built ins
 int is_builtin(t_cmd *cmd);
 int execute_builtin(t_cmd *cmd, t_minishell *minishell);
+int execute_exit(t_cmd *cmd, t_minishell *minishell);
 
 // redirections
 int redirecting_stdin(t_cmd *cmd);

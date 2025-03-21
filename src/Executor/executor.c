@@ -1,28 +1,26 @@
-#include "../../inc/minishell.h"
+#include "minishell.h"
 #include "execution.h"
 #include "signals.h"
+#include "parsing.h"
 
-void	execution(char **env, t_cmd *cmd) 
+void	execution(t_cmd *cmd, t_minishell *minishell) 
 {
 	char	*path;
 	char	**path_cmds;
 	char	*found_path;
-	char 	*saved_cmd;
-
-	saved_cmd = ft_strdup(cmd->cmd_arr[0]);  // create a copy b4 freeing
-	if (!saved_cmd)
-		exit(1);
-	path = get_path(env);
+	
+	path = get_path(minishell->env);
 	path_cmds = get_paths_cmds(path);
 	found_path = find_path(path_cmds, cmd->cmd_arr[0]);
-	if (execute(found_path, cmd, env) == -1)
+	if (execute(found_path, cmd, minishell->env) == -1)
 	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(cmd->cmd_arr[0], 2);
+		ft_putendl_fd(": command not found", 2);
 		ft_free_2d(path_cmds);
 		free(found_path);
-		write(2, "minishell: command not found: ", 30);
-		write(2, saved_cmd, ft_strlen(saved_cmd));
-		write(2, "\n", 1);
-		exit(127);
+		minishell->exit_code = 127;
+		exit_shell(minishell);
 	}
 }
 
@@ -34,6 +32,7 @@ int	execute_cmd(t_cmd *cmd, t_minishell *minishell)
 	pipe(fd);
 	setup_signals_non_interactive(); // SIGNALS: Ignore signals before fork
 	id = fork();
+	// printf("id =%d\n", id); // for testing
 	if (id == 0) 
 	{
 		setup_signals_default(); // SIGNALS: Reset signals to default in child
@@ -48,16 +47,17 @@ int	execute_cmd(t_cmd *cmd, t_minishell *minishell)
 				}
 				else 
 				{
-					execution(minishell->env, cmd);
+					execution(cmd, minishell);
 				}
 			}
 		}
-		exit(0); // TODO: line needs to be double checked bc of #
+		minishell->exit_code = 127;
+		exit_shell(minishell);
 	}
 	else 
 	{
 		handle_pipe_redirection(cmd, fd, PARENT_PROCESS); 
-		if (is_builtin(cmd) == 1 && has_pipe(cmd) == 0) // pipe check: IF pipe not found, go ahead (for builtins) //
+		if (is_builtin(cmd) == 1 && has_pipe(cmd) == 0) // TODO: redo (eazy) m
 		{
 			if (redirecting_io(cmd) == 1)
 			{
@@ -65,26 +65,14 @@ int	execute_cmd(t_cmd *cmd, t_minishell *minishell)
 			}
 		}
 	}
-	return(id);
-}
 
-// New function to handle signal termination:
-// Checks if the child process was terminated by a signal (instead of normally)
-// Returns the actual signal number that caused the termination.
-// If the signal that killed the child was SIGINT(ex. when Ctrl C pressed)
-// -> set the global variable g_signum to SIGINT.
-void handle_signal_termination(int status)
-{
-	if (WIFSIGNALED(status))
-	{
-		if (WTERMSIG(status) == SIGINT) 
-			g_signum = SIGINT;
-		else if (WTERMSIG(status) == SIGQUIT)
-		{
-			g_signum = SIGQUIT;
-			write(2, "Quit (core dumped)\n", 19);
-		}
-	}
+	// {
+	// 	if (wait(NULL) == -1) // if -1, all children done
+	// 	{
+	// 		break;
+	// 	}
+	// }
+	return (id);
 }
 
 void looping_through_list_commands(t_minishell *minishell) // TODO: change name of ft
@@ -94,19 +82,25 @@ void looping_through_list_commands(t_minishell *minishell) // TODO: change name 
 	int id;
 
 	current = minishell->list_cmd->head;
-	while(current != NULL)
+	while(current != NULL) 
 	{ 
 		id = execute_cmd(current, minishell); // alle fd redirection redirecten stdin, stdout
 		current = current->next;
 	}
-		setup_signals_non_interactive(); // SIGNALS: Ignore signals during wait 
-		waitpid(id,&status, 0);
-		while (waitpid(-1, NULL, WNOHANG) != -1) //WUNTRACED
-			;
-		setup_signals_interactive(); // SIGNALS: Reset signals to interactive mode
-		handle_signal_termination(status); // SIGNALS: Check signal termination
-}
+	setup_signals_non_interactive(); // SIGNALS: Ignore signals during wait 
+	waitpid(id, &status, 0); 
+	while(wait(NULL) != -1)
+		;
+	
+	if (WIFEXITED(status))  // if child process terminated normally // updates minishell exit code/status from last ran command (paula if)
+	{
+		minishell->exit_code = WEXITSTATUS(status); // macro to extract exit code/status
+		// printf("Child exited with status: %d\n", minishell->exit_code); // for testing
+	}
 
+	setup_signals_interactive(); // SIGNALS: Reset signals to interactive mode */
+	handle_signal_termination(status); // SIGNALS: Check signal termination
+}
 
 // go thru entire cmd list. if command found, execute w above function, if not, execution will handle
 void checking_list_cmds_for_exec(t_minishell *minishell) // TODO: delete later
@@ -136,7 +130,7 @@ int ft_execution (t_minishell *minishell)
 	int copy_of_stdin_fd = dup(STDIN_FILENO);
 	int copy_of_stdout_fd = dup(STDOUT_FILENO);
 
-	setup_signals_non_interactive(); // SIGNALS: Ignore signals during execution setup
+	// setup_signals_non_interactive(); // SIGNALS: Ignore signals during execution setup
 
 	looping_through_list_commands(minishell); // going through list_cmds & checking for RD_IN & file
 	// stdin & stdout has to be set back to its original TODO: (create ft for it later)
@@ -145,7 +139,7 @@ int ft_execution (t_minishell *minishell)
 	dup2(copy_of_stdout_fd, STDOUT_FILENO);
 	close(copy_of_stdout_fd);
 
-	setup_signals_interactive(); // SIGNALS: Reset signals to interactive mode
+	// setup_signals_interactive(); // SIGNALS: Reset signals to interactive mode
 
 
 	// may be deleted: checking_list_cmds_for_exec(list_cmds, minishell->env); // goes thru cmd list and executes all cmds

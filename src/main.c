@@ -35,7 +35,7 @@ void command_loop(t_minishell *minishell)
 	char *input;
 	t_lst_token *tokens;
 	
-	while (1)
+	while (1) // changed by Paula
 	{
 		input = get_and_validate_input();
 		if (input == NULL)
@@ -69,8 +69,13 @@ int	main(int argc, char **argv, char **env)
 	(void) argv;
 	init_minishell(&minishell, env);
 	disable_echoctl(); // Disable echoing of control characters
-	setup_signals_interactive();
-	command_loop(minishell);	
-	exit_shell(minishell);
-	return (minishell->exit_code);
+	// setup_signals_interactive();
+
+	command_loop(minishell); // parsing, execution happens here
+	// printf("exit flag in main = %d\n", minishell->exit_requested); // for testing
+
+	exit_shell(minishell); 
+	// printf("final exit code (in main) = %d\n", exit_code); // for testing
+
+	return (0);
 }

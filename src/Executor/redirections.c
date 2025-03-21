@@ -6,6 +6,7 @@ int redirecting_stdout(t_cmd *cmd) // redirect output (out & apnd)
 	t_rdir *current;
 	int fd_outfile;
 
+	fd_outfile = 1;
 	if(cmd && cmd->list_rdir && cmd->list_rdir->head)
 	{
 		current = cmd->list_rdir->head;
@@ -24,7 +25,7 @@ int redirecting_stdout(t_cmd *cmd) // redirect output (out & apnd)
 			{
 				write(2, "minishell: ", 11); // bash
 				write(2, current->name, ft_strlen(current->name));
-				write(2, ": No such file or directory\n", 28); 
+				write(2, ": No such file or directory\n", 28);
 				return (-1);
 			}
 			dup2(fd_outfile, STDOUT_FILENO);
@@ -41,6 +42,7 @@ int redirecting_stdin(t_cmd *cmd) // redirect input (in)
 	t_rdir *current;
 	int fd_infile;
 
+	fd_infile = 1;
 	if(cmd && cmd->list_rdir && cmd->list_rdir->head)
 	{
 		current = cmd->list_rdir->head;

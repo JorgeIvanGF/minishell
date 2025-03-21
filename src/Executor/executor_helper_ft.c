@@ -69,7 +69,7 @@ int	execute(char *found_path, t_cmd *cmd, char **env)
 {
 	if (execve(found_path, cmd->cmd_arr, env) == -1)
 	{
-		ft_free_2d(cmd->cmd_arr);
+		
 		return (-1);
 	}
 	return (0);

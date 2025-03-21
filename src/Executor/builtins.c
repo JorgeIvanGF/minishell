@@ -1,5 +1,6 @@
-#include "../../inc/minishell.h"
+#include "minishell.h"
 #include "execution.h"
+#include "parsing.h"
 
 // echo w option -n
 void execute_echo(char **env, t_cmd *cmd)
@@ -151,65 +152,6 @@ int execute_unset(char **env, t_cmd *cmd)
     return (0);
 }
 
-// exit with no options
-// echo $? (to see exit code in bash)
-// exit code cant go higher than 255. after it starts counting from 0 again (256). formel: % 256
-int syntax_check_exit(t_cmd *cmd, t_minishell *minishell) 
-{
-    int i;
-    
-    i = 0;
-    while (cmd->cmd_arr[1] && cmd->cmd_arr[1][i] != '\0' && cmd->cmd_arr[1][i] == ' ')
-    {
-        i++;
-    }
-    if (cmd->cmd_arr[1][i] == '-' || cmd->cmd_arr[1][i] == '+')
-    {
-        i++;
-    } // TODO: fix error: if sign but followed by a space then error w numeric argument (NOT: too many arguments like rn)
-    
-    while (cmd->cmd_arr[1] && cmd->cmd_arr[1][i] != '\0')
-    {
-        if (ft_isdigit(cmd->cmd_arr[1][i]) == 0)
-        {
-            ft_putendl_fd("exit", 2);
-            ft_putstr_fd("minishell: exit: ", 2);
-            ft_putstr_fd(cmd->cmd_arr[1], 2);
-            ft_putendl_fd(": numeric argument required", 2);
-            minishell->exit_code = 255;
-            return (-1); // undst // in main.c after freeing
-        }
-        i++;
-    }
-    return (1);
-}
-
-int execute_exit(t_cmd *cmd, t_minishell *minishell)
-{
-    int entered_exit_code;
-    
-    if (!cmd->cmd_arr[1]) // if sole input is exit
-    {
-        write(1, "exit\n", 5);
-        minishell->exit_code = 0;
-    }
-    else if (cmd->cmd_arr[1] && !cmd->cmd_arr[2]) // if input is exit + a number
-    {
-        if (syntax_check_exit(cmd, minishell) == 1)
-        {
-            entered_exit_code = ft_atoi(cmd->cmd_arr[1]);
-            minishell->exit_code = entered_exit_code % 256; // formula to calculate exit code if above 255 (module % of 256) 
-            printf("exit code calculated = %d\n", minishell->exit_code); // just for testing
-        }
-    }
-    else if (cmd->cmd_arr[2]) // if input is exit but has too many arguments following
-    {
-        ft_putendl_fd("exit", 2);
-        ft_putendl_fd("minishell: exit: too many arguments", 2);
-    }
-
-    return (1);
-}
 
 int execute_builtin(t_cmd *cmd, t_minishell *minishell) // executes builtin
 {
