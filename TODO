@@ -3,7 +3,7 @@ LEFT
 - heredoc
 
 - DONE exit status (save when doing wait)
-- builtin: export
+- builtin: export (J)
 - norminette
 
 
@@ -11,14 +11,17 @@ ERRORS (TODO)
 *PAULA*
 -- * < infile | wc (FIXED)
 -- * ls > nonexisting file - la (FIXED)
--- grep 'minishell' < input.txt | sort > sorted.txt (maybe bc of this: sort > sorted.txt) (due to file descriptor!)
-
-*JORGE*
-- minishell doesnt exit right away w control c (Jorge)
-- arrow up pressing makes minishell appear twice orange in terminal
+-- grep 'minishell' < input.txt | sort > sorted.txt 
 
 
 
 FIX STYLE
  - ft_execution
  - add headers everywhere
+
+
+
+HEREDOC (<< delimiter)
+- file erstellen w random name
+- writing in file
+- closed w delimiter
