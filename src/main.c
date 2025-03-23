@@ -62,31 +62,30 @@ void command_loop(t_minishell *minishell)
 
 
 // The Main function 
-// int	main(int argc, char **argv, char **env)
-// {
-// 	t_minishell	*minishell;
+int	main(int argc, char **argv, char **env)
+{
+	t_minishell	*minishell;
 	
-// 	(void) argc;
-// 	(void) argv;
-// 	init_minishell(&minishell, env);
-// 	disable_echoctl(); // Disable echoing of control characters
-// 	// setup_signals_interactive();
+	(void) argc;
+	(void) argv;
+	init_minishell(&minishell, env);
+	disable_echoctl(); // Disable echoing of control characters
+	// setup_signals_interactive();
 
-// 	command_loop(minishell); // parsing, execution happens here
-// 	// printf("exit flag in main = %d\n", minishell->exit_requested); // for testing
+	command_loop(minishell); // parsing, execution happens here
+	// printf("exit flag in main = %d\n", minishell->exit_requested); // for testing
 
-// 	exit_shell(minishell); 
-// 	// printf("final exit code (in main) = %d\n", exit_code); // for testing
+	exit_shell(minishell); 
+	// printf("final exit code (in main) = %d\n", exit_code); // for testing
 
-// 	return (0);
-// }
+	return (0);
+}
 
 
 
 // --------------------- HEREDOC ---------------------------------------------
 int heredoc(char *delimiter) // TODO: call somewhere else / implement properly
 {
-	// (void) delimiter;
 	int heredoc;
 	char *line;
 
@@ -123,9 +122,9 @@ int heredoc(char *delimiter) // TODO: call somewhere else / implement properly
 	return (1);
 }
 
-int main ()
-{
-	heredoc("n");
+// int main ()
+// {
+// 	heredoc("n");
 
-	return (0);
-}
+// 	return (0);
+// }

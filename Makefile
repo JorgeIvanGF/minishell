@@ -53,10 +53,15 @@ SRC_FILES   = main.c \
 			Executor/executor_helper_ft.c \
 			Executor/print_ft.c \
 			Executor/init_structs.c \
-			Executor/builtins.c \
 			Executor/redirections.c \
 			Executor/pipe.c \
-			Executor/builtins/exit.c
+			Executor/builtins/builtins.c \
+			Executor/builtins/exit.c \
+			Executor/builtins/cd.c \
+			Executor/builtins/echo.c \
+			Executor/builtins/env.c \
+			Executor/builtins/pwd.c \
+			Executor/builtins/unset.c
 
 
 

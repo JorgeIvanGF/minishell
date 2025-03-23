@@ -1,24 +1,26 @@
 
 LEFT
 - heredoc
-
-- DONE exit status (save when doing wait)
 - builtin: export (J)
-- norminette
+- add headers everywhere
 
 
 ERRORS (TODO)
 *PAULA*
 -- * < infile | wc (FIXED)
 -- * ls > nonexisting file - la (FIXED)
--- grep 'minishell' < input.txt | sort > sorted.txt 
+-- grep 'minishell' < input.txt | sort > sorted.txt (TODO)
+
+SUNDAY
+- check cd.c
+- heredoc finish
+- fix error above
+- add one sentence comment to each function for description
+- norminette
+- do TODO comments
 
 
-
-FIX STYLE
- - ft_execution
- - add headers everywhere
-
+- delete init_structs.c before submission (print_ft is fine to stay)
 
 
 HEREDOC (<< delimiter)

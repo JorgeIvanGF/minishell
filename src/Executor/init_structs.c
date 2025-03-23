@@ -1,7 +1,7 @@
 #include "../../inc/minishell.h"
 #include "execution.h"
 
-t_lst_rdir *init_list_redirection(t_rdir *head, t_rdir *tail, int size)
+t_lst_rdir *init_list_redirection(t_rdir *head, t_rdir *tail, int size) // TODO: delete or comment all
 {
 	t_lst_rdir *list_redirection;
 	

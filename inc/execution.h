@@ -21,11 +21,16 @@ int		execute(char *found_path, t_cmd *cmd, char **env);
 int is_builtin(t_cmd *cmd);
 int execute_builtin(t_cmd *cmd, t_minishell *minishell);
 int execute_exit(t_cmd *cmd, t_minishell *minishell);
+int execute_pwd();
+int execute_unset(char **env, t_cmd *cmd);
+int execute_cd(t_cmd *cmd);
+void execute_echo(t_cmd *cmd);
+int execute_env(char **env, t_cmd *cmd);
 
 // redirections
-int redirecting_stdin(t_cmd *cmd);
-int redirecting_stdout(t_cmd *cmd);
-int redirecting_io(t_cmd *cmd);
+int redirect_stdin(t_cmd *cmd);
+int redirect_stdout(t_cmd *cmd);
+int redirect_io(t_cmd *cmd);
 
 // pipe
 void setup_pipe(int fd[2]);

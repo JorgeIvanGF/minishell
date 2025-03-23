@@ -1,7 +1,7 @@
 #include "../../inc/minishell.h"
 #include "execution.h"
 
-void print_redirection(t_rdir *redirection)
+void print_redirection(t_rdir *redirection) 
 {
 	printf("---------------------- REDIRECTION -------------------------------\n");
 	printf("redirection type = %d\n", redirection->type);
