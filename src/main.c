@@ -53,6 +53,7 @@ void command_loop(t_minishell *minishell)
 		}
 		if (tokenize_input(input, &tokens))
 			continue;
+		
 		if (process_inputs(minishell, tokens, input))
 			continue;
 	}
@@ -69,7 +70,7 @@ int	main(int argc, char **argv, char **env)
 	(void) argv;
 	init_minishell(&minishell, env);
 	disable_echoctl(); // Disable echoing of control characters
-	// setup_signals_interactive();
+	setup_signals_interactive();
 
 	command_loop(minishell); // parsing, execution happens here
 	// printf("exit flag in main = %d\n", minishell->exit_requested); // for testing

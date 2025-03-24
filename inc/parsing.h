@@ -68,6 +68,8 @@ int				process_standard_token(char *input, int *i,
 
 // tokenizer_utils_4.c
 char			*append_segment(char *result, char *segment);
+int				is_redirection(const char *token);
+int				check_redirection_syntax(t_lst_token *token_list);
 
 // syntax.c:
 int				syntax_check(t_lst_token *tokens, t_minishell *minishell);
