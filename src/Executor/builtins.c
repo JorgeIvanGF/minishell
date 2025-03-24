@@ -175,6 +175,7 @@ int execute_builtin(t_cmd *cmd, t_minishell *minishell) // executes builtin
 	else if (ft_strcmp(cmd->cmd_arr[0], "export") == 0)
     {
         // TODO: J
+        execute_export(minishell->env, cmd);
     }
 	else if (ft_strcmp(cmd->cmd_arr[0], "unset") == 0)
     {

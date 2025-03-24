@@ -17,9 +17,9 @@ char	*append_segment(char *result, char *segment)
 int	is_redirection(const char *token)
 {
 	return ((ft_strcmp(token, ">") == 0)
-			|| (ft_strcmp(token, ">>") == 0)
-			|| (ft_strcmp(token, "<") == 0)
-			|| (ft_strcmp(token, "<<") == 0));
+		|| (ft_strcmp(token, ">>") == 0)
+		|| (ft_strcmp(token, "<") == 0)
+		|| (ft_strcmp(token, "<<") == 0));
 }
 
 // Check redirection syntax:
@@ -34,16 +34,18 @@ int	check_redirection_syntax(t_lst_token *token_list)
 	tmp = token_list->head;
 	while (tmp)
 	{
-		if (tmp->type == REDIR_IN || tmp->type == REDIR_OUT ||
-			tmp->type == APPEND || tmp->type == HEREDOC)
+		if (tmp->type == REDIR_IN || tmp->type == REDIR_OUT
+			|| tmp->type == APPEND || tmp->type == HEREDOC)
 		{
 			next = tmp->next;
 			while (next && next->type == SPC)
 				next = next->next;
-			if (!next || ((next->type != WORD && next->type != DBQ &&
-				next->type != SGQ) || !next->value || next->value[0] == '\0'))
+			if (!next || ((next->type != WORD && next->type != DBQ
+						&& next->type != SGQ) || !next->value
+					|| next->value[0] == '\0'))
 			{
-				ft_putstr_fd(RED"Error: syntax error near unexpected token `newline'\n"RESET, 2);
+				ft_putstr_fd(RED"Error: syntax error near "
+					"unexpected token `newline'\n"RESET, 2);
 				return (0);
 			}
 		}
