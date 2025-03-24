@@ -12,6 +12,8 @@ void execute_echo(t_cmd *cmd)
     i = 1;
     newline_check = 1;
 
+    write(2, "echo executed\n", 14);
+
     if (cmd->cmd_arr[1] != NULL && ft_strcmp(cmd->cmd_arr[1], "-n") == 0)
     {
         newline_check = 0;

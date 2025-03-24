@@ -11,8 +11,14 @@ ERRORS (TODO)
 -- * ls > nonexisting file - la (FIXED)
 -- grep 'minishell' < input.txt | sort > sorted.txt (TODO)
 
+*JORGE*
+- wrong output
+bash-3.2$ <
+bash: syntax error near unexpected token `newline'
+bash-3.2$ <<
+bash: syntax error near unexpected token `newline'
+
 SUNDAY
-- check cd.c
 - heredoc finish
 - fix error above
 - add one sentence comment to each function for description
@@ -27,3 +33,10 @@ HEREDOC (<< delimiter)
 - file erstellen w random name
 - writing in file
 - closed w delimiter
+
+
+
+CHANGED FROM LAST VERSION (put into previous version bc redirections not working)
+- cd
+- heredoc
+- execute_cmd

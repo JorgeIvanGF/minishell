@@ -36,9 +36,21 @@ int	execute_cmd(t_cmd *cmd, t_minishell *minishell)
 	if (id == 0) 
 	{
 		setup_signals_default(); // SIGNALS: Reset signals to default in child
-		if (!(is_builtin(cmd) == 1 && has_pipe(cmd) == 0)) 
+		
+		// handle_pipe_redirection(cmd, fd, CHILD_PROCESS); 
+		if(cmd->next == NULL)
 		{
-			handle_pipe_redirection(cmd, fd, CHILD_PROCESS); 
+			close(fd[0]);
+			close(fd[1]);
+		}
+		else
+		{
+			
+			close(fd[0]);
+			dup2(fd[1], STDOUT_FILENO);
+			close(fd[1]);
+		}
+		
 			if (redirect_io(cmd) == 1) // TODO: recheck where to call (what if no file found?)
 			{
 				if (is_builtin(cmd) == 1) // pipe check: IF pipe found, go ahead (for builtins)
@@ -50,14 +62,18 @@ int	execute_cmd(t_cmd *cmd, t_minishell *minishell)
 					execution(cmd, minishell);
 				}
 			}
-		}
+		
 		minishell->exit_code = 127;
 		exit_shell(minishell);
 	}
 	else 
 	{
-		handle_pipe_redirection(cmd, fd, PARENT_PROCESS); 
-		if (is_builtin(cmd) == 1 && has_pipe(cmd) == 0) // TODO: redo (eazy) m
+		// handle_pipe_redirection(cmd, fd, PARENT_PROCESS); 
+		
+		close(fd[1]);
+		dup2(fd[0], STDIN_FILENO);
+		close(fd[0]);
+		if (is_builtin(cmd) == 1 && minishell->list_cmd->size == 1) // TODO: redo (eazy) m
 		{
 			if (redirect_io(cmd) == 1)
 			{
@@ -97,20 +113,20 @@ void looping_through_list_commands(t_minishell *minishell) // TODO: change name 
 }
 
 // Save original file descriptors of STDIN and STDOUT
-void save_io_fds(int *stdin_fd_copy, int *stdout_fd_copy)
-{
-	*stdin_fd_copy = dup(STDIN_FILENO);
-	*stdout_fd_copy = dup(STDOUT_FILENO);
-}
+// void save_io_fds(int *stdin_fd_copy, int *stdout_fd_copy)
+// {
+// 	*stdin_fd_copy = dup(STDIN_FILENO);
+// 	*stdout_fd_copy = dup(STDOUT_FILENO);
+// }
 
-// Restore STDIN and STDOUT to their original file descriptors
-void restore_io(int stdin_fd_copy, int stdout_fd_copy)
-{
-	dup2(stdin_fd_copy, STDIN_FILENO);
-	close(stdin_fd_copy);
-	dup2(stdout_fd_copy, STDOUT_FILENO);
-	close(stdout_fd_copy);
-}
+// // Restore STDIN and STDOUT to their original file descriptors
+// void restore_io(int stdin_fd_copy, int stdout_fd_copy)
+// {
+// 	dup2(stdin_fd_copy, STDIN_FILENO);
+// 	close(stdin_fd_copy);
+// 	dup2(stdout_fd_copy, STDOUT_FILENO);
+// 	close(stdout_fd_copy);
+// }
 
 int ft_execution(t_minishell *minishell) // TODO: as main exec ft, have in one file, and seperate rest above
 {
@@ -119,11 +135,17 @@ int ft_execution(t_minishell *minishell) // TODO: as main exec ft, have in one f
 
 	print_list_commands(minishell->list_cmd);
 
-	save_io_fds(&stdin_fd_copy, &stdout_fd_copy);
+	// save_io_fds(&stdin_fd_copy, &stdout_fd_copy);
+	stdin_fd_copy = dup(STDIN_FILENO);
+	stdout_fd_copy = dup(STDOUT_FILENO);
 
 	looping_through_list_commands(minishell); // going through list_cmds & checking for RD_IN & file
 
-	restore_io(stdin_fd_copy, stdout_fd_copy);
+	// restore_io(stdin_fd_copy, stdout_fd_copy);
+	dup2(stdin_fd_copy, STDIN_FILENO);
+	close(stdin_fd_copy);
+	dup2(stdout_fd_copy, STDOUT_FILENO);
+	close(stdout_fd_copy);
 
 	return (minishell->exit_code);
 }

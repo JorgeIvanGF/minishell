@@ -43,7 +43,10 @@ int is_builtin(t_cmd *cmd)
     (ft_strcmp(cmd->cmd_arr[0], "unset") == 0) || 
     (ft_strcmp(cmd->cmd_arr[0], "env") == 0) || // TODO: also needs to be able to be entered when capitalized (ENV)
     (ft_strcmp(cmd->cmd_arr[0], "exit") == 0))
+    {
+        write(2, "is builtin\n", 11);
         return (1);
+    }
     
     return (0);
 }
