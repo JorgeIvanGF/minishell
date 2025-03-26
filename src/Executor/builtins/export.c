@@ -106,10 +106,11 @@ void	print_sorted_env(char **env)
 
 // Executes the export builtin command:
 // If no arguments are given, prints the sorted environment.
-// Otherwise, validates each argument and updates or adds the environment variable.
-int execute_export(char **env, t_cmd *cmd)
+// Otherwise, validates each argument and updates or adds 
+// the environment variable.
+int	execute_export(char **env, t_cmd *cmd)
 {
-	int i;
+	int	i;
 
 	if (!cmd->cmd_arr[1])
 	{

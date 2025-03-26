@@ -21,7 +21,8 @@ int	is_valid_identifier(const char *str)
 	return (1);
 }
 
-// Appends a new variable to the environment array when it is not already present.
+// Appends a new variable to the environment array when 
+// it is not already present.
 void	append_new_var(char ***env, const char *var, int count)
 {
 	char	**new_env;

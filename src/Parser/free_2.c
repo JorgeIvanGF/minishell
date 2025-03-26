@@ -25,7 +25,7 @@ void	continue_shell(t_minishell *minishell, t_lst_token **tokens,
 // Free the MINISHELL itself
 void	exit_shell(t_minishell *minishell) // TODO: paula recheck bc of exit code
 {
-	int exit_code;
+	int	exit_code;
 
 	exit_code = minishell->exit_code;
 	if (minishell->list_cmd)
