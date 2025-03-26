@@ -71,7 +71,7 @@ char			*append_segment(char *result, char *segment);
 int				is_redirection(const char *token);
 int				check_redirection_syntax(t_lst_token *token_list);
 
-// syntax.c:
+// syntax.c
 int				syntax_check(t_lst_token *tokens, t_minishell *minishell);
 void			expand_variables(t_token *token, char **env);
 

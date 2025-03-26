@@ -1,6 +1,7 @@
 #include "../inc/minishell.h"
 #include "../inc/parsing.h"
 #include "../inc/signals.h"
+#include "execution.h"
 
 // To Test the Lexer (Tmporary function)
 void print_tokens(t_lst_token *tokens)
