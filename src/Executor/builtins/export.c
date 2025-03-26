@@ -2,18 +2,20 @@
 #include "execution.h"
 #include "parsing.h"
 
-
-void	sort_array(char **arr, int n)
+// Sorts an array of strings using bubble sort.
+// If strings are out of order (current string is 
+// lexicographically greater than the next), it swaps them
+void	sort_array(char **arr, int count)
 {
 	int		i;
 	int		j;
 	char	*tmp;
 
 	i = 0;
-	while (i < n - 1)
+	while (i < count - 1)
 	{
 		j = 0;
-		while (j < n - i - 1)
+		while (j < count - i - 1)
 		{
 			if (ft_strcmp(arr[j], arr[j + 1]) > 0)
 			{
@@ -27,7 +29,11 @@ void	sort_array(char **arr, int n)
 	}
 }
 
-static char	**sort_env(char **env)
+// Duplicates the environment array and returns a sorted copy.
+// Counts the number of ENV vars -> Allocates memory for the copy
+// create individual string copies -> sort the copied env
+// returns the sorted copy
+char	**sort_env(char **env)
 {
 	int		count;
 	int		i;
@@ -50,6 +56,9 @@ static char	**sort_env(char **env)
 	return (env_copy);
 }
 
+// Prints one environment variable in the format 
+// VAR="value" (if value exists) or just VAR.
+// Always adds a newline at the end.
 void	print_env_line(char *line)
 {
 	char	*equal;
@@ -69,7 +78,8 @@ void	print_env_line(char *line)
 	write(1, "\n", 1);
 }
 
-
+// Prints all environment variables in sorted order 
+// with the prefix "declare -x ".
 void	print_sorted_env(char **env)
 {
 	int		i;
@@ -94,18 +104,30 @@ void	print_sorted_env(char **env)
 	free(env_copy);
 }
 
-
-
+// Executes the export builtin command:
+// If no arguments are given, prints the sorted environment.
+// Otherwise, validates each argument and updates or adds the environment variable.
 int execute_export(char **env, t_cmd *cmd)
 {
 	int i;
 
 	if (!cmd->cmd_arr[1])
 	{
-		print_sorted_env(*env);
+		print_sorted_env(env);
 		return (0);
 	}
-
-
+	i = 1;
+	while (cmd->cmd_arr[i])
+	{
+		if (!is_valid_identifier(cmd->cmd_arr[i]))
+		{
+			ft_putstr_fd("minishell: export: `", 2);
+			ft_putstr_fd(cmd->cmd_arr[i], 2);
+			ft_putstr_fd("': not a valid identifier\n", 2);
+		}
+		else
+			update_env(&env, cmd->cmd_arr[i]);
+		i++;
+	}
 	return (0);
 }

@@ -22,6 +22,14 @@ int is_builtin(t_cmd *cmd);
 int execute_builtin(t_cmd *cmd, t_minishell *minishell);
 int execute_exit(t_cmd *cmd, t_minishell *minishell);
 
+// Export built-in
+int execute_export(char **env, t_cmd *cmd);
+
+// export_utils.c
+int		is_valid_identifier(const char *str);
+void	append_new_var(char ***env, const char *var, int count);
+void	update_env(char ***env, const char *var);
+
 // redirections
 int redirecting_stdin(t_cmd *cmd);
 int redirecting_stdout(t_cmd *cmd);
@@ -76,6 +84,5 @@ void print_list_commands(t_lst_cmd *list_cmds);
 // 	t_redirection *tail;
 // 	int size;
 // } t_list_redirection;
-
 
 #endif
