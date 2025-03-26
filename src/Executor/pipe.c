@@ -21,15 +21,27 @@ void handle_pipe_redirection(t_cmd *cmd, int fd[2], int process_type)
 {
 	if (process_type == CHILD_PROCESS)
 	{
-		if(has_pipe(cmd) == 1)
+		// if(has_pipe(cmd) == 1)
+		// {
+		// 	close(fd[0]);
+		// 	dup2(fd[1], STDOUT_FILENO);
+		// 	close(fd[1]);
+		// }
+		// else
+		// {
+		// 	close(fd[0]);
+		// 	close(fd[1]);
+		// }
+
+		if(cmd->next == NULL) // new // TODO: compare with above
 		{
 			close(fd[0]);
-			dup2(fd[1], STDOUT_FILENO);
 			close(fd[1]);
 		}
 		else
 		{
 			close(fd[0]);
+			dup2(fd[1], STDOUT_FILENO);
 			close(fd[1]);
 		}
 	}

@@ -3,13 +3,14 @@ LEFT
 - heredoc
 - builtin: export (J)
 - add headers everywhere
+- heredoc: - file needs to be hidden (m)
 
 
 ERRORS (TODO)
 *PAULA*
 -- * < infile | wc (FIXED)
 -- * ls > nonexisting file - la (FIXED)
--- grep 'minishell' < input.txt | sort > sorted.txt (TODO)
+-- grep 'minishell' < input.txt | sort > sorted.txt (TODO) (not closing)
 
 *JORGE*
 - wrong output
@@ -17,13 +18,6 @@ bash-3.2$ <
 bash: syntax error near unexpected token `newline'
 bash-3.2$ <<
 bash: syntax error near unexpected token `newline'
-
-SUNDAY
-- heredoc finish
-- fix error above
-- add one sentence comment to each function for description
-- norminette
-- do TODO comments
 
 
 - delete init_structs.c before submission (print_ft is fine to stay)
@@ -35,8 +29,11 @@ HEREDOC (<< delimiter)
 - closed w delimiter
 
 
-
-CHANGED FROM LAST VERSION (put into previous version bc redirections not working)
-- cd
-- heredoc
-- execute_cmd
+TODO M:
+<<a <<b <<c cat (last one (c) needs to printed) [dont need]
+- 1. unlink is not working 
+- 2. error above
+- 3. wait into one ft
+- add one sentence comment to each function for description
+- norminette (left: execute, redirections)
+- do TODO comments

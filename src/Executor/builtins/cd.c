@@ -2,10 +2,8 @@
 #include "execution.h"
 #include "parsing.h"
 
-/*
-change directory with only a relative or absolute path
--
-*/ 
+
+// change directory with only a relative or absolute path
 int execute_cd(t_cmd *cmd)
 {  
     char *home_path;

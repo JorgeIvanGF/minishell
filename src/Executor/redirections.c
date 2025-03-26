@@ -5,6 +5,8 @@
 
 int redirect_stdin(t_cmd *cmd);
 int redirect_stdout(t_cmd *cmd); 
+int redirect_heredoc(char *delimiter);
+
 
 // Redirect both STDIN and STDOUT based on the redirection types in the command
 int redirect_io(t_cmd *cmd)
@@ -53,8 +55,6 @@ int redirect_stdin(t_cmd *cmd)
 					close(fd_infile);
 				}
 			}
-			
-
 			current = current->next;
 		}
 	}
@@ -101,23 +101,20 @@ int redirect_stdout(t_cmd *cmd)
 				}
 				else
 				{
-
 					dup2(fd_outfile, STDOUT_FILENO);
 					close(fd_outfile);
 				}
 			}
-
-			
-
 			current = current->next;
 		}
 	}
 	return (1);
 }
 
-int redirect_heredoc(char *delimiter) // TODO: call somewhere else / implement properly
+int redirect_heredoc(char *delimiter)
 {
 	int heredoc;
+	int heredoc2;
 	char *line;
 
 	heredoc = open("viktoria1", O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -137,6 +134,7 @@ int redirect_heredoc(char *delimiter) // TODO: call somewhere else / implement p
 		line = get_next_line(0);
 		if (ft_strcmp(line, delimiter) == 0)
 		{
+			ft_free(line);
 			break;
 		}
 		write(heredoc, line, ft_strlen(line));
@@ -146,8 +144,16 @@ int redirect_heredoc(char *delimiter) // TODO: call somewhere else / implement p
 	}
 	ft_free(delimiter);
 
+	close(heredoc);
+	heredoc2  = open("viktoria1", O_RDONLY);
+	if (heredoc2 == -1)
+	{
+		write(2, "minishell: ", 11);
+		write(2, "heredoc fail\n", 13);
+		return (-1);
+	}
 	// close(heredoc);
 	// unlink("viktoria1");
 	
-	return (heredoc);
+	return (heredoc2);
 }
