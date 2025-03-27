@@ -27,7 +27,7 @@ void execute_cmd_or_builtin_wpipe(t_cmd *cmd, t_minishell *minishell)
 {
 	if (is_builtin(cmd) == 1 && minishell->list_cmd->size > 1)
 	{
-		// write (2, "builtin executed if pipe\n", 25);
+		write (2, "builtin executed if pipe\n", 25);
 		execute_builtin(cmd, minishell);
 	}
 	else if (!(is_builtin(cmd)))
@@ -46,7 +46,7 @@ void execute_builtin_without_pipe(t_cmd *cmd, t_minishell *minishell)
 	{
 		if (redirect_io(cmd) == 1)
 		{
-			// write (2, "builtin executed if NO pipe\n", 28);
+			write (2, "builtin executed if NO pipe\n", 28);
 			execute_builtin(cmd, minishell);
 		}
 	}

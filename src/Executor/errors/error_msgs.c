@@ -9,7 +9,7 @@ void error_cmd_not_found(char *cmd_name)
 	ft_putendl_fd(": command not found", 2);
 }
 
-// env - no such file or directory (needed?) - 1
+// env - no such file or directory - 1
 void error_env_no_file_directory(char *arg2)
 {
 	write(2, "env: ", 5);

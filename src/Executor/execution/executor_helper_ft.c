@@ -1,4 +1,4 @@
-#include "../../inc/minishell.h"
+#include "minishell.h"
 #include "execution.h"
 
 char	*get_path(char **env)

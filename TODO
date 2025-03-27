@@ -5,9 +5,15 @@ ERRORS (TODO)
 -- * < infile | wc (FIXED)
 -- * ls > nonexisting file - la (FIXED)
 -- grep 'minishell' < input.txt | sort > sorted.txt (TODO) (not closing or whateverrrrrrr)
+-- echo hi <input (FALSCHES OUTPUT)
+          minishell: input: No such file or directory
+		  hi
+		  minishell: input: No such file or directory
 -- heredoc not done anymore once delimiter is typed (even before merge)
 -- unlink is not working (deleting file)
 -- heredoc file needs to appear hidden
+
+
 
 
 - delete init_structs.c before submission (print_ft is fine to stay)
