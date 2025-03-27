@@ -1,10 +1,11 @@
-#include "../../inc/minishell.h"
+#include "minishell.h"
 #include "execution.h"
 
-t_lst_rdir *init_list_redirection(t_rdir *head, t_rdir *tail, int size) // TODO: delete or comment all
+t_lst_rdir	*init_list_redirection(t_rdir *head, t_rdir *tail, int size)
+		// TODO: delete or comment all
 {
-	t_lst_rdir *list_redirection;
-	
+	t_lst_rdir	*list_redirection;
+
 	list_redirection = malloc(1 * sizeof(t_lst_rdir));
 	if (!list_redirection)
 	{
@@ -13,44 +14,42 @@ t_lst_rdir *init_list_redirection(t_rdir *head, t_rdir *tail, int size) // TODO:
 	list_redirection->head = head;
 	list_redirection->tail = tail;
 	list_redirection->size = size;
-
-	return(list_redirection);
+	return (list_redirection);
 }
 
-t_rdir *init_redirection(int type, char *name)
+t_rdir	*init_redirection(int type, char *name)
 {
-	t_rdir *redirection; // objekt bzw. instance
+	t_rdir	*redirection;
 
-	redirection = malloc(1 * sizeof (t_rdir));
+	redirection = malloc(1 * sizeof(t_rdir));
 	if (!redirection)
 	{
-		return(NULL);
+		return (NULL);
 	}
 	redirection->type = type;
 	redirection->name = name;
 	redirection->next = NULL;
-
-	return(redirection);
+	return (redirection);
 }
 
-t_cmd *init_command(char **cmd_arr, t_lst_rdir *list_rdir)
+t_cmd	*init_command(char **cmd_arr, t_lst_rdir *list_rdir)
 {
-	t_cmd *cmd;
+	t_cmd	*cmd;
 
 	cmd = malloc(1 * sizeof(t_cmd));
 	if (!cmd)
 	{
 		return (NULL);
 	}
-	cmd->cmd_arr = cmd_arr; 
+	cmd->cmd_arr = cmd_arr;
 	cmd->list_rdir = list_rdir;
 	cmd->next = NULL;
-	return(cmd);
+	return (cmd);
 }
 
-t_lst_cmd *init_list_commands(int size, t_cmd *head, t_cmd *tail)
+t_lst_cmd	*init_list_commands(int size, t_cmd *head, t_cmd *tail)
 {
-	t_lst_cmd *list_cmds;
+	t_lst_cmd	*list_cmds;
 
 	list_cmds = malloc(1 * sizeof(list_cmds));
 	if (!list_cmds)
@@ -60,15 +59,13 @@ t_lst_cmd *init_list_commands(int size, t_cmd *head, t_cmd *tail)
 	list_cmds->size = size;
 	list_cmds->head = head;
 	list_cmds->tail = tail;
-
 	return (list_cmds);
 }
 
-char **init_cmd_array(char *str)
+char	**init_cmd_array(char *str)
 {
-	char **cmd_arr;
+	char	**cmd_arr;
 
 	cmd_arr = ft_split(str, ' ');
-
-	return(cmd_arr);
+	return (cmd_arr);
 }

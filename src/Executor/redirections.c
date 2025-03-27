@@ -3,22 +3,21 @@
 #include "parsing.h"
 #include "signals.h"
 
-int redirect_stdin(t_cmd *cmd);
-int redirect_stdout(t_cmd *cmd); 
-int redirect_heredoc(char *delimiter);
-
+int	redirect_stdin(t_cmd *cmd);
+int	redirect_stdout(t_cmd *cmd);
+int	redirect_heredoc(char *delimiter);
 
 // Redirect both STDIN and STDOUT based on the redirection types in the command
-int redirect_io(t_cmd *cmd)
+int	redirect_io(t_cmd *cmd)
 {
 	return (redirect_stdin(cmd) && redirect_stdout(cmd)); // TODO: memorize 
 }
 
-// Redirect STDIN from specified file(s) based on the redirection type in the command
-int redirect_stdin(t_cmd *cmd)
+// Redirect STDIN from specified file(s) based on the redirection type in cmd
+int	redirect_stdin(t_cmd *cmd)
 {
-	t_rdir *current;
-	int fd_infile;
+	t_rdir	*current;
+	int		fd_infile;
 
 	// fd_infile = 1;
 	if(cmd && cmd->list_rdir && cmd->list_rdir->head)
@@ -31,9 +30,7 @@ int redirect_stdin(t_cmd *cmd)
 				fd_infile = open(current->name, O_RDONLY);
 				if (fd_infile == -1)
 				{
-					write(2, "minishell: ", 11); // TODO: create error message file.c 
-					write(2, current->name, ft_strlen(current->name));
-					write(2, ": No such file or directory\n", 28); 
+					error_no_file_directory(current->name);
 					return (-1);
 				}
 				else
@@ -61,11 +58,11 @@ int redirect_stdin(t_cmd *cmd)
 	return (1);
 }
 
-// Redirect STDOUT to specified file(s) based on the redirection type in the command
-int redirect_stdout(t_cmd *cmd) 
+// Redirect STDOUT to specified file(s) based on the redirection type in cmd
+int	redirect_stdout(t_cmd *cmd)
 {
-	t_rdir *current;
-	int fd_outfile;
+	t_rdir	*current;
+	int		fd_outfile;
 
 	if(cmd && cmd->list_rdir && cmd->list_rdir->head)
 	{
@@ -77,14 +74,11 @@ int redirect_stdout(t_cmd *cmd)
 				fd_outfile = open(current->name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 				if (fd_outfile == -1)
 				{
-					write(2, "minishell: ", 11);  // TODO: create error message file.c 
-					write(2, current->name, ft_strlen(current->name));
-					write(2, ": No such file or directory\n", 28);
+					error_no_file_directory(current->name);
 					return (-1);
 				}
 				else
 				{
-
 					dup2(fd_outfile, STDOUT_FILENO);
 					close(fd_outfile);
 				}
@@ -94,9 +88,7 @@ int redirect_stdout(t_cmd *cmd)
 				fd_outfile = open(current->name, O_WRONLY | O_CREAT | O_APPEND, 0644);
 				if (fd_outfile == -1)
 				{
-					write(2, "minishell: ", 11);  // TODO: create error message file.c 
-					write(2, current->name, ft_strlen(current->name));
-					write(2, ": No such file or directory\n", 28);
+					error_no_file_directory(current->name);
 					return (-1);
 				}
 				else
@@ -111,49 +103,38 @@ int redirect_stdout(t_cmd *cmd)
 	return (1);
 }
 
-int redirect_heredoc(char *delimiter)
+int redirect_heredoc(char *delimiter) // TODO: fix - delimiter not closing it once typed // TODO: file should open hidden
 {
-	int heredoc;
-	int heredoc2;
-	char *line;
+	int		heredoc;
+	int		heredoc2;
+	char	*line;
 
 	heredoc = open("viktoria1", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (heredoc == -1)
 	{
-		write(2, "minishell: ", 11);
-		write(2, "heredoc fail\n", 13);
+		error_heredoc();
 		return (-1);
 	}
-
 	delimiter = ft_strjoin(delimiter, "\n"); // bc line has new line
 	while (1)
 	{
-		// printf("> "); //=========> [ '>', ' ' ]
-		// printf("\n");
 		write (1, "> ", 2);
 		line = get_next_line(0);
 		if (ft_strcmp(line, delimiter) == 0)
 		{
 			ft_free(line);
-			break;
+			break ;
 		}
 		write(heredoc, line, ft_strlen(line));
 		ft_free(line);
-		// printf("delimiter = -%s-\n", delimiter);
-		// printf("line = -%s-\n", line);
 	}
 	ft_free(delimiter);
-
 	close(heredoc);
-	heredoc2  = open("viktoria1", O_RDONLY);
+	heredoc2 = open("viktoria1", O_RDONLY);
 	if (heredoc2 == -1)
 	{
-		write(2, "minishell: ", 11);
-		write(2, "heredoc fail\n", 13);
+		error_heredoc();
 		return (-1);
 	}
-	// close(heredoc);
-	// unlink("viktoria1");
-	
 	return (heredoc2);
 }

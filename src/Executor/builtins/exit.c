@@ -13,9 +13,8 @@ int execute_exit(t_cmd *cmd, t_minishell *minishell)
 {
     syntax_check_exit(cmd, minishell);
 
-    minishell->exit_code = ft_atoi(cmd->cmd_arr[1]) % 256; 
-    // printf("exit code calculated = %d\n", minishell->exit_code); // just for testing
     printf("exit\n");
+    minishell->exit_code = ft_atoi(cmd->cmd_arr[1]) % 256; 
     exit_shell(minishell);
 
     return (1);
@@ -47,12 +46,7 @@ void check_empty(t_cmd *cmd, t_minishell *minishell)
 {
     if(cmd->cmd_arr[1] && ft_strlen(cmd->cmd_arr[1]) == 0)
     {
-        ft_putendl_fd("exit", 2); // TODO: put error messages into own function to call here
-        ft_putstr_fd("minishell: exit: ", 2);
-        ft_putstr_fd(cmd->cmd_arr[1], 2);
-        ft_putendl_fd(": numeric argument required", 2);
-        minishell->exit_code = 255;
-        exit_shell(minishell);
+        error_no_numeric_argument(cmd->cmd_arr[1], minishell);
     }
 }
 
@@ -70,12 +64,7 @@ void check_non_numeric(t_cmd *cmd, t_minishell *minishell)
     {
         if (!ft_isdigit(cmd->cmd_arr[1][i]))
         {
-            ft_putendl_fd("exit", 2); // TODO: put error messages into own function to call here
-            ft_putstr_fd("minishell: exit: ", 2);
-            ft_putstr_fd(cmd->cmd_arr[1], 2);
-            ft_putendl_fd(": numeric argument required", 2);
-            minishell->exit_code = 255;
-            exit_shell(minishell);
+            error_no_numeric_argument(cmd->cmd_arr[1], minishell);
         }
         i++;
     }
@@ -85,9 +74,6 @@ void check_too_many_arguments(t_cmd *cmd, t_minishell *minishell)
 {
     if (cmd->cmd_arr[2])
     {
-        ft_putendl_fd("exit", 2); // TODO: put error messages into own function to call here
-        ft_putendl_fd("minishell: exit: too many arguments", 2);
-        minishell->exit_code = 1;
-        exit_shell(minishell);
+        error_arguments_exceeded(minishell);
     }
 }

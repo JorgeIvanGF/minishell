@@ -1,19 +1,26 @@
 
-LEFT
-- heredoc
-- builtin: export (J)
-- add headers everywhere
-- heredoc: - file needs to be hidden (m)
-
 
 ERRORS (TODO)
 *PAULA*
 -- * < infile | wc (FIXED)
 -- * ls > nonexisting file - la (FIXED)
--- grep 'minishell' < input.txt | sort > sorted.txt (TODO) (not closing)
+-- grep 'minishell' < input.txt | sort > sorted.txt (TODO) (not closing or whateverrrrrrr)
+-- heredoc not done anymore once delimiter is typed (even before merge)
+-- unlink is not working (deleting file)
+-- heredoc file needs to appear hidden
 
 
 - delete init_structs.c before submission (print_ft is fine to stay)
+
+
+
+TODO:
+<<a <<b <<c cat (last one (c) needs to printed) [dont need]
+- add one sentence comment to each function for description
+- do TODO comments
+- jorge will add heredoc signals tmrw
+
+
 
 
 HEREDOC (<< delimiter)
@@ -22,11 +29,7 @@ HEREDOC (<< delimiter)
 - closed w delimiter
 
 
-TODO M:
-<<a <<b <<c cat (last one (c) needs to printed) [dont need]
-- 1. unlink is not working 
-- 2. error above
-- 3. wait into one ft
-- add one sentence comment to each function for description
-- norminette (left: execute, redirections)
-- do TODO comments
+git
+"REFACTOR(exec): added folder/files for errors to improve readability"
+"FIX(exec): builtins were being executed twice again"
+"FIX(exec): heredoc: created file now appears hidden && delimiter closes/deletes file" //not yet

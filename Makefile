@@ -64,8 +64,9 @@ SRC_FILES   = main.c \
 			Executor/builtins/echo.c \
 			Executor/builtins/env.c \
 			Executor/builtins/pwd.c \
-			Executor/builtins/unset.c
-
+			Executor/builtins/unset.c \
+			Executor/errors/error_msgs.c \
+			Executor/errors/error_msgs_exit.c
 
 
 SRCS        = $(addprefix $(SRC_DIR)/, $(SRC_FILES))

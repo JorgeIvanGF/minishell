@@ -1,22 +1,20 @@
-#include "minishell.h"
 #include "execution.h"
-#include "signals.h"
+#include "minishell.h"
 #include "parsing.h"
+#include "signals.h"
 
-void	execution(t_cmd *cmd, t_minishell *minishell) 
+void	execution(t_cmd *cmd, t_minishell *minishell)
 {
 	char	*path;
 	char	**path_cmds;
 	char	*found_path;
-	
+
 	path = get_path(minishell->env);
 	path_cmds = get_paths_cmds(path);
 	found_path = find_path(path_cmds, cmd->cmd_arr[0]);
 	if (execute(found_path, cmd, minishell->env) == -1)
 	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(cmd->cmd_arr[0], 2);
-		ft_putendl_fd(": command not found", 2);
+		error_cmd_not_found(cmd->cmd_arr[0]);
 		ft_free_2d(path_cmds);
 		free(found_path);
 		minishell->exit_code = 127;
@@ -24,99 +22,116 @@ void	execution(t_cmd *cmd, t_minishell *minishell)
 	}
 }
 
-int	execute_cmd(t_cmd *cmd, t_minishell *minishell)
+// Executes a built-in command if part of a pipeline, otherwise runs an external command.
+void execute_cmd_or_builtin_wpipe(t_cmd *cmd, t_minishell *minishell)
 {
-	int	id;
-	int fd[2];
-	
-	pipe(fd);
-	setup_signals_non_interactive(); // SIGNALS: Ignore signals before fork
-	id = fork();
-	// printf("id =%d\n", id); // for testing
-	if (id == 0) 
+	if (is_builtin(cmd) == 1 && minishell->list_cmd->size > 1)
 	{
-		setup_signals_default(); // SIGNALS: Reset signals to default in child
-		handle_pipe_redirection(cmd, fd, CHILD_PROCESS); 
-		// if(cmd->next == NULL)
-		// {
-		// 	close(fd[0]);
-		// 	close(fd[1]);
-		// }
-		// else
-		// {
-		// 	close(fd[0]);
-		// 	dup2(fd[1], STDOUT_FILENO);
-		// 	close(fd[1]);
-		// }
+		// write (2, "builtin executed if pipe\n", 25);
+		execute_builtin(cmd, minishell);
+	}
+	else if (!(is_builtin(cmd)))
+	{
+		execution(cmd, minishell);
+	}
+}
+
+/*
+Checks if command is a builtin and the only command in the list (no pipe involved). 
+If so, it handles I/O redirection and executes the builtin.
+*/
+void execute_builtin_without_pipe(t_cmd *cmd, t_minishell *minishell)
+{
+	if (is_builtin(cmd) == 1 && minishell->list_cmd->size == 1)
+	{
 		if (redirect_io(cmd) == 1)
 		{
-			if (is_builtin(cmd) == 1) // pipe check: IF pipe found, go ahead (for builtins)
-			{
-				execute_builtin(cmd, minishell);
-			}
-			else 
-			{
-				execution(cmd, minishell);
-			}
+			// write (2, "builtin executed if NO pipe\n", 28);
+			execute_builtin(cmd, minishell);
+		}
+	}
+}
+
+/*
+Handles the execution of a command, including managing pipe redirection and I/O redirection. 
+Child process: executes the command, either running a builtin or an external command, 
+Parent process: sets up input redirection, executes built-ins without pipes if necessary, and cleans up. 
+*/
+int	process_full_cmd_line(t_cmd *cmd, t_minishell *minishell)
+{
+	int	id;
+	int	fd[2];
+
+	pipe(fd);
+	setup_signals_non_interactive();
+	id = fork();
+	if (id == 0)
+	{
+		setup_signals_default();
+		redirect_output_to_pipe(cmd, fd);
+		if (redirect_io(cmd) == 1)
+		{
+			execute_cmd_or_builtin_wpipe(cmd, minishell);
 		}
 		minishell->exit_code = 127;
 		exit_shell(minishell);
 	}
-	else 
+	else
 	{
-		handle_pipe_redirection(cmd, fd, PARENT_PROCESS); 
-		unlink("viktoria1"); //loschen von erstellen heredoc des childes
-		// close(fd[1]);
-		// dup2(fd[0], STDIN_FILENO);
-		// close(fd[0]);
-		if (is_builtin(cmd) == 1 && minishell->list_cmd->size == 1)
-		{
-			if (redirect_io(cmd) == 1)
-			{
-				execute_builtin(cmd, minishell);
-			}
-		}
-		unlink("viktoria1"); //loschen von erstellen heredoc des parents
+		redirect_input_to_pipe(fd);
+		unlink("viktoria1"); // loschen von erstellen heredoc des childes
+		execute_builtin_without_pipe(cmd, minishell);
+		unlink("viktoria1"); // loschen von erstellen heredoc des parents
 	}
 	return (id);
 }
 
-void looping_through_list_commands(t_minishell *minishell) // TODO: change name of ft
+/*
+Handles multiple child processes: waits for each process to finish, checks its exit status, 
+and updates the minishell's exit code accordingly, specifically for last ran command. 
+*/
+void	handle_wait_and_exit_status(t_minishell *minishell, int id, int *status)
 {
-	t_cmd *current;
-	int status;
-	int id;
+	waitpid(id, status, 0);
+	while (wait(NULL) != -1)
+		;
+	if (WIFEXITED(status))
+	{
+		minishell->exit_code = WEXITSTATUS(status);
+	}
+}
+
+/*
+Iterates through list of commands, processes each command, and manages signals during execution. 
+It waits for all processes to finish, handles their exit status, and ensures proper signal handling.
+*/
+void	iterate_and_execute_cmd_list(t_minishell *minishell)
+{
+	t_cmd	*current;
+	int		status;
+	int		id;
 
 	current = minishell->list_cmd->head;
-	while(current != NULL) 
-	{ 
-		id = execute_cmd(current, minishell); // alle fd redirection redirecten stdin, stdout
+	while (current != NULL)
+	{
+		id = process_full_cmd_line(current, minishell);
 		current = current->next;
 	}
-	setup_signals_non_interactive(); // SIGNALS: Ignore signals during wait 
-	waitpid(id, &status, 0); // TODO: put wait stuff in one sept ft to call here
-	while(wait(NULL) != -1) 
-		;
-	
-	if (WIFEXITED(status))  // if child process terminated normally // updates minishell exit code/status from last ran command (paula if)
-	{
-		minishell->exit_code = WEXITSTATUS(status); // macro to extract exit code/status
-		// printf("Child exited with status: %d\n", minishell->exit_code); // for testing
-	}
-
-	setup_signals_interactive(); // SIGNALS: Reset signals to interactive mode */
-	handle_signal_termination(status); // SIGNALS: Check signal termination
+	setup_signals_non_interactive();
+	handle_wait_and_exit_status(minishell, id, &status); // TODO: id?
+	setup_signals_interactive();
+	handle_signal_termination(status);
 }
 
 // Save original file descriptors of STDIN and STDOUT
-void save_io_fds(int *stdin_fd_copy, int *stdout_fd_copy)
+void	save_io_fds(int *stdin_fd_copy, int *stdout_fd_copy)
 {
 	*stdin_fd_copy = dup(STDIN_FILENO);
 	*stdout_fd_copy = dup(STDOUT_FILENO);
 }
 
 // Restore STDIN and STDOUT to their original file descriptors
-void restore_io(int stdin_fd_copy, int stdout_fd_copy)
+void	restore_io(int stdin_fd_copy, int stdout_fd_copy)
 {
 	dup2(stdin_fd_copy, STDIN_FILENO);
 	close(stdin_fd_copy);
@@ -124,24 +139,14 @@ void restore_io(int stdin_fd_copy, int stdout_fd_copy)
 	close(stdout_fd_copy);
 }
 
-int ft_execution(t_minishell *minishell) // TODO: as main exec ft, have in one file, and seperate rest above
+int	ft_execution(t_minishell *minishell) // TODO: as main exec ft, have in one file, and seperate rest above
 {
-	int stdin_fd_copy;
-	int stdout_fd_copy;
+	int	stdin_fd_copy;
+	int	stdout_fd_copy;
 
 	// print_list_commands(minishell->list_cmd);
-
 	save_io_fds(&stdin_fd_copy, &stdout_fd_copy);
-	// stdin_fd_copy = dup(STDIN_FILENO);
-	// stdout_fd_copy = dup(STDOUT_FILENO);
-
-	looping_through_list_commands(minishell); // going through list_cmds & checking for RD_IN & file
-
+	iterate_and_execute_cmd_list(minishell);
 	restore_io(stdin_fd_copy, stdout_fd_copy);
-	// dup2(stdin_fd_copy, STDIN_FILENO);
-	// close(stdin_fd_copy);
-	// dup2(stdout_fd_copy, STDOUT_FILENO);
-	// close(stdout_fd_copy);
-
 	return (minishell->exit_code);
 }
