@@ -43,7 +43,7 @@ void execute_builtin_without_pipe(t_cmd *cmd, t_minishell *minishell)
 { 
 	if (is_builtin(cmd) == 1 && minishell->list_cmd->size == 1)
 	{
-		if (redirect_io(cmd) == 1)
+		if (setup_redirections(cmd, minishell) == 1)
 		{
 			execute_builtin(cmd, minishell);
 		}
@@ -67,16 +67,18 @@ int	process_full_cmd_line(t_cmd *cmd, t_minishell *minishell)
 		execute_builtin_without_pipe(cmd, minishell);
 		return (-1);
 	}
-	pipe(fd);
+	if (pipe(fd) == -1)
+	{
+		minishell->exit_code = 1; // TODO: change exit code to input exit_shell(minishell, 1) everywehre
+		exit_shell(minishell);
+	}
 	id = fork();
 	if (id == 0)
 	{
 		setup_signals_default();
 		redirect_output_to_pipe(cmd, fd);
-		if (redirect_io(cmd) == 1)
-			execute_cmd_or_builtin_wpipe(cmd, minishell);
-		minishell->exit_code = 127;
-		exit_shell(minishell);
+		check_and_setup_redirections(cmd, minishell);
+		execute_cmd_or_builtin_wpipe(cmd, minishell);
 	}
 	else
 		redirect_input_to_pipe(fd);
@@ -111,12 +113,7 @@ void	iterate_and_execute_cmd_list(t_minishell *minishell)
 	current = minishell->list_cmd->head;
 	while (current != NULL)
 	{
-		//wenn open not failed bei jeglicher rdir , skip 
-		// if (check_io(current) == 1)
-		// {
-		// 
-			id = process_full_cmd_line(current, minishell);
-		// }
+		id = process_full_cmd_line(current, minishell);
 		current = current->next;
 	}
 	setup_signals_non_interactive();
@@ -127,29 +124,26 @@ void	iterate_and_execute_cmd_list(t_minishell *minishell)
 }
 
 // Save original file descriptors of STDIN and STDOUT
-void	save_io_fds(int *stdin_fd_copy, int *stdout_fd_copy)
+void	save_io_fds(t_minishell *minishell)
 {
-	*stdin_fd_copy = dup(STDIN_FILENO);
-	*stdout_fd_copy = dup(STDOUT_FILENO);
+	minishell->og_stdin_fd = dup(STDIN_FILENO);
+	minishell->og_stdout_fd = dup(STDOUT_FILENO);
 }
 
 // Restore STDIN and STDOUT to their original file descriptors
-void	restore_io(int stdin_fd_copy, int stdout_fd_copy)
+void	restore_io(t_minishell *minishell)
 {
-	dup2(stdin_fd_copy, STDIN_FILENO);
-	close(stdin_fd_copy);
-	dup2(stdout_fd_copy, STDOUT_FILENO);
-	close(stdout_fd_copy);
+	dup2(minishell->og_stdin_fd, STDIN_FILENO);
+	close(minishell->og_stdin_fd);
+	dup2(minishell->og_stdout_fd, STDOUT_FILENO);
+	close(minishell->og_stdout_fd);
 }
 
 int	ft_execution(t_minishell *minishell)
 {
-	int	stdin_fd_copy;
-	int	stdout_fd_copy;
-
 	// print_list_commands(minishell->list_cmd);
-	save_io_fds(&stdin_fd_copy, &stdout_fd_copy);
+	save_io_fds(minishell);
 	iterate_and_execute_cmd_list(minishell);
-	restore_io(stdin_fd_copy, stdout_fd_copy);
+	restore_io(minishell);
 	return (minishell->exit_code);
 }

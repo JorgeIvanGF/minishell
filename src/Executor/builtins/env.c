@@ -13,7 +13,7 @@ int	execute_env(char **env, t_cmd *cmd)
 		return (1);
 	}
 	i = 0;
-	while (env[i] != NULL)
+	while (env && env[i] != NULL)
 	{
 		write(1, env[i], ft_strlen(env[i]));
 		write(1, "\n", 1);

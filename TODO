@@ -14,7 +14,6 @@ TODO:
 <<a <<b <<c cat (last one (c) needs to printed) [dont need]
 - add one sentence comment to each function for description
 - do TODO comments
-- redirections: ln 136: change 1 to OG stdin
 - norminette
 - delete init_structs.c before submission (print_ft is fine to stay)
 - jorge will add heredoc signals & create folders
@@ -28,8 +27,3 @@ HEREDOC (<< delimiter)
 - writing in file
 - closed w delimiter
 
-git
-"FIX(exec): added open file check"
-"FEAT(exec): heredoc: created file appears hidden && delimiter deletes file"
-"FIX(exec): special case handled"
-"FEAT(exec): created check_io.c"

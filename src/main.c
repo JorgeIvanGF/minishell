@@ -65,7 +65,7 @@ void command_loop(t_minishell *minishell)
 // The Main function 
 int	main(int argc, char **argv, char **env)
 {
-	t_minishell	*minishell;
+	static t_minishell	*minishell;
 	
 	(void) argc;
 	(void) argv;
