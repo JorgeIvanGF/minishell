@@ -53,10 +53,10 @@ SRC_FILES   = main.c \
 			Executor/builtins/export.c \
 			Executor/builtins/export_utils.c \
 			Executor/execution/executor.c \
-			Executor/execution/executor_helper_ft.c \
+			Executor/execution/executor_utils.c \
 			Executor/print_ft.c \
 			Executor/init_structs.c \
-			Executor/redirections.c \
+			Executor/redirections/redirections.c \
 			Executor/pipe.c \
 			Executor/builtins/builtins.c \
 			Executor/builtins/exit.c \
@@ -66,7 +66,8 @@ SRC_FILES   = main.c \
 			Executor/builtins/pwd.c \
 			Executor/builtins/unset.c \
 			Executor/errors/error_msgs.c \
-			Executor/errors/error_msgs_exit.c
+			Executor/errors/error_msgs_exit.c \
+			Executor/redirections/file_check.c
 
 
 SRCS        = $(addprefix $(SRC_DIR)/, $(SRC_FILES))

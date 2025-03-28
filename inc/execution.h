@@ -36,6 +36,13 @@ int redirect_heredoc(char *delimiter);
 int redirect_stdin(t_cmd *cmd);
 int redirect_stdout(t_cmd *cmd);
 int redirect_io(t_cmd *cmd);
+int	check_io(t_cmd *cmd);
+
+// redirections open file
+int open_file_check_RDIN(char *rdir_name, int *fd_infile);
+int open_file_check_RD_HOC();
+int open_file_check_RD_OUT(char *rdir_name, int *fd_outfile);
+int open_file_check_RD_APND(char *rdir_name, int *fd_outfile);
 
 // pipe
 int has_pipe(t_cmd *cmd);

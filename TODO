@@ -1,22 +1,12 @@
 
 
-ERRORS (TODO)
+ERRORS (ALL FIXED)
 *PAULA*
 -- * < infile | wc (FIXED)
 -- * ls > nonexisting file - la (FIXED)
--- grep 'minishell' < input.txt | sort > sorted.txt (TODO) (not closing or whateverrrrrrr)
--- echo hi <input (FALSCHES OUTPUT)
-          minishell: input: No such file or directory
-		  hi
-		  minishell: input: No such file or directory
--- heredoc not done anymore once delimiter is typed (even before merge)
--- unlink is not working (deleting file)
--- heredoc file needs to appear hidden
+-- grep 'minishell' < input.txt | sort > sorted.txt (FIXED)
 
 
-
-
-- delete init_structs.c before submission (print_ft is fine to stay)
 
 
 
@@ -24,7 +14,11 @@ TODO:
 <<a <<b <<c cat (last one (c) needs to printed) [dont need]
 - add one sentence comment to each function for description
 - do TODO comments
-- jorge will add heredoc signals tmrw
+- redirections: ln 136: change 1 to OG stdin
+- norminette
+- delete init_structs.c before submission (print_ft is fine to stay)
+- jorge will add heredoc signals & create folders
+
 
 
 
@@ -34,8 +28,8 @@ HEREDOC (<< delimiter)
 - writing in file
 - closed w delimiter
 
-
 git
-"REFACTOR(exec): added folder/files for errors to improve readability"
-"FIX(exec): builtins were being executed twice again"
-"FIX(exec): heredoc: created file now appears hidden && delimiter closes/deletes file" //not yet
+"FIX(exec): added open file check"
+"FEAT(exec): heredoc: created file appears hidden && delimiter deletes file"
+"FIX(exec): special case handled"
+"FEAT(exec): created check_io.c"
