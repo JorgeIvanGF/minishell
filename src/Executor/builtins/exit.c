@@ -2,16 +2,17 @@
 #include "execution.h"
 #include "parsing.h"
 
-void syntax_check_exit(t_cmd *cmd, t_minishell *minishell); // -1 if fail ; 1 if not
+int syntax_check_exit(t_cmd *cmd, t_minishell *minishell);
 void check_null(t_cmd *cmd, t_minishell *minishell);
 void check_empty(t_cmd *cmd, t_minishell *minishell);
 void check_non_numeric(t_cmd *cmd, t_minishell *minishell);
-void check_too_many_arguments(t_cmd *cmd, t_minishell *minishell);
+int check_too_many_arguments(t_cmd *cmd, t_minishell *minishell);
 
 // TODO: add function description (// formula to calculate exit code if above 255 (module % of 256))
 int execute_exit(t_cmd *cmd, t_minishell *minishell)
 {
-    syntax_check_exit(cmd, minishell);
+    if (syntax_check_exit(cmd, minishell) == 0)
+        return (0);
 
     printf("exit\n");
     minishell->exit_code = ft_atoi(cmd->cmd_arr[1]) % 256; 
@@ -20,7 +21,7 @@ int execute_exit(t_cmd *cmd, t_minishell *minishell)
     return (1);
 }
 
-void syntax_check_exit(t_cmd *cmd, t_minishell *minishell) // -1 if fail ; 1 if not
+int syntax_check_exit(t_cmd *cmd, t_minishell *minishell) // -1 if fail ; 1 if not
 {
     // case 1 = NULL
     check_null(cmd, minishell);
@@ -29,7 +30,7 @@ void syntax_check_exit(t_cmd *cmd, t_minishell *minishell) // -1 if fail ; 1 if 
     //case 3 = non numeric
     check_non_numeric(cmd, minishell);
     //case 4 = too many arguments
-    check_too_many_arguments(cmd, minishell);
+    return (check_too_many_arguments(cmd, minishell));
 } 
 
 void check_null(t_cmd *cmd, t_minishell *minishell)
@@ -70,10 +71,12 @@ void check_non_numeric(t_cmd *cmd, t_minishell *minishell)
     }
 }
 
-void check_too_many_arguments(t_cmd *cmd, t_minishell *minishell)
+int check_too_many_arguments(t_cmd *cmd, t_minishell *minishell)
 {
     if (cmd->cmd_arr[2])
     {
         error_arguments_exceeded(minishell);
+        return (0);
     }
+    return (1);
 }

@@ -23,7 +23,7 @@ void	continue_shell(t_minishell *minishell, t_lst_token **tokens,
 // Free Cmd List (and set to NULL)
 // Free ENV (and set to NULL)
 // Free the MINISHELL itself
-void	exit_shell(t_minishell *minishell) // TODO: paula recheck bc of exit code
+void	exit_shell(t_minishell *minishell) // TODO: paula recheck bc of exit code implementing in ft input
 {
 	int	exit_code;
 
@@ -38,6 +38,7 @@ void	exit_shell(t_minishell *minishell) // TODO: paula recheck bc of exit code
 		free_env(minishell->env);
 		minishell->env = NULL;
 	}
-	free(minishell);
+	if(minishell)
+		free(minishell);
 	exit(exit_code);
 }

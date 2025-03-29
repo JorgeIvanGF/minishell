@@ -56,7 +56,7 @@ void	update_env(char ***env, const char *var)
 	i = 0;
 	while ((*env)[i])
 	{
-		if (!ft_strncmp((*env)[i], var, var_len) && (*env)[i][var_len] == '=') // TODO: segfault
+		if (!ft_strncmp((*env)[i], var, var_len) && (*env)[i][var_len] == '=')
 		{
 			free((*env)[i]);
 			(*env)[i] = ft_strdup(var);

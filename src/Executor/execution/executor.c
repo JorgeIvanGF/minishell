@@ -18,7 +18,6 @@ void	execution(t_cmd *cmd, t_minishell *minishell)
 		ft_free_2d(path_cmds);
 		free(found_path);
 		minishell->exit_code = 127;
-		exit_shell(minishell);
 	}
 }
 
@@ -27,7 +26,11 @@ void execute_cmd_or_builtin_wpipe(t_cmd *cmd, t_minishell *minishell)
 {
 	if (is_builtin(cmd) == 1 && minishell->list_cmd->size > 1)
 	{
-		execute_builtin(cmd, minishell);
+		if (execute_builtin(cmd, minishell) == 0)
+		{
+			minishell->exit_code = 1;
+			exit_shell(minishell);
+		}
 	}
 	else if (!(is_builtin(cmd)))
 	{
@@ -45,7 +48,10 @@ void execute_builtin_without_pipe(t_cmd *cmd, t_minishell *minishell)
 	{
 		if (setup_redirections(cmd, minishell) == 1)
 		{
-			execute_builtin(cmd, minishell);
+			if (execute_builtin(cmd, minishell) == 0)
+			{
+				minishell->exit_code = 1;
+			}
 		}
 	}
 }
@@ -118,7 +124,7 @@ void	iterate_and_execute_cmd_list(t_minishell *minishell)
 	}
 	setup_signals_non_interactive();
 	handle_wait_and_exit_status(minishell, id, &status);
-	unlink("./src/Executor/redirections/viktoria1");
+	unlink("./src/Executor/redirections/heredocfile");
 	setup_signals_interactive();
 	handle_signal_termination(status);
 }
@@ -141,7 +147,7 @@ void	restore_io(t_minishell *minishell)
 
 int	ft_execution(t_minishell *minishell)
 {
-	// print_list_commands(minishell->list_cmd);
+	print_list_commands(minishell->list_cmd);
 	save_io_fds(minishell);
 	iterate_and_execute_cmd_list(minishell);
 	restore_io(minishell);

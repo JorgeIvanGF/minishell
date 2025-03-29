@@ -56,7 +56,7 @@ Handle I/O redirection to/from a pipe based on process type
 // {
 // 	if (process_type == CHILD_PROCESS)
 // 	{
-// 		if (cmd->next == NULL) // TODO: has_pipe?
+// 		if (cmd->next == NULL) 
 // 		{
 // 			close(fd[0]);
 // 			close(fd[1]);

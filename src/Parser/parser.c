@@ -35,8 +35,8 @@ void	add_argument(t_cmd *cmd, char *arg)
 	new_args = expand_cmd_arr(cmd->cmd_arr, arg);
 	if (!new_args)
 		return ;
-	free(cmd->cmd_arr);
-	cmd->cmd_arr = new_args;
+	free(cmd->cmd_arr);//TODO: fix this 2d
+	cmd->cmd_arr = new_args; //TODO: fix w strdup for every single arr[i] in arr
 }
 
 // Add the RD to the list of RDs:

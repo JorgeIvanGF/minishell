@@ -66,7 +66,7 @@ SRC_FILES   = main.c \
 			Executor/builtins/pwd.c \
 			Executor/builtins/unset.c \
 			Executor/errors/error_msgs.c \
-			Executor/errors/error_msgs_exit.c \
+			Executor/errors/error_msgs2.c \
 			Executor/redirections/file_check.c
 
 
@@ -85,7 +85,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
-	@$(CC) $(OBJS) $(LIBFT) -o $(NAME) $(RL_FLAGS)
+	@$(CC) $(OBJS) $(LIBFT) -o $(NAME) $(RL_FLAGS) -fsanitize=address -shared-libasan
 	@echo "$(GREEN)** $(NAME) Compiled successfully! **"
 
 # Libft Dependency (Build)

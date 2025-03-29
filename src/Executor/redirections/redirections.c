@@ -162,14 +162,13 @@ void redirect_stdout_to_file(int fd_outfile)
 	close(fd_outfile);
 }
 
-
-int redirect_heredoc(char *delimiter, t_minishell *minishell)
+int redirect_heredoc(char *delimiter, t_minishell *minishell) // TODO: create open file check for two seperately(see above) + ft for line+delimiter
 {
 	int		fd_heredoc_file;
 	int		fd_heredoc_file2;
 	char	*line;
 
-	fd_heredoc_file = open("./src/Executor/redirections/viktoria1", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	fd_heredoc_file = open("./src/Executor/redirections/heredocfile", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd_heredoc_file == -1)
 	{
 		error_heredoc();
@@ -178,7 +177,7 @@ int redirect_heredoc(char *delimiter, t_minishell *minishell)
 	delimiter = ft_strjoin(delimiter, "\n"); // bc line has new line
 	while (1)
 	{
-		write (minishell->og_stdout_fd, "> ", 2); // TODO: bring & change to original stdinput (from main)
+		write (minishell->og_stdout_fd, "> ", 2);
 		line = get_next_line(minishell->og_stdin_fd);
 		if (ft_strcmp(line, delimiter) == 0)
 		{
@@ -190,7 +189,7 @@ int redirect_heredoc(char *delimiter, t_minishell *minishell)
 	}
 	ft_free(delimiter);
 	close(fd_heredoc_file);
-	fd_heredoc_file2 = open("./src/Executor/redirections/viktoria1", O_RDONLY);
+	fd_heredoc_file2 = open("./src/Executor/redirections/heredocfile", O_RDONLY);
 	if (fd_heredoc_file2 == -1)
 	{
 		error_heredoc();

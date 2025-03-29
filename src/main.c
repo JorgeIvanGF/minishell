@@ -36,7 +36,7 @@ void command_loop(t_minishell *minishell)
 	char *input;
 	t_lst_token *tokens;
 	
-	while (1) // changed by Paula
+	while (1)
 	{
 		input = get_and_validate_input();
 		if (input == NULL)
@@ -77,7 +77,7 @@ int	main(int argc, char **argv, char **env)
 	// printf("exit flag in main = %d\n", minishell->exit_requested); // for testing
 
 	exit_shell(minishell); 
-	// printf("final exit code (in main) = %d\n", exit_code); // for testing
+	printf("final exit code (in main) = %d\n", minishell->exit_code); // for testing
 
 	return (0);
 }
