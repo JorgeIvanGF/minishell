@@ -26,6 +26,7 @@
 # define BOLD      "\x1b[1m" 
 # define UNDERLINE "\x1b[4m"
 
+
 // Enum Redirections_________________________________
 typedef enum e_redirection_type
 {
@@ -79,5 +80,6 @@ typedef struct s_minishell
 
 // Execution________________________________________
 int	ft_execution(t_minishell *minishell);
+
 
 #endif

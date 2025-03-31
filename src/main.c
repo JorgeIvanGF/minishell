@@ -36,7 +36,7 @@ void command_loop(t_minishell *minishell)
 	char *input;
 	t_lst_token *tokens;
 	
-	while (1) // changed by Paula
+	while (1)
 	{
 		setup_interactive_signals(); //SIGNALSNEW
 		input = get_and_validate_input();
@@ -61,25 +61,38 @@ void command_loop(t_minishell *minishell)
 	}
 }
 
+// int	execute1(char *found_path, t_cmd *cmd, char **env)
+// {
+// 	(void)found_path;
+// 	(void)cmd;
+
+// 	char *args[] = {"bash", NULL};  // Properly define an array
+
+// 	if (execve("/bin/bash", args, env) == -1)
+// 	{
+// 		perror("execve");  // Print error message
+// 		return (-1);
+// 	}
+// 	return (0);
+// }
 
 
 // The Main function 
 int	main(int argc, char **argv, char **env)
 {
 	static t_minishell	*minishell;
-	
+
 	(void) argc;
 	(void) argv;
-	init_minishell(&minishell, env);
-	//disable_echoctl(); //SIGNALS Disable echoing of control characters
-	//setup_signals_interactive(); //SIGNALS
-	//handle_signals_interactive(); //SIGNALSNEW
 
-	command_loop(minishell); // parsing, execution happens here
-	// printf("exit flag in main = %d\n", minishell->exit_requested); // for testing
+	init_minishell(&minishell, env);
+	disable_echoctl(); //SIGNALS Disable echoing of control characters
+	//setup_signals_interactive(); //SIGNALS
+	// handle_signals_interactive(); //SIGNALSNEW
+
+	command_loop(minishell);
 
 	exit_shell(minishell); 
-	// printf("final exit code (in main) = %d\n", exit_code); // for testing
 
 	return (0);
 }

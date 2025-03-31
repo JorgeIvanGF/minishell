@@ -7,10 +7,15 @@ int	execute_env(char **env, t_cmd *cmd)
 {
 	int	i;
 
+	if (get_path(env) == NULL)
+	{
+		error_no_file_directory("env");
+		return (0);
+	}
 	if (env && cmd->cmd_arr[1])
 	{
 		error_env_no_file_directory(cmd->cmd_arr[1]);
-		return (1);
+		return (0);
 	}
 	i = 0;
 	while (env && env[i] != NULL)
@@ -19,5 +24,5 @@ int	execute_env(char **env, t_cmd *cmd)
 		write(1, "\n", 1);
 		i++;
 	}
-	return (0);
+	return (1);
 }

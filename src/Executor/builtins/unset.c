@@ -19,7 +19,7 @@ int	execute_unset(char **env, t_cmd *cmd)
 		{
 			split_env_path = ft_split(env[path_line], '=');
 			if (!split_env_path)
-				return (1);
+				return (0);
 			if ((ft_strcmp(split_env_path[0], cmd->cmd_arr[i]) == 0))
 			{
 				ft_free_2d(split_env_path);
@@ -31,7 +31,7 @@ int	execute_unset(char **env, t_cmd *cmd)
 		}
 		i++;
 	}
-	return (0);
+	return (1);
 }
 
 void	delete_path_from_env(char ***ptr_to_env, int path_line)

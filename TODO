@@ -7,6 +7,13 @@ ERRORS (ALL FIXED)
 -- grep 'minishell' < input.txt | sort > sorted.txt (FIXED)
 
 
+JORGE (TODO)
+- fix signals
+- fix ^D showing up when doing ctrlD 
+- $ (wrong output)
+- \$USER (wrong output) -> when sth is before $
+
+
 
 
 
@@ -15,8 +22,11 @@ TODO:
 - add one sentence comment to each function for description
 - do TODO comments
 - norminette
-- delete init_structs.c before submission (print_ft is fine to stay)
 - jorge will add heredoc signals & create folders
+- exit_code_num = minishell->exit_code (to put under every "exit) for tester (10+)
+
+- LAST TODO: too many fts redirections.c, executor.c --> then DONE!
+- add headers
 
 
 
@@ -26,4 +36,33 @@ HEREDOC (<< delimiter)
 - file erstellen w random name
 - writing in file
 - closed w delimiter
+
+
+
+
+
+eval
+fix:
+jorge
+more important
+- tab (cmpr w other minishell)
+- return value of a process section
+- $
+less important
+- SIGNALS: after cat -> ctrl c -> minishell appears twice & no ^C before (w wc too)
+- SIGNALS: after cat -> ctrl d -> no ^\Quit: 3 printed
+
+
+
+
+
+paula
+- ENV PATH: set $path to multiple directory.....
+- heredoc file supposed to show up hidden 
+- !!!!!!!!!!!echo "hello" | cat (OPEN) // pipes
+- unset $PATH (not valid identifier message)
+
+
+
+
 

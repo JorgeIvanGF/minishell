@@ -1,17 +1,16 @@
-#include "minishell.h"
 #include "execution.h"
+#include "minishell.h"
 
-// exit - minishell exit - too many arguments - 1
-void error_arguments_exceeded(t_minishell *minishell)
+// exit - minishell exit - too many arguments
+void	error_arguments_exceeded(t_minishell *minishell)
 {
 	ft_putendl_fd("exit", 2);
 	ft_putendl_fd("minishell: exit: too many arguments", 2);
 	minishell->exit_code = 1;
-	exit_shell(minishell);
 }
 
-// exit - minishell exit - numeric argument required - 2
-void error_no_numeric_argument(char *cmd_name, t_minishell *minishell)
+// exit - minishell exit - numeric argument required
+void	error_no_numeric_argument(char *cmd_name, t_minishell *minishell)
 {
 	ft_putendl_fd("exit", 2);
 	ft_putstr_fd("minishell: exit: ", 2);

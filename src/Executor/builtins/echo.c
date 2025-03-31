@@ -3,7 +3,7 @@
 #include "parsing.h"
 
 // echo w option -n
-// TODO: add function description (// -n check first -> if -n, dont have \n at end)
+// in case of -n: no newline will be added
 void	execute_echo(t_cmd *cmd)
 {
 	int	i;

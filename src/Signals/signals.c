@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <readline/readline.h>
 #include <minishell.h>
 #include <signals.h>
 

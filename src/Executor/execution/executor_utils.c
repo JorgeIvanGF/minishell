@@ -58,7 +58,7 @@ char	*check_paths_w_cmd(char **path_cmds, char *cmd)
 char	*find_path(char **path_cmds, char *cmd)
 {
 	if (access(cmd, X_OK) == 0)
-		return (cmd);
+		return (ft_strdup(cmd));
 	else
 	{
 		return (check_paths_w_cmd(path_cmds, cmd));
