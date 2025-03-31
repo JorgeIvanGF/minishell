@@ -16,7 +16,7 @@ void	execution(t_cmd *cmd, t_minishell *minishell)
 	{
 		error_cmd_not_found(cmd->cmd_arr[0]);
 		ft_free_2d(path_cmds);
-		free(found_path);
+		//free(found_path);
 		minishell->exit_code = 127;
 		exit_shell(minishell);
 	}

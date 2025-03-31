@@ -16,7 +16,7 @@ int	execute_builtin(t_cmd *cmd, t_minishell *minishell)
 	else if (ft_strcmp(cmd->cmd_arr[0], "pwd") == 0)
 		execute_pwd();
 	else if (ft_strcmp(cmd->cmd_arr[0], "export") == 0)
-		execute_export(minishell->env, cmd);
+		execute_export(&minishell->env, cmd);
 	else if (ft_strcmp(cmd->cmd_arr[0], "unset") == 0)
 		execute_unset(minishell->env, cmd);
 	else if (ft_strcmp(cmd->cmd_arr[0], "env") == 0)

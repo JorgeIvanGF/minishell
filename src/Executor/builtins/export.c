@@ -108,13 +108,13 @@ void	print_sorted_env(char **env)
 // If no arguments are given, prints the sorted environment.
 // Otherwise, validates each argument and updates or adds 
 // the environment variable.
-int	execute_export(char **env, t_cmd *cmd)
+int	execute_export(char ***env, t_cmd *cmd)
 {
 	int	i;
 
 	if (!cmd->cmd_arr[1])
 	{
-		print_sorted_env(env);
+		print_sorted_env(*env);
 		return (0);
 	}
 	i = 1;
@@ -127,7 +127,7 @@ int	execute_export(char **env, t_cmd *cmd)
 			ft_putstr_fd("': not a valid identifier\n", 2);
 		}
 		else
-			update_env(&env, cmd->cmd_arr[i]);
+			update_env(env, cmd->cmd_arr[i]);
 		i++;
 	}
 	return (0);

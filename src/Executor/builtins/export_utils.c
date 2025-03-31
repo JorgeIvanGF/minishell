@@ -45,6 +45,28 @@ void	append_new_var(char ***env, const char *var, int count)
 
 // Updates an existing ENV var if it exists, or adds it if not.
 // It compares the variable name up to the '=' character.
+// void	update_env(char ***env, const char *var)
+// {
+// 	int	i;
+// 	int	var_len;
+
+// 	var_len = 0;
+// 	while (var[var_len] && var[var_len] != '=')
+// 		var_len++;
+// 	i = 0;
+// 	while ((*env)[i])
+// 	{
+// 		if (!ft_strncmp((*env)[i], var, var_len) && (*env)[i][var_len] == '=') // TODO: segfault
+// 		{
+// 			free((*env)[i]);
+// 			(*env)[i] = ft_strdup(var);
+// 			return ;
+// 		}
+// 		i++;
+// 	}
+// 	append_new_var(env, var, i);
+// }
+
 void	update_env(char ***env, const char *var)
 {
 	int	i;
@@ -53,14 +75,17 @@ void	update_env(char ***env, const char *var)
 	var_len = 0;
 	while (var[var_len] && var[var_len] != '=')
 		var_len++;
+
 	i = 0;
 	while ((*env)[i])
 	{
-		if (!ft_strncmp((*env)[i], var, var_len) && (*env)[i][var_len] == '=') // TODO: segfault
+		if (!ft_strncmp((*env)[i], var, var_len) && (*env)[i][var_len] == '=')
 		{
 			free((*env)[i]);
 			(*env)[i] = ft_strdup(var);
-			return ;
+			if (!(*env)[i])
+				return;
+			return;
 		}
 		i++;
 	}

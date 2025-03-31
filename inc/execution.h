@@ -24,7 +24,7 @@ int execute_unset(char **env, t_cmd *cmd);
 int execute_cd(t_cmd *cmd);
 void execute_echo(t_cmd *cmd);
 int execute_env(char **env, t_cmd *cmd);
-int execute_export(char **env, t_cmd *cmd);
+int execute_export(char ***env, t_cmd *cmd);
 
 // built in: export [utils]
 int		is_valid_identifier(const char *str);
