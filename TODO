@@ -59,7 +59,7 @@ less important
 paula
 - ENV PATH: set $path to multiple directory.....
 - heredoc file supposed to show up hidden 
-- !!!!!!!!!!!echo "hello" | cat (OPEN) // pipes
+- !!!!!!!!!!!echo "hello" | cat (OPEN) // pipes --> wc -l & wc -c by itself stays open (BUT ls | wc -l works fine)
 - unset $PATH (not valid identifier message)
 
 
