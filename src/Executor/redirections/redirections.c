@@ -169,6 +169,7 @@ int redirect_heredoc(char *delimiter, t_minishell *minishell)
 	int		fd_heredoc_file2;
 	char	*line;
 
+	setup_heredoc_signals(); //SIGNALSNEW
 	fd_heredoc_file = open("./src/Executor/redirections/viktoria1", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd_heredoc_file == -1)
 	{

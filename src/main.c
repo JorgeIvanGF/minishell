@@ -38,6 +38,7 @@ void command_loop(t_minishell *minishell)
 	
 	while (1) // changed by Paula
 	{
+		setup_interactive_signals(); //SIGNALSNEW
 		input = get_and_validate_input();
 		if (input == NULL)
 		{
@@ -70,8 +71,9 @@ int	main(int argc, char **argv, char **env)
 	(void) argc;
 	(void) argv;
 	init_minishell(&minishell, env);
-	disable_echoctl(); // Disable echoing of control characters
-	setup_signals_interactive();
+	//disable_echoctl(); //SIGNALS Disable echoing of control characters
+	//setup_signals_interactive(); //SIGNALS
+	//handle_signals_interactive(); //SIGNALSNEW
 
 	command_loop(minishell); // parsing, execution happens here
 	// printf("exit flag in main = %d\n", minishell->exit_requested); // for testing
