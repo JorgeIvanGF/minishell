@@ -96,7 +96,7 @@ char	*get_and_validate_input(void)
 
 	if (!input)
 	{
-		// printf("exit\n"); 
+		printf("exit\n"); 
 		return (NULL);
 	}
 	if (*input)

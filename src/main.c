@@ -80,7 +80,7 @@ void command_loop(t_minishell *minishell)
 int	main(int argc, char **argv, char **env)
 {
 	static t_minishell	*minishell;
-	
+
 	(void) argc;
 	(void) argv;
 
@@ -91,12 +91,10 @@ int	main(int argc, char **argv, char **env)
 	 exit_code_num = minishell->exit_code ; //TODO: delete
 	// disable_echoctl(); // Disable echoing of control characters
 	// setup_signals_interactive();
-	init_signals();//TODO: delete and uncomment files and header file to jorge original
-	command_loop(minishell); // parsing, execution happens here
-	// printf("exit flag in main = %d\n", minishell->exit_requested); // for testing
+	// TODO: call signal main function here [jorge]
+	command_loop(minishell);
 
 	exit_shell(minishell); 
-	// printf("final exit code (in main) = %d\n", minishell->exit_code); // for testing
 
 	return (0);
 }

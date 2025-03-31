@@ -1,57 +1,58 @@
+#include <stdio.h>
 #include <readline/readline.h>
 #include <minishell.h>
 #include <signals.h>
 
 
+ 
 
+// t_global_f	g_global_var;
 
-t_global_f	g_global_var;
+// void	sigint_handler(int sig)
+// {
+// 	exit(exit_code_num);
+// 	if (!g_global_var.heredoc)
+// 		ft_putstr_fd("\n", STDERR_FILENO);
+// 	rl_on_new_line();
+// 	rl_replace_line("", 0);
+// 	rl_redisplay();
+// 	(void)sig;
+// }
 
-void	sigint_handler(int sig)
-{
-	exit(exit_code_num);
-	if (!g_global_var.heredoc)
-		ft_putstr_fd("\n", STDERR_FILENO);
-	rl_on_new_line();
-	// rl_replace_line("", 0);
-	rl_redisplay();
-	(void)sig;
-}
+// void	sigquit_handler(void)
+// {
+// 	struct sigaction	act;
 
-void	sigquit_handler(void)
-{
-	struct sigaction	act;
+// 	ft_memset(&act, 0, sizeof(struct sigaction));
+// 	sigemptyset(&(act.sa_mask));
+// 	act.sa_handler = SIG_IGN;
+// 	sigaction(SIGQUIT, &act, NULL);
+// }
 
-	ft_memset(&act, 0, sizeof(struct sigaction));
-	sigemptyset(&(act.sa_mask));
-	act.sa_handler = SIG_IGN;
-	sigaction(SIGQUIT, &act, NULL);
-}
+// int	handle_termios(t_bool ctl)
+// {
+// 	struct termios	terminos_p;
+// 	int				status;
 
-int	handle_termios(t_bool ctl)
-{
-	struct termios	terminos_p;
-	int				status;
+// 	(void)ctl;
+// 	status = tcgetattr(STDOUT_FILENO, &terminos_p);
+// 	if (status == -1)
+// 		return (1);
+// 	terminos_p.c_lflag &= ~(ECHOCTL);
+// 	status = tcsetattr(STDOUT_FILENO, TCSANOW, &terminos_p);
+// 	if (status == -1)
+// 		return (1);
+// 	return (0);
+// }
 
-	(void)ctl;
-	status = tcgetattr(STDOUT_FILENO, &terminos_p);
-	if (status == -1)
-		return (1);
-	terminos_p.c_lflag &= ~(ECHOCTL);
-	status = tcsetattr(STDOUT_FILENO, TCSANOW, &terminos_p);
-	if (status == -1)
-		return (1);
-	return (0);
-}
-
-void	init_signals(void)
-{
-	// rl_event_hook = NULL;
-	handle_termios(true);
-	// sigquit_handler();
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, SIG_IGN);
-}
+// void	init_signals(void)
+// {
+// 	// rl_event_hook = NULL;
+// 	handle_termios(true);
+// 	// sigquit_handler();
+// 	signal(SIGINT, sigint_handler);
+// 	signal(SIGQUIT, SIG_IGN);
+// }
 
 // void	sigquit_init(void)
 // {
