@@ -93,6 +93,8 @@ void	*init_minishell(t_minishell **minishell, char **env)
 		(*minishell) = NULL;
 		printf(RED"Failed to copy ENV-VAR\n"RESET);
 	}
+	(*minishell)->og_stdin_fd = 0;
+	(*minishell)->og_stdout_fd = 1;
 	(*minishell)->list_cmd = NULL;
 	(*minishell)->exit_code = 0;
 	return (minishell);

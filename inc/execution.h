@@ -32,17 +32,17 @@ void	append_new_var(char ***env, const char *var, int count);
 void	update_env(char ***env, const char *var);
 
 // redirections
-int redirect_heredoc(char *delimiter, t_minishell *minishell);
 int	setup_redirections(t_cmd *cmd, t_minishell *minishell);
 void redirect_stdout_to_file(int fd_outfile);
 void redirect_stdin_to_file(int fd_infile);
 int redirect_heredoc(char *delimiter, t_minishell *minishell);
-void	check_and_setup_redirections(t_cmd *cmd, t_minishell *minishell);
+void check_and_setup_redirections(t_cmd *cmd, t_minishell *minishell);
 
 
 // redirections open file
 int open_file_check_RDIN(char *rdir_name, int *fd_infile);
-int open_file_check_RD_HOC();
+int open_file_check_RD_HOC_WR(int *fd_heredoc_file);
+int open_file_check_RD_HOC_RD(int *fd_heredoc_file2);
 int open_file_check_RD_OUT(char *rdir_name, int *fd_outfile);
 int open_file_check_RD_APND(char *rdir_name, int *fd_outfile);
 

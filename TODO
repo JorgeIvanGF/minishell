@@ -7,6 +7,13 @@ ERRORS (ALL FIXED)
 -- grep 'minishell' < input.txt | sort > sorted.txt (FIXED)
 
 
+JORGE (TODO)
+- fix signals
+- fix ^D showing up when doing ctrlD 
+- $ (wrong output)
+- \$USER (wrong output) -> when sth is before $
+
+
 
 
 

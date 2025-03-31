@@ -16,8 +16,10 @@ void	execution(t_cmd *cmd, t_minishell *minishell)
 	{
 		error_cmd_not_found(cmd->cmd_arr[0]);
 		ft_free_2d(path_cmds);
-		free(found_path);
+		ft_free(found_path);
 		minishell->exit_code = 127;
+		 exit_code_num = minishell->exit_code ; //TODO: delete
+		exit_shell(minishell);
 	}
 }
 
@@ -29,6 +31,7 @@ void execute_cmd_or_builtin_wpipe(t_cmd *cmd, t_minishell *minishell)
 		if (execute_builtin(cmd, minishell) == 0)
 		{
 			minishell->exit_code = 1;
+			 exit_code_num = minishell->exit_code ; //TODO: delete
 			exit_shell(minishell);
 		}
 	}
@@ -51,6 +54,7 @@ void execute_builtin_without_pipe(t_cmd *cmd, t_minishell *minishell)
 			if (execute_builtin(cmd, minishell) == 0)
 			{
 				minishell->exit_code = 1;
+				 exit_code_num = minishell->exit_code ; //TODO: delete
 			}
 		}
 	}
@@ -67,7 +71,7 @@ int	process_full_cmd_line(t_cmd *cmd, t_minishell *minishell)
 	int	id;
 	int	fd[2];
 
-	setup_signals_non_interactive();
+	// setup_signals_non_interactive();
 	if (is_builtin(cmd) == 1 && minishell->list_cmd->size == 1)
 	{
 		execute_builtin_without_pipe(cmd, minishell);
@@ -75,13 +79,13 @@ int	process_full_cmd_line(t_cmd *cmd, t_minishell *minishell)
 	}
 	if (pipe(fd) == -1)
 	{
-		minishell->exit_code = 1; // TODO: change exit code to input exit_shell(minishell, 1) everywehre
+		minishell->exit_code = 1;
 		exit_shell(minishell);
 	}
 	id = fork();
 	if (id == 0)
 	{
-		setup_signals_default();
+		// setup_signals_default();
 		redirect_output_to_pipe(cmd, fd);
 		check_and_setup_redirections(cmd, minishell);
 		execute_cmd_or_builtin_wpipe(cmd, minishell);
@@ -97,18 +101,39 @@ and updates the minishell's exit code accordingly, specifically for last ran com
 */
 void	handle_wait_and_exit_status(t_minishell *minishell, int id, int *status)
 {
-	waitpid(id, status, 0);
+	waitpid(id, &(*status), 0);
 	while (wait(NULL) != -1)
 		;
-	if (WIFEXITED(status))
+
+	if (WIFEXITED(*status))
 	{
-		minishell->exit_code = WEXITSTATUS(status);
+		minishell->exit_code = WEXITSTATUS(*status);
+		exit_code_num = minishell->exit_code ; //TODO: delete
+	}
+	else if (WIFSIGNALED(*status))
+	{
+		minishell->exit_code = 128 + WTERMSIG(*status);
+		 exit_code_num = minishell->exit_code ; //TODO: delete
+		if (WCOREDUMP(*status))
+		{
+
+		}
+	}
+	else if (WIFSTOPPED(*status))
+	{
+		minishell->exit_code = 128 + WSTOPSIG(*status);
+		exit_code_num = minishell->exit_code ; //TODO: delete
+	}
+	else if (WIFCONTINUED(*status))
+	{
+
 	}
 }
 
 /*
 Iterates through list of commands, processes each command, and manages signals during execution. 
 It waits for all processes to finish, handles their exit status, and ensures proper signal handling.
+If 
 */
 void	iterate_and_execute_cmd_list(t_minishell *minishell)
 {
@@ -122,11 +147,14 @@ void	iterate_and_execute_cmd_list(t_minishell *minishell)
 		id = process_full_cmd_line(current, minishell);
 		current = current->next;
 	}
-	setup_signals_non_interactive();
-	handle_wait_and_exit_status(minishell, id, &status);
+	// setup_signals_non_interactive();
+
+	if(id != -1)
+		handle_wait_and_exit_status(minishell, id, &status);
+
 	unlink("./src/Executor/redirections/heredocfile");
-	setup_signals_interactive();
-	handle_signal_termination(status);
+	// setup_signals_interactive();
+	// handle_signal_termination(status);
 }
 
 // Save original file descriptors of STDIN and STDOUT
@@ -147,7 +175,7 @@ void	restore_io(t_minishell *minishell)
 
 int	ft_execution(t_minishell *minishell)
 {
-	print_list_commands(minishell->list_cmd);
+	// print_list_commands(minishell->list_cmd);
 	save_io_fds(minishell);
 	iterate_and_execute_cmd_list(minishell);
 	restore_io(minishell);

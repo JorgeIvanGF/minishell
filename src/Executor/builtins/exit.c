@@ -14,8 +14,9 @@ int execute_exit(t_cmd *cmd, t_minishell *minishell)
     if (syntax_check_exit(cmd, minishell) == 0)
         return (0);
 
-    printf("exit\n");
+    // printf("exit\n");
     minishell->exit_code = ft_atoi(cmd->cmd_arr[1]) % 256; 
+    exit_code_num = minishell->exit_code ; //TODO: delete
     exit_shell(minishell);
 
     return (1);
@@ -37,8 +38,7 @@ void check_null(t_cmd *cmd, t_minishell *minishell)
 {
     if(!cmd->cmd_arr[1])
     {
-        printf("exit\n");
-        minishell->exit_code = 0;
+        // printf("exit\n");
         exit_shell(minishell);
     }
 }

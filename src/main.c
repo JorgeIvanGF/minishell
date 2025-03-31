@@ -60,6 +60,20 @@ void command_loop(t_minishell *minishell)
 	}
 }
 
+// int	execute1(char *found_path, t_cmd *cmd, char **env)
+// {
+// 	(void)found_path;
+// 	(void)cmd;
+
+// 	char *args[] = {"bash", NULL};  // Properly define an array
+
+// 	if (execve("/bin/bash", args, env) == -1)
+// 	{
+// 		perror("execve");  // Print error message
+// 		return (-1);
+// 	}
+// 	return (0);
+// }
 
 
 // The Main function 
@@ -69,15 +83,20 @@ int	main(int argc, char **argv, char **env)
 	
 	(void) argc;
 	(void) argv;
-	init_minishell(&minishell, env);
-	disable_echoctl(); // Disable echoing of control characters
-	setup_signals_interactive();
 
+
+
+	// execute1(NULL, NULL, env);
+	init_minishell(&minishell, env);
+	 exit_code_num = minishell->exit_code ; //TODO: delete
+	// disable_echoctl(); // Disable echoing of control characters
+	// setup_signals_interactive();
+	init_signals();//TODO: delete and uncomment files and header file to jorge original
 	command_loop(minishell); // parsing, execution happens here
 	// printf("exit flag in main = %d\n", minishell->exit_requested); // for testing
 
 	exit_shell(minishell); 
-	printf("final exit code (in main) = %d\n", minishell->exit_code); // for testing
+	// printf("final exit code (in main) = %d\n", minishell->exit_code); // for testing
 
 	return (0);
 }

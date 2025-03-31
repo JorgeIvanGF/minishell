@@ -28,6 +28,7 @@ void	exit_shell(t_minishell *minishell) // TODO: paula recheck bc of exit code i
 	int	exit_code;
 
 	exit_code = minishell->exit_code;
+	 exit_code_num = minishell->exit_code ; //TODO: delete
 	if (minishell->list_cmd)
 	{
 		free_cmd_list(minishell->list_cmd);

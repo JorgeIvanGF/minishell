@@ -7,11 +7,18 @@ int	execute_env(char **env, t_cmd *cmd)
 {
 	int	i;
 
-	if (env && cmd->cmd_arr[1])
+	if (get_path(env) == NULL)
+	{
+		error_no_file_directory("env");
+		return (0);
+	}
+
+	if (env && cmd->cmd_arr[1] )
 	{
 		error_env_no_file_directory(cmd->cmd_arr[1]);
 		return (0);
 	}
+
 	i = 0;
 	while (env && env[i] != NULL)
 	{
@@ -21,3 +28,6 @@ int	execute_env(char **env, t_cmd *cmd)
 	}
 	return (1);
 }
+
+
+// TODO: if PATH is not in env, dont print env
