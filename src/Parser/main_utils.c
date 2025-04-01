@@ -75,31 +75,17 @@ int	handle_only_spaces(char *input)
 // If Ctrl+D is pressed 'exit' is printed
 // If input is not empty, add it to history
 char	*get_and_validate_input(void)
-{
-	char	*input = NULL;
-
-	
-	if (isatty(0)) // for tester
-		input = readline(ORANGE"MINISHELL> "RESET);
-	else
-	{
-		char *line;
-		line = get_next_line(0);
-		input= ft_strtrim(line, "\n");
-		free(line);
-	}
-
-
-	// input = readline(ORANGE"MINISHELL> "RESET);
-		
-
-
-	if (!input)
-	{
-		printf("exit\n"); 
-		return (NULL);
-	}
-	if (*input)
-		add_history(input);
-	return (input);
-}
+ {
+ 	char	*input;
+ 
+ 	input = readline(ORANGE"MINISHELL> "RESET);
+ 	if (!input)
+ 	{
+ 		printf("exit\n");
+ 		return (NULL);
+ 	}
+ 	if (*input)
+ 		add_history(input);
+ 	return (input);
+ }
+ 

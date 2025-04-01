@@ -5,7 +5,7 @@
 // and return a copy of its value (the part after the =)
 // Join the extracted 'name' with '=' to create the prefix
 // Check if matches with the ENV-VAR ->fetch the part after '='
-static char	*get_env_value(char *var, char **env)
+char	*get_env_value(char *var, char **env)
 {
 	int		i;
 	char	*prefix;
@@ -17,7 +17,6 @@ static char	*get_env_value(char *var, char **env)
 	prefix = ft_strjoin(var, "=");
 	while (env[i])
 	{
-		printf(RED"perfix = %s\n"RESET, prefix);
 		if (ft_strncmp(env[i], prefix, ft_strlen(prefix)) == 0)
 		{
 			value = ft_strdup(env[i] + ft_strlen(prefix));

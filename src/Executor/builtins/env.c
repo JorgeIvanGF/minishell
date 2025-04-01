@@ -5,7 +5,8 @@
 // env with no options or arguments
 int	execute_env(char **env, t_cmd *cmd)
 {
-	int	i;
+	int		i;
+	char	**check_export;
 
 	if (get_path(env) == NULL)
 	{
@@ -20,9 +21,14 @@ int	execute_env(char **env, t_cmd *cmd)
 	i = 0;
 	while (env && env[i] != NULL)
 	{
-		write(1, env[i], ft_strlen(env[i]));
-		write(1, "\n", 1);
+		check_export = ft_split(env[i], '=');
+		if (check_export[1])
+		{
+			write(1, env[i], ft_strlen(env[i]));
+			write(1, "\n", 1);
+		}
 		i++;
+		ft_free_2d(check_export);
 	}
 	return (1);
 }

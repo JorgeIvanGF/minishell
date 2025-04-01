@@ -84,6 +84,7 @@ void	print_sorted_env(char **env)
 {
 	int		i;
 	char	**env_copy;
+	char **check_export;;
 
 	env_copy = sort_env(env);
 	if (!env_copy)
@@ -91,8 +92,13 @@ void	print_sorted_env(char **env)
 	i = 0;
 	while (env_copy[i])
 	{
-		write(1, "declare -x ", 11);
-		print_env_line(env_copy[i]);
+		check_export = ft_split( env[i], '=');
+		if(!(!check_export[1] && get_env_value(env_copy[i], env) != NULL))
+		{
+			write(1, "declare -x ", 11);
+			print_env_line(env_copy[i]);
+		}
+		ft_free_2d(check_export);
 		i++;
 	}
 	i = 0;
@@ -111,6 +117,7 @@ void	print_sorted_env(char **env)
 int	execute_export(char ***env, t_cmd *cmd)
 {
 	int	i;
+	char **check_export;
 
 	if (!cmd->cmd_arr[1])
 	{
@@ -128,8 +135,15 @@ int	execute_export(char ***env, t_cmd *cmd)
 			return (0);
 		}
 		else
-			update_env(env, cmd->cmd_arr[i]);
-		i++;
+		{
+			check_export = ft_split( cmd->cmd_arr[i], '=');
+			if(!(!check_export[1] && get_env_value(cmd->cmd_arr[i], *env) != NULL))
+			{
+				update_env(env, cmd->cmd_arr[i]);
+			}
+			i++;
+			ft_free_2d(check_export);
+		}
 	}
 	return (1);
 }

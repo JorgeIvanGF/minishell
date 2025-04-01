@@ -8,8 +8,6 @@ ERRORS (ALL FIXED)
 
 
 JORGE (TODO)
-- fix signals
-- fix ^D showing up when doing ctrlD 
 - $ (wrong output)
 - \$USER (wrong output) -> when sth is before $
 
@@ -19,14 +17,12 @@ JORGE (TODO)
 
 TODO:
 <<a <<b <<c cat (last one (c) needs to printed) [dont need]
-- add one sentence comment to each function for description
 - do TODO comments
 - norminette
 ;rge will add heredoc signals & create folders
 - exit_code_num = minishell->exit_code (to put under every "exit) for tester (10+)
 
-- LAST TODO: too many fts redirections.c, executor.c --> then DONE!
-- add headers
+- add headers (ctrl, cmd, h)
 
 
 
@@ -48,6 +44,7 @@ more important
 - tab (cmpr w other minishell)
 - return value of a process section
 - $
+- change export return values
 less important
 - SIGNALS: after cat -> ctrl c -> minishell appears twice & no ^C before (w wc too)
 - SIGNALS: after cat -> ctrl d -> no ^\Quit: 3 printed
@@ -58,9 +55,9 @@ less important
 
 paula
 - ENV PATH: set $path to multiple directory.....
-- heredoc file supposed to show up hidden 
-- !!!!!!!!!!!echo "hello" | cat (OPEN) // pipes
-- unset $PATH (not valid identifier message)
+- nah: unset $PATH (not valid identifier message)
+- fixed !!!!!!!!!!!echo "hello" | cat (OPEN) //
+- fixed << . (remove that error message in makefile)
 
 
 

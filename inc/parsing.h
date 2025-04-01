@@ -130,4 +130,7 @@ int				handle_null_input(void);
 // main.c
 void			print_tokens(t_lst_token *tokens);
 
+//check env
+char	*get_env_value(char *var, char **env);
+
 #endif

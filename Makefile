@@ -53,10 +53,11 @@ SRC_FILES   = main.c \
 			Signals/signals_utils.c \
 			Executor/builtins/export.c \
 			Executor/builtins/export_utils.c \
-			Executor/execution/executor_helper.c \
-			Executor/execution/executor_utils.c \
+			Executor/execution/executor_process_helper.c \
+			Executor/execution/path_finder_exec.c \
 			Executor/execution/executor_process.c \
 			Executor/execution/main_executor.c \
+			Executor/execution/fd_backup.c \
 			Executor/print_ft.c \
 			Executor/redirections/redirections.c \
 			Executor/pipe.c \
