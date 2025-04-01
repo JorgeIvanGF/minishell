@@ -21,6 +21,7 @@ void	add_argument(t_cmd *cmd, char *arg)
 {
 	char	**new_args;
 
+	new_args = NULL;
 	if (!cmd || !arg)
 	{
 		printf(RED"Error: NULL cmd or arg\n"RESET);
@@ -32,7 +33,8 @@ void	add_argument(t_cmd *cmd, char *arg)
 			return ;
 		return ;
 	}
-	new_args = expand_cmd_arr(cmd->cmd_arr, arg);
+	if(arg && ft_strlen(arg)!=0)// TODO: expand fix done
+		new_args = expand_cmd_arr(cmd->cmd_arr, arg);
 	if (!new_args)
 		return ;
 	free(cmd->cmd_arr);//TODO: fix this 2d

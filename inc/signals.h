@@ -58,5 +58,11 @@ void	setup_exec_signals(void);
 void	handle_sigint_heredoc(int signo);
 void	setup_heredoc_signals(void);
 
+// NEW NEW NEW
+// Signals Utils
+void	enable_SIGQUIT_in_child(void);
+void	print_signal_message(int signal);
+void	ft_init_signls_terminal(void);
+void	ft_save_restore_terminal(int i);
 
 #endif

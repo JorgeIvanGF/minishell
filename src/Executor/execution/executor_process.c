@@ -34,6 +34,7 @@ int	process_full_cmd_line(t_cmd *cmd, t_minishell *minishell)
 	if (id == 0)
 	{
 		setup_exec_signals(); //SIGNALSNEW
+		enable_SIGQUIT_in_child();//NEW NEW NEW
 		redirect_output_to_pipe(cmd, fd);
 		check_and_setup_redirections(cmd, minishell);
 		execute_cmd_or_builtin_wpipe(cmd, minishell);
@@ -61,7 +62,8 @@ void	handle_wait_and_exit_status(t_minishell *minishell, int id, int *status)
 		minishell->exit_code = 128 + WTERMSIG(*status);
 		if (WCOREDUMP(*status))
 		{
-		}
+		}		
+		print_signal_message(WTERMSIG(*status));//NEW NEW NEW
 	}
 	else if (WIFSTOPPED(*status))
 		minishell->exit_code = 128 + WSTOPSIG(*status);

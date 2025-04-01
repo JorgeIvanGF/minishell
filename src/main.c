@@ -90,8 +90,12 @@ int	main(int argc, char **argv, char **env)
 	//setup_signals_interactive(); //SIGNALS
 	// handle_signals_interactive(); //SIGNALSNEW
 
+	ft_init_signls_terminal();    // NEW NEW NEW setup terminal (hide ^C etc.)
+	ft_save_restore_terminal(0);    // NEW NEW NEW save terminal state
+
 	command_loop(minishell);
 
+	ft_save_restore_terminal(1);    //NEW NEW NEW restore on exit
 	exit_shell(minishell); 
 
 	return (0);

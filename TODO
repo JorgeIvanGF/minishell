@@ -22,7 +22,7 @@ TODO:
 - add one sentence comment to each function for description
 - do TODO comments
 - norminette
-- jorge will add heredoc signals & create folders
+;rge will add heredoc signals & create folders
 - exit_code_num = minishell->exit_code (to put under every "exit) for tester (10+)
 
 - LAST TODO: too many fts redirections.c, executor.c --> then DONE!

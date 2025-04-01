@@ -6,7 +6,7 @@
 /*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 12:46:08 by jorgutie          #+#    #+#             */
-/*   Updated: 2024/10/13 18:46:22 by jorgutie         ###   ########.fr       */
+/*   Updated: 2025/04/01 21:43:11 by jorgutie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@ char	*ft_strdup(const char *s1)
 {
 	char	*copy;
 	size_t	len;
-
+	
+	if(!s1)
+		return (NULL);
 	len = (size_t)(ft_strlen(s1));
 	copy = (char *)malloc(sizeof(char) * (len + 1));
 	if (copy == NULL)

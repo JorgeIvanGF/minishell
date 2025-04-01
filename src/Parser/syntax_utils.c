@@ -17,6 +17,7 @@ static char	*get_env_value(char *var, char **env)
 	prefix = ft_strjoin(var, "=");
 	while (env[i])
 	{
+		printf(RED"perfix = %s\n"RESET, prefix);
 		if (ft_strncmp(env[i], prefix, ft_strlen(prefix)) == 0)
 		{
 			value = ft_strdup(env[i] + ft_strlen(prefix));
@@ -62,6 +63,7 @@ static char	*handle_dollar(char *input, int i, char **env, t_minishell *minishel
 	char	*value;
 	char	*new_input;
 
+	printf(BLUE"input =%s\n"RESET, input );
 	// Handle $?
 	if (input[i + 1] == '?')
 	{
@@ -72,8 +74,10 @@ static char	*handle_dollar(char *input, int i, char **env, t_minishell *minishel
 	{
 		var = extract_var_name(&input[i + 1]);
 		value = get_env_value(var, env);
+		printf(GREEN"value = %s\n"RESET, value);
 	}
 	new_input = replace_var(input, var, value, i);
+	printf(YELLOW"new input =%s\n"RESET, new_input );
 	free(var);
 	if (value)
 		free(value);
