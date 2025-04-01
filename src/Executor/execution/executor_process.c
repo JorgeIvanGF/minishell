@@ -3,17 +3,42 @@
 #include "parsing.h"
 #include "signals.h"
 
-void	handle_wait_and_exit_status(t_minishell *minishell, int id, int *status);
-void	iterate_and_execute_cmd_list(t_minishell *minishell);
+int		process_full_cmd_line(t_cmd *cmd, t_minishell *minishell);
+void	handle_wait_and_exit_status(t_minishell *minishell, int id, \
+		int *status);
 
 /*
-Handles the execution of a command,
-	including managing pipe redirection and I/O redirection.
-Child process: executes the command,
-	either running a builtin or an external command,
-Parent process: sets up input redirection,
-	executes built-ins without pipes if necessary, and cleans up.
-Note: If last command, redirect_output_to_pipe will close pipe.
+* Processes the command list by iterating through each command and executing it.
+* Returns ID -1 for built-ins executed in parent process (no child to wait for).
+* Waits for child processes to complete if any were created (id != -1).
+* Updates exit status based on the last command's result.
+* Cleans up temporary heredoc files after command execution.
+*/
+void	iterate_and_execute_cmd_list(t_minishell *minishell)
+{
+	t_cmd	*current;
+	int		status;
+	int		id;
+
+	current = minishell->list_cmd->head;
+	while (current != NULL)
+	{
+		id = process_full_cmd_line(current, minishell);
+		current = current->next;
+	}
+	if (id != -1)
+		handle_wait_and_exit_status(minishell, id, &status);
+	unlink("./src/Executor/redirections/heredocfile");
+}
+
+/*
+* Handles the execution of a command,
+* 	including managing pipe redirection and I/O redirection.
+* Child process: executes the command,
+*	either running a builtin or an external command,
+* Parent process: sets up input redirection,
+*	executes built-ins without pipes if necessary, and cleans up.
+* Note: If last command, redirect_output_to_pipe will close pipe.
 */
 int	process_full_cmd_line(t_cmd *cmd, t_minishell *minishell)
 {
@@ -44,10 +69,10 @@ int	process_full_cmd_line(t_cmd *cmd, t_minishell *minishell)
 }
 
 /*
-Handles multiple child processes: waits for each process to finish,
-	checks its exit status,
-and updates the minishell's exit code accordingly,
-	specifically for last ran command.
+* Handles multiple child processes: waits for each process to finish,
+*	checks its exit status,
+* and updates the minishell's exit code accordingly,
+*	specifically for last ran command.
 */
 void	handle_wait_and_exit_status(t_minishell *minishell, int id, int *status)
 {
@@ -71,25 +96,3 @@ void	handle_wait_and_exit_status(t_minishell *minishell, int id, int *status)
 	setup_interactive_signals(); //SIGNALSNEW
 }
 
-/*
-Iterates through list of commands, processes each command,
-	and manages signals during execution.
-It waits for all processes to finish, handles their exit status,
-	and ensures proper signal handling.
-*/
-void	iterate_and_execute_cmd_list(t_minishell *minishell)
-{
-	t_cmd	*current;
-	int		status;
-	int		id;
-
-	current = minishell->list_cmd->head;
-	while (current != NULL)
-	{
-		id = process_full_cmd_line(current, minishell);
-		current = current->next;
-	}
-	if (id != -1)
-		handle_wait_and_exit_status(minishell, id, &status);
-	unlink("./src/Executor/redirections/heredocfile");
-}

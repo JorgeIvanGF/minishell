@@ -30,7 +30,7 @@ int		execute_exit(t_cmd *cmd, t_minishell *minishell);
 int		execute_pwd(void);
 int		execute_unset(char **env, t_cmd *cmd);
 int		execute_cd(t_cmd *cmd);
-void	execute_echo(t_cmd *cmd);
+int		execute_echo(t_cmd *cmd);
 int		execute_env(char **env, t_cmd *cmd);
 int		execute_export(char ***env, t_cmd *cmd);
 

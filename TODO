@@ -8,8 +8,6 @@ ERRORS (ALL FIXED)
 
 
 JORGE (TODO)
-- fix signals
-- fix ^D showing up when doing ctrlD 
 - $ (wrong output)
 - \$USER (wrong output) -> when sth is before $
 
@@ -48,6 +46,7 @@ more important
 - tab (cmpr w other minishell)
 - return value of a process section
 - $
+- change export return values
 less important
 - SIGNALS: after cat -> ctrl c -> minishell appears twice & no ^C before (w wc too)
 - SIGNALS: after cat -> ctrl d -> no ^\Quit: 3 printed
@@ -58,9 +57,9 @@ less important
 
 paula
 - ENV PATH: set $path to multiple directory.....
-- heredoc file supposed to show up hidden 
-- !!!!!!!!!!!echo "hello" | cat (OPEN) // pipes --> wc -l & wc -c by itself stays open (BUT ls | wc -l works fine)
-- unset $PATH (not valid identifier message)
+- nah: unset $PATH (not valid identifier message)
+- fixed !!!!!!!!!!!echo "hello" | cat (OPEN) //
+- fixed << . (remove that error message in makefile)
 
 
 
