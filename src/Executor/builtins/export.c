@@ -115,7 +115,7 @@ int	execute_export(char ***env, t_cmd *cmd)
 	if (!cmd->cmd_arr[1])
 	{
 		print_sorted_env(*env);
-		return (0);
+		return (1);
 	}
 	i = 1;
 	while (cmd->cmd_arr[i])
@@ -125,10 +125,11 @@ int	execute_export(char ***env, t_cmd *cmd)
 			ft_putstr_fd("minishell: export: `", 2);
 			ft_putstr_fd(cmd->cmd_arr[i], 2);
 			ft_putstr_fd("': not a valid identifier\n", 2);
+			return (0);
 		}
 		else
 			update_env(env, cmd->cmd_arr[i]);
 		i++;
 	}
-	return (0);
+	return (1);
 }
