@@ -17,14 +17,12 @@ JORGE (TODO)
 
 TODO:
 <<a <<b <<c cat (last one (c) needs to printed) [dont need]
-- add one sentence comment to each function for description
 - do TODO comments
 - norminette
 - jorge will add heredoc signals & create folders
 - exit_code_num = minishell->exit_code (to put under every "exit) for tester (10+)
 
-- LAST TODO: too many fts redirections.c, executor.c --> then DONE!
-- add headers
+- add headers (ctrl, cmd, h)
 
 
 

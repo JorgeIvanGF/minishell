@@ -26,5 +26,5 @@ int	execute_echo(t_cmd *cmd)
 	if (newline_check == 1)
 		write(1, "\n", 1);
 
-	return(1);
+	return (1);
 }

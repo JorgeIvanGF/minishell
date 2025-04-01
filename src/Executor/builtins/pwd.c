@@ -3,6 +3,7 @@
 #include "parsing.h"
 
 // pwd with no options
+// current working directory is extracted (allocated with enough space)
 int	execute_pwd(void)
 {
 	char	*cwd;

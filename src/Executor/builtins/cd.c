@@ -3,7 +3,9 @@
 #include "parsing.h"
 
 // change directory with only a relative or absolute path
-// '~' is replaced by HOME path
+// - cd gets home directory path
+// - '~' is replaced by HOME path
+// - cd x changes directory to x
 int	execute_cd(t_cmd *cmd)
 {
 	char	*home_path;

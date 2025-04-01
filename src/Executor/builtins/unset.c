@@ -5,6 +5,7 @@
 void	delete_path_from_env(char ***ptr_to_env, int path_line);
 
 // unset with no options
+// if matching path in env is found, path will be deleted
 int	execute_unset(char **env, t_cmd *cmd)
 {
 	int		i;

@@ -27,8 +27,10 @@ void	execution(t_cmd *cmd, t_minishell *minishell)
 	}
 }
 
-// Executes a built-in command if part of a pipeline,
+// Executes a built-in command if part of a pipeline
+// & needs exit to copy behavior from external command execution (execve),
 // otherwise runs an external command.
+// Note: Piped builtins lose their effect on the shell (bash).
 void	execute_cmd_or_builtin_wpipe(t_cmd *cmd, t_minishell *minishell)
 {
 	if (is_builtin(cmd) == 1 && minishell->list_cmd->size > 1)
@@ -46,6 +48,8 @@ void	execute_cmd_or_builtin_wpipe(t_cmd *cmd, t_minishell *minishell)
 }
 
 // Checks if command is a builtin & only command in the list (no pipe involved).
+// Note: [Some builtins modify the shell's environment 
+//  --> If in child process, their effects won’t persist in parent.]
 // If so, it handles I/O redirection and executes the builtin.
 void	execute_builtin_without_pipe(t_cmd *cmd, t_minishell *minishell)
 {

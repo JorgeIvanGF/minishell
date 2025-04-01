@@ -9,7 +9,7 @@ void	handle_wait_and_exit_status(t_minishell *minishell, int id, \
 
 /*
 * Processes the command list by iterating through each command and executing it.
-* Returns ID -1 for built-ins executed in parent process (no child to wait for).
+* -Returns ID -1 for built-ins executed in parent process (no child to wait for).
 * Waits for child processes to complete if any were created (id != -1).
 * Updates exit status based on the last command's result.
 * Cleans up temporary heredoc files after command execution.
@@ -69,10 +69,10 @@ int	process_full_cmd_line(t_cmd *cmd, t_minishell *minishell)
 }
 
 /*
-* Handles multiple child processes: waits for each process to finish,
-*	checks its exit status,
-* and updates the minishell's exit code accordingly,
-*	specifically for last ran command.
+* Handles multiple child processes.
+* 1. Waits for last child [last ran command] to finish & stores exit status.
+* 2. Waits for remaining [zombie] child processes to finish.
+* 3. Checks how last process ended.
 */
 void	handle_wait_and_exit_status(t_minishell *minishell, int id, int *status)
 {
@@ -95,4 +95,3 @@ void	handle_wait_and_exit_status(t_minishell *minishell, int id, int *status)
 	}
 	setup_interactive_signals(); //SIGNALSNEW
 }
-
