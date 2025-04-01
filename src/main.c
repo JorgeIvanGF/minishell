@@ -86,7 +86,7 @@ int	main(int argc, char **argv, char **env)
 	(void) argv;
 
 	init_minishell(&minishell, env);
-	disable_echoctl(); //SIGNALS Disable echoing of control characters
+	//disable_echoctl(); //SIGNALS Disable echoing of control characters
 	//setup_signals_interactive(); //SIGNALS
 	// handle_signals_interactive(); //SIGNALSNEW
 

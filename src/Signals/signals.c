@@ -80,17 +80,36 @@ volatile sig_atomic_t	g_sig = 0;
 
 // SIGNAL HANDLER: SIGINT (Ctrl-C) in shell prompt
 // Prints a newline, clears input, shows prompt again.
+// void	handle_sigint(int signo)
+// {
+// 	if (signo == SIGINT)
+// 	{
+// 		g_sig = signo;
+// 		write(1, "\n", 1);
+// 		rl_replace_line("", 0);
+// 		rl_on_new_line();
+// 		rl_redisplay();
+// 	}
+// }
+
+// Called only in main shell prompt (readline) //NEW
 void	handle_sigint(int signo)
 {
 	if (signo == SIGINT)
 	{
 		g_sig = signo;
-		write(1, "\n", 1);
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
+
+		// Only reset readline state if SIGINT happened during prompt input
+		if (isatty(STDIN_FILENO))
+		{
+			write(1, "\n", 1);
+			rl_replace_line("", 0);
+			rl_on_new_line();
+			rl_redisplay();
+		}
 	}
 }
+
 
 // SETUP: Signals for interactive mode (when waiting for user input)
 // - SIGINT (Ctrl-C) prints prompt again
