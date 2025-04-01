@@ -73,7 +73,7 @@ int				check_redirection_syntax(t_lst_token *token_list);
 
 // syntax.c
 int				syntax_check(t_lst_token *tokens, t_minishell *minishell);
-void			expand_variables(t_token *token, char **env);
+void			expand_variables(t_token *token, char **env, t_minishell *minishell);
 
 // syntax_uyils_2.c
 char			*replace_var(char *input, char *var, char *value, int pos);

@@ -91,5 +91,6 @@ void	iterate_and_execute_cmd_list(t_minishell *minishell)
 	}
 	if (id != -1)
 		handle_wait_and_exit_status(minishell, id, &status);
+	printf(GREEN"exit code = %d\n", minishell->exit_code); // TO DEBUG
 	unlink("./src/Executor/redirections/heredocfile");
 }

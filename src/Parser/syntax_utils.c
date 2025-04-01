@@ -33,14 +33,46 @@ static char	*get_env_value(char *var, char **env)
 // retrieves its value from the ENV,
 // replaces "$VAR" in the input string with the value, 
 // frees temp memory,and returns the updated string
-static char	*handle_dollar(char *input, int i, char **env)
+// static char	*handle_dollar(char *input, int i, char **env, t_minishell *minishell)
+// {
+// 	char	*var;
+// 	char	*value;
+// 	char	*new_input;
+
+// 	var = extract_var_name(&input[i + 1]);
+// 	//value = get_env_value(var, env);
+// 	if (ft_strcmp(var, "?") == 0) //NEW
+// 		value = ft_itoa(minishell->exit_code);
+// 	else
+// 		value = get_env_value(var, env);
+
+// 	new_input = replace_var(input, var, value, i);
+// 	free(var);
+// 	if (value)
+// 		free(value);
+// 	return (new_input);
+// }
+
+
+// ***********************************
+
+static char	*handle_dollar(char *input, int i, char **env, t_minishell *minishell)
 {
 	char	*var;
 	char	*value;
 	char	*new_input;
 
-	var = extract_var_name(&input[i + 1]);
-	value = get_env_value(var, env);
+	// Handle $?
+	if (input[i + 1] == '?')
+	{
+		var = ft_strdup("?");
+		value = ft_itoa(minishell->exit_code);
+	}
+	else
+	{
+		var = extract_var_name(&input[i + 1]);
+		value = get_env_value(var, env);
+	}
 	new_input = replace_var(input, var, value, i);
 	free(var);
 	if (value)
@@ -48,12 +80,14 @@ static char	*handle_dollar(char *input, int i, char **env)
 	return (new_input);
 }
 
+
+
 // If the token is NOT originally DBQ, it toggles an in_single flag
 // on encountering SGQ -> Advance past the quote to avoid processing
 // it repeatedly -> When a '$' is found outside single quotes,
 // it calls handle_dollar to expand the variable.
 // Returns the updated input string after processing.
-static char	*process_input(char *input, int is_dbq, char **env)
+static char	*process_input(char *input, int is_dbq, char **env, t_minishell *minishell)
 {
 	int		i;
 	int		in_single;
@@ -70,7 +104,7 @@ static char	*process_input(char *input, int is_dbq, char **env)
 		}
 		else if (input[i] == '$' && !in_single)
 		{
-			new_input = handle_dollar(input, i, env);
+			new_input = handle_dollar(input, i, env, minishell);
 			if (!new_input)
 				return (NULL);
 			input = new_input;
@@ -81,7 +115,7 @@ static char	*process_input(char *input, int is_dbq, char **env)
 	return (input);
 }
 
-static char	*expand_env_vars(char *input, char **env)
+static char	*expand_env_vars(char *input, char **env, t_minishell *minishell)
 {
 	int		len;
 	int		is_dbq;
@@ -93,12 +127,12 @@ static char	*expand_env_vars(char *input, char **env)
 		is_dbq = 1;
 	else
 		is_dbq = 0;
-	return (process_input(input, is_dbq, env));
+	return (process_input(input, is_dbq, env, minishell));
 }
 
 // Expands environment variables for tokens that are 
 // double-quoted (DBQ) or unquoted (WORD).
-void	expand_variables(t_token *token, char **env)
+void	expand_variables(t_token *token, char **env, t_minishell *minishell)
 {
 	char	*expanded;
 
@@ -106,7 +140,7 @@ void	expand_variables(t_token *token, char **env)
 		return ;
 	if (token->type == DBQ || token->type == WORD)
 	{
-		expanded = expand_env_vars(token->value, env);
+		expanded = expand_env_vars(token->value, env, minishell);
 		if (expanded)
 			token->value = expanded;
 	}

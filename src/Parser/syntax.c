@@ -88,7 +88,7 @@ int	syntax_check(t_lst_token *tokens, t_minishell *minishell)
 	while (curr)
 	{
 		if (curr->type == DBQ || curr->type == WORD)
-			expand_variables(curr, minishell->env);
+			expand_variables(curr, minishell->env, minishell);
 		remove_external_quotes(curr);
 		curr = curr->next;
 	}
