@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 00:51:43 by jorgutie          #+#    #+#             */
+/*   Updated: 2025/04/02 01:29:06 by jorgutie         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "parsing.h"
 
@@ -106,10 +118,10 @@ int	init_cmd_arr(t_cmd *cmd, char *arg)
 		printf(RED "Error: Failed to allocate memory for cmd_arr\n" RESET);
 		return (0);
 	}
-	if(arg && ft_strlen(arg)==0)//TODO:expand fix done
- 	{
+	if (arg && ft_strlen(arg) == 0)
+	{
 		cmd->cmd_arr[0] = NULL;
-		return(1);
+		return (1);
 	}
 	cmd->cmd_arr[0] = ft_strdup(arg);
 	if (!cmd->cmd_arr[0])

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   syntax_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 00:51:54 by jorgutie          #+#    #+#             */
+/*   Updated: 2025/04/02 01:31:27 by jorgutie         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "parsing.h"
 
@@ -29,41 +41,13 @@ char	*get_env_value(char *var, char **env)
 	return (NULL);
 }
 
-// When a '$' at index i, extracts the name
-// retrieves its value from the ENV,
-// replaces "$VAR" in the input string with the value, 
-// frees temp memory,and returns the updated string
-// static char	*handle_dollar(char *input, int i, char **env, t_minishell *minishell)
-// {
-// 	char	*var;
-// 	char	*value;
-// 	char	*new_input;
-
-// 	var = extract_var_name(&input[i + 1]);
-// 	//value = get_env_value(var, env);
-// 	if (ft_strcmp(var, "?") == 0) //NEW
-// 		value = ft_itoa(minishell->exit_code);
-// 	else
-// 		value = get_env_value(var, env);
-
-// 	new_input = replace_var(input, var, value, i);
-// 	free(var);
-// 	if (value)
-// 		free(value);
-// 	return (new_input);
-// }
-
-
-// ***********************************
-
-static char	*handle_dollar(char *input, int i, char **env, t_minishell *minishell)
+static char	*handle_dollar(char *input, int i
+	, char **env, t_minishell *minishell)
 {
 	char	*var;
 	char	*value;
 	char	*new_input;
 
-	printf(BLUE"input =%s\n"RESET, input );
-	// Handle $?
 	if (input[i + 1] == '?')
 	{
 		var = ft_strdup("?");
@@ -73,24 +57,21 @@ static char	*handle_dollar(char *input, int i, char **env, t_minishell *minishel
 	{
 		var = extract_var_name(&input[i + 1]);
 		value = get_env_value(var, env);
-		printf(GREEN"value = %s\n"RESET, value);
 	}
 	new_input = replace_var(input, var, value, i);
-	printf(YELLOW"new input =%s\n"RESET, new_input );
 	free(var);
 	if (value)
 		free(value);
 	return (new_input);
 }
 
-
-
 // If the token is NOT originally DBQ, it toggles an in_single flag
 // on encountering SGQ -> Advance past the quote to avoid processing
 // it repeatedly -> When a '$' is found outside single quotes,
 // it calls handle_dollar to expand the variable.
 // Returns the updated input string after processing.
-static char	*process_input(char *input, int is_dbq, char **env, t_minishell *minishell)
+static char	*process_input(char *input, int is_dbq, char **env
+	, t_minishell *minishell)
 {
 	int		i;
 	int		in_single;

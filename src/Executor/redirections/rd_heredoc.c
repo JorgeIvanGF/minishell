@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rd_heredoc.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 00:50:55 by jorgutie          #+#    #+#             */
+/*   Updated: 2025/04/02 01:23:19 by jorgutie         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "execution.h"
 #include "minishell.h"
 #include "parsing.h"
@@ -41,7 +53,7 @@ int	redirect_heredoc(char *delimiter, t_minishell *minishell)
 	int	fd_heredoc_file;
 	int	fd_heredoc_file2;
 
-	setup_heredoc_signals(); //SIGNALSNEW
+	setup_heredoc_signals();
 	if (open_file_check_rdhoc_wr(&fd_heredoc_file) == -1)
 		return (-1);
 	write_heredoc_to_file(fd_heredoc_file, delimiter, minishell);

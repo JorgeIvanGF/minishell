@@ -1,23 +1,17 @@
-// #ifndef SIGNALS_H
-// # define SIGNALS_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signals.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 00:49:15 by jorgutie          #+#    #+#             */
+/*   Updated: 2025/04/02 01:40:21 by jorgutie         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-
-// // Global variable for signal handling 
-// extern int	g_signum;
-
-// // Signal handling functions_________________
-// void	handle_signals(int signum);
-// void	handle_signals_heredoc(int signum);
-// void	setup_signals_interactive(void);
-// void	setup_signals_heredoc(void);
-// void	setup_signals_non_interactive(void);
-// void	setup_signals_default(void);
-// void	handle_signal_termination(int status);
-
-
-// #endif
-#ifndef SIGANALS_H
-# define SIGANALS_H
+#ifndef SIGNALS_H
+# define SIGNALS_H
 
 # include <stdio.h>
 # include <signal.h>
@@ -52,7 +46,6 @@ extern volatile sig_atomic_t	g_sig;
 
 // New new
 void	handle_sigint(int signo);
-void	handle_sigquit(int signo);
 void	setup_interactive_signals(void);
 void	setup_exec_signals(void);
 void	handle_sigint_heredoc(int signo);
@@ -60,7 +53,7 @@ void	setup_heredoc_signals(void);
 
 // NEW NEW NEW
 // Signals Utils
-void	enable_SIGQUIT_in_child(void);
+void	enable_sigquit_in_child(void);
 void	print_signal_message(int signal);
 void	ft_init_signls_terminal(void);
 void	ft_save_restore_terminal(int i);

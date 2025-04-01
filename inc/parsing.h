@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 00:49:11 by jorgutie          #+#    #+#             */
+/*   Updated: 2025/04/02 00:56:27 by jorgutie         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PARSING_H
 # define PARSING_H
 
@@ -73,7 +85,8 @@ int				check_redirection_syntax(t_lst_token *token_list);
 
 // syntax.c
 int				syntax_check(t_lst_token *tokens, t_minishell *minishell);
-void			expand_variables(t_token *token, char **env, t_minishell *minishell);
+void			expand_variables(t_token *token, char **env, \
+					t_minishell *minishell);
 
 // syntax_uyils_2.c
 char			*replace_var(char *input, char *var, char *value, int pos);
@@ -131,6 +144,6 @@ int				handle_null_input(void);
 void			print_tokens(t_lst_token *tokens);
 
 //check env
-char	*get_env_value(char *var, char **env);
+char			*get_env_value(char *var, char **env);
 
 #endif

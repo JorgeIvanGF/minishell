@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor_process.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 00:50:34 by jorgutie          #+#    #+#             */
+/*   Updated: 2025/04/02 01:40:21 by jorgutie         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "execution.h"
 #include "minishell.h"
 #include "parsing.h"
@@ -28,7 +40,6 @@ void	iterate_and_execute_cmd_list(t_minishell *minishell)
 	}
 	if (id != -1)
 		handle_wait_and_exit_status(minishell, id, &status);
-	// printf(GREEN"exit code = %d\n", minishell->exit_code); // TO DEBUG
 	unlink("./src/Executor/redirections/heredocfile");
 }
 
@@ -59,8 +70,8 @@ int	process_full_cmd_line(t_cmd *cmd, t_minishell *minishell)
 	id = fork();
 	if (id == 0)
 	{
-		setup_exec_signals(); //SIGNALSNEW
-		enable_SIGQUIT_in_child();//NEW NEW NEW
+		setup_exec_signals();
+		enable_sigquit_in_child();
 		redirect_output_to_pipe(cmd, fd);
 		check_and_setup_redirections(cmd, minishell);
 		execute_cmd_or_builtin_wpipe(cmd, minishell);
@@ -89,12 +100,12 @@ void	handle_wait_and_exit_status(t_minishell *minishell, int id, int *status)
 		if (WCOREDUMP(*status))
 		{
 		}
-		print_signal_message(WTERMSIG(*status));//NEW NEW NEW
+		print_signal_message(WTERMSIG(*status));
 	}
 	else if (WIFSTOPPED(*status))
 		minishell->exit_code = 128 + WSTOPSIG(*status);
 	else if (WIFCONTINUED(*status))
 	{
 	}
-	setup_interactive_signals(); //SIGNALSNEW
+	setup_interactive_signals();
 }

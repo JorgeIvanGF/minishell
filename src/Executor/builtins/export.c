@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 00:50:11 by jorgutie          #+#    #+#             */
+/*   Updated: 2025/04/02 01:48:16 by jorgutie         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "execution.h"
 #include "parsing.h"
@@ -84,7 +96,7 @@ void	print_sorted_env(char **env)
 {
 	int		i;
 	char	**env_copy;
-	char **check_export;;
+	char	**check_export;
 
 	env_copy = sort_env(env);
 	if (!env_copy)
@@ -92,8 +104,8 @@ void	print_sorted_env(char **env)
 	i = 0;
 	while (env_copy[i])
 	{
-		check_export = ft_split( env[i], '=');
-		if(!(!check_export[1] && get_env_value(env_copy[i], env) != NULL))
+		check_export = ft_split(env[i], '=');
+		if (!(!check_export[1] && get_env_value(env_copy[i], env) != NULL))
 		{
 			write(1, "declare -x ", 11);
 			print_env_line(env_copy[i]);
@@ -101,13 +113,7 @@ void	print_sorted_env(char **env)
 		ft_free_2d(check_export);
 		i++;
 	}
-	i = 0;
-	while (env_copy[i])
-	{
-		free(env_copy[i]);
-		i++;
-	}
-	free(env_copy);
+	free_env_copy(env_copy);
 }
 
 // Executes the export builtin command:
@@ -116,14 +122,11 @@ void	print_sorted_env(char **env)
 // the environment variable.
 int	execute_export(char ***env, t_cmd *cmd)
 {
-	int	i;
-	char **check_export;
+	int		i;
+	char	**check_export;
 
 	if (!cmd->cmd_arr[1])
-	{
-		print_sorted_env(*env);
-		return (1);
-	}
+		return (print_sorted_env(*env), 1);
 	i = 1;
 	while (cmd->cmd_arr[i])
 	{
@@ -131,16 +134,14 @@ int	execute_export(char ***env, t_cmd *cmd)
 		{
 			ft_putstr_fd("minishell: export: `", 2);
 			ft_putstr_fd(cmd->cmd_arr[i], 2);
-			ft_putstr_fd("': not a valid identifier\n", 2);
-			return (0);
+			return (ft_putstr_fd("': not a valid identifier\n", 2), 0);
 		}
 		else
 		{
-			check_export = ft_split( cmd->cmd_arr[i], '=');
-			if(!(!check_export[1] && get_env_value(cmd->cmd_arr[i], *env) != NULL))
-			{
+			check_export = ft_split(cmd->cmd_arr[i], '=');
+			if (!(!check_export[1]
+					&& get_env_value(cmd->cmd_arr[i], *env) != NULL))
 				update_env(env, cmd->cmd_arr[i]);
-			}
 			i++;
 			ft_free_2d(check_export);
 		}

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 00:49:00 by jorgutie          #+#    #+#             */
+/*   Updated: 2025/04/02 01:46:21 by jorgutie         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef EXECUTION_H
 # define EXECUTION_H
 
@@ -38,6 +50,7 @@ int		execute_export(char ***env, t_cmd *cmd);
 int		is_valid_identifier(const char *str);
 void	append_new_var(char ***env, const char *var, int count);
 void	update_env(char ***env, const char *var);
+void	free_env_copy(char **env_copy);
 
 // built in: exit [utils]
 void	check_null(t_cmd *cmd, t_minishell *minishell);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 00:49:08 by jorgutie          #+#    #+#             */
+/*   Updated: 2025/04/02 00:54:34 by jorgutie         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -25,7 +37,6 @@
 // Text attributes 
 # define BOLD      "\x1b[1m" 
 # define UNDERLINE "\x1b[4m"
-
 
 // Enum Redirections_________________________________
 typedef enum e_redirection_type
@@ -80,6 +91,5 @@ typedef struct s_minishell
 
 // Execution________________________________________
 int	ft_execution(t_minishell *minishell);
-
 
 #endif

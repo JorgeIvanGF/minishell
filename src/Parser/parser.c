@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 00:51:46 by jorgutie          #+#    #+#             */
+/*   Updated: 2025/04/02 01:27:40 by jorgutie         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "parsing.h"
 
@@ -33,12 +45,12 @@ void	add_argument(t_cmd *cmd, char *arg)
 			return ;
 		return ;
 	}
-	if(arg && ft_strlen(arg)!=0)// TODO: expand fix done
+	if (arg && ft_strlen(arg) != 0)
 		new_args = expand_cmd_arr(cmd->cmd_arr, arg);
 	if (!new_args)
 		return ;
-	free(cmd->cmd_arr);//TODO: fix this 2d
-	cmd->cmd_arr = new_args; //TODO: fix w strdup for every single arr[i] in arr
+	free(cmd->cmd_arr);
+	cmd->cmd_arr = new_args;
 }
 
 // Add the RD to the list of RDs:

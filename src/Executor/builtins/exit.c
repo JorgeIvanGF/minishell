@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exit.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 00:50:04 by jorgutie          #+#    #+#             */
+/*   Updated: 2025/04/02 01:07:33 by jorgutie         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "execution.h"
 #include "minishell.h"
 #include "parsing.h"
@@ -24,4 +36,3 @@ int	syntax_check_exit(t_cmd *cmd, t_minishell *minishell)
 	check_non_numeric(cmd, minishell);
 	return (check_too_many_arguments(cmd, minishell));
 }
-

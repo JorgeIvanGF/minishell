@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_free.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 20:04:05 by pdrettas          #+#    #+#             */
-/*   Updated: 2025/03/10 20:05:15 by pdrettas         ###   ########.fr       */
+/*   Updated: 2025/04/02 01:02:56 by jorgutie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void ft_free(char *str)
+void	ft_free(char *str)
 {
 	if (str != NULL)
 	{

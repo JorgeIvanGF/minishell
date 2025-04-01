@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 00:51:35 by jorgutie          #+#    #+#             */
+/*   Updated: 2025/04/02 01:25:40 by jorgutie         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "parsing.h"
 #include "signals.h"
@@ -21,11 +33,8 @@ int	process_inputs(t_minishell *minishell, t_lst_token *tokens, char *input)
 		free(input);
 		exit_shell(minishell);
 	}
-	//print_command_list(minishell->list_cmd); // TO DEBUG
-	// setup_signals_non_interactive(); // SIGNALS
-	ft_execution(minishell); // To Paula
-	// setup_signals_interactive(); // SIGNALS: Reset signals to interactive mode // moved
-	continue_shell(minishell, &tokens, &input);	
+	ft_execution(minishell);
+	continue_shell(minishell, &tokens, &input);
 	return (0);
 }
 
@@ -44,7 +53,6 @@ int	tokenize_input(char *input, t_lst_token **tokens)
 		free(input);
 		return (1);
 	}
-	//print_tokens(*tokens); // TO DEBUG
 	return (0);
 }
 
@@ -75,17 +83,16 @@ int	handle_only_spaces(char *input)
 // If Ctrl+D is pressed 'exit' is printed
 // If input is not empty, add it to history
 char	*get_and_validate_input(void)
- {
- 	char	*input;
- 
- 	input = readline(ORANGE"MINISHELL> "RESET);
- 	if (!input)
- 	{
- 		printf("exit\n");
- 		return (NULL);
- 	}
- 	if (*input)
- 		add_history(input);
- 	return (input);
- }
- 
+{
+	char	*input;
+
+	input = readline(ORANGE"MINISHELL> "RESET);
+	if (!input)
+	{
+		printf("exit\n");
+		return (NULL);
+	}
+	if (*input)
+		add_history(input);
+	return (input);
+}

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   echo.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 00:49:55 by jorgutie          #+#    #+#             */
+/*   Updated: 2025/04/02 01:06:39 by jorgutie         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "execution.h"
 #include "minishell.h"
 #include "parsing.h"
@@ -25,6 +37,5 @@ int	execute_echo(t_cmd *cmd)
 	}
 	if (newline_check == 1)
 		write(1, "\n", 1);
-
 	return (1);
 }

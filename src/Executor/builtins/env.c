@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 00:49:58 by jorgutie          #+#    #+#             */
+/*   Updated: 2025/04/02 01:07:13 by jorgutie         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "execution.h"
 #include "minishell.h"
 #include "parsing.h"
@@ -14,10 +26,7 @@ int	execute_env(char **env, t_cmd *cmd)
 		return (0);
 	}
 	if (env && cmd->cmd_arr[1])
-	{
-		error_env_no_file_directory(cmd->cmd_arr[1]);
-		return (0);
-	}
+		return (error_env_no_file_directory(cmd->cmd_arr[1]), 0);
 	i = 0;
 	while (env && env[i] != NULL)
 	{

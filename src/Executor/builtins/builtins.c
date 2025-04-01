@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtins.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 00:49:43 by jorgutie          #+#    #+#             */
+/*   Updated: 2025/04/02 01:05:14 by jorgutie         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "execution.h"
 #include "minishell.h"
 #include "parsing.h"
@@ -26,7 +38,6 @@ int	execute_builtin(t_cmd *cmd, t_minishell *minishell)
 		return (execute_env(minishell->env, cmd));
 	else if (ft_strcmp(cmd->cmd_arr[0], "exit") == 0)
 		return (execute_exit(cmd, minishell));
-
 	return (0);
 }
 

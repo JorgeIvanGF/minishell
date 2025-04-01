@@ -1,81 +1,76 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 00:52:31 by jorgutie          #+#    #+#             */
+/*   Updated: 2025/04/02 01:35:53 by jorgutie         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/minishell.h"
 #include "../inc/parsing.h"
 #include "../inc/signals.h"
 #include "execution.h"
 
-// To Test the Lexer (Tmporary function)
-void print_tokens(t_lst_token *tokens)
-{
-	t_token *curr = tokens->head;
-	printf(YELLOW"TOKEN VALUES AND TYPES\n"RESET);
-	while (curr)
-	{
-		printf("Token: %-10s | Type: %d\n", curr->value, curr->type);
-		curr = curr->next;
-	}
-}
+// // To Test the Lexer (Tmporary function)
+// void	print_tokens(t_lst_token *tokens)
+// {
+// 	t_token *curr = tokens->head;
+// 	printf(YELLOW"TOKEN VALUES AND TYPES\n"RESET);
+// 	while (curr)
+// 	{
+// 		printf("Token: %-10s | Type: %d\n", curr->value, curr->type);
+// 		curr = curr->next;
+// 	}
+// }
 
 // Disables the terminal's echoing of control characters.
 // This function retrieves the current terminal settings, 
 // clears the ECHOCTL flag (which normally causes control 
 // characters like Ctrl-C to be displayed as "^C"),
 // and applies the updated settings immediately.
-void disable_echoctl(void)
-{
-	struct termios term;
+// void	disable_echoctl(void)
+// {
+// 	struct termios term;
 
-	if (tcgetattr(STDIN_FILENO, &term) == -1)
-		return;
-	term.c_lflag &= ~ECHOCTL;
-	tcsetattr(STDIN_FILENO, TCSANOW, &term);
-}
+// 	if (tcgetattr(STDIN_FILENO, &term) == -1)
+// 		return ;
+// 	term.c_lflag &= ~ECHOCTL;
+// 	tcsetattr(STDIN_FILENO, TCSANOW, &term);
+// }
 
 // Process the command loop
-void command_loop(t_minishell *minishell)
+void	command_loop(t_minishell *minishell)
 {
-	char *input;
-	t_lst_token *tokens;
-	
+	char		*input;
+	t_lst_token	*tokens;
+
 	while (1)
 	{
-		setup_interactive_signals(); //SIGNALSNEW
+		setup_interactive_signals();
 		input = get_and_validate_input();
 		if (input == NULL)
 		{
 			if (handle_null_input())
-				break;
-			continue;
+				break ;
+			continue ;
 		}
 		if (handle_empty_input(input))
-			continue;
-		if (handle_only_spaces(input)) 
+			continue ;
+		if (handle_only_spaces(input))
 		{
 			free(input);
-			continue;
+			continue ;
 		}
 		if (tokenize_input(input, &tokens))
-			continue;
-		
+			continue ;
 		if (process_inputs(minishell, tokens, input))
-			continue;
+			continue ;
 	}
 }
-
-// int	execute1(char *found_path, t_cmd *cmd, char **env)
-// {
-// 	(void)found_path;
-// 	(void)cmd;
-
-// 	char *args[] = {"bash", NULL};  // Properly define an array
-
-// 	if (execve("/bin/bash", args, env) == -1)
-// 	{
-// 		perror("execve");  // Print error message
-// 		return (-1);
-// 	}
-// 	return (0);
-// }
-
 
 // The Main function 
 int	main(int argc, char **argv, char **env)
@@ -84,19 +79,11 @@ int	main(int argc, char **argv, char **env)
 
 	(void) argc;
 	(void) argv;
-
 	init_minishell(&minishell, env);
-	//disable_echoctl(); //SIGNALS Disable echoing of control characters
-	//setup_signals_interactive(); //SIGNALS
-	// handle_signals_interactive(); //SIGNALSNEW
-
-	ft_init_signls_terminal();    // NEW NEW NEW setup terminal (hide ^C etc.)
-	ft_save_restore_terminal(0);    // NEW NEW NEW save terminal state
-
+	ft_init_signls_terminal();
+	ft_save_restore_terminal(0);
 	command_loop(minishell);
-
-	ft_save_restore_terminal(1);    //NEW NEW NEW restore on exit
-	exit_shell(minishell); 
-
+	ft_save_restore_terminal(1);
+	exit_shell(minishell);
 	return (0);
 }

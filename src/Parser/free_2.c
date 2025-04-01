@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free_2.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 00:51:17 by jorgutie          #+#    #+#             */
+/*   Updated: 2025/04/02 01:24:04 by jorgutie         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "parsing.h"
 
@@ -38,7 +50,7 @@ void	exit_shell(t_minishell *minishell)
 		free_env(minishell->env);
 		minishell->env = NULL;
 	}
-	if(minishell)
+	if (minishell)
 		free(minishell);
 	exit(exit_code);
 }
