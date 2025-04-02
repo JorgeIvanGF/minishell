@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 00:52:27 by jorgutie          #+#    #+#             */
-/*   Updated: 2025/04/02 01:52:30 by jorgutie         ###   ########.fr       */
+/*   Updated: 2025/04/03 01:21:46 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,19 +54,20 @@ void	setup_exec_signals(void)
 
 // SIGNAL HANDLER: SIGINT (Ctrl-C) inside heredoc
 // Closes STDIN so get_next_line() returns NULL and heredoc is aborted.
+// exit (4) [personalized] if ctrl c
 void	handle_sigint_heredoc(int signo)
 {
 	if (signo == SIGINT)
 	{
 		write(1, "\n", 1);
-		close(STDIN_FILENO);
+		exit(4);
 	}
 }
 
 // SETUP: Signals during heredoc input (<<)
 // - SIGINT (Ctrl-C) aborts heredoc
 // - SIGQUIT (Ctrl-\) is ignored
-void	setup_heredoc_signals(void)
+void	setup_heredoc_signals(void) // TODO: do not touch 
 {
 	signal(SIGINT, handle_sigint_heredoc);
 	signal(SIGQUIT, SIG_IGN);

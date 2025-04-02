@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 00:49:00 by jorgutie          #+#    #+#             */
-/*   Updated: 2025/04/02 01:46:21 by jorgutie         ###   ########.fr       */
+/*   Updated: 2025/04/02 23:20:23 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,12 @@ int		check_too_many_arguments(t_cmd *cmd, t_minishell *minishell);
 int		setup_redirections(t_cmd *cmd, t_minishell *minishell);
 void	redirect_stdout_to_file(int fd_outfile);
 void	redirect_stdin_to_file(int fd_infile);
-int		redirect_heredoc(char *delimiter, t_minishell *minishell);
+int		handle_heredoc(t_rdir *hdoc_rdir, char *delimiter, t_minishell *minishell, int hdoc_counter);
 void	check_and_setup_redirections(t_cmd *cmd, t_minishell *minishell);
 
 // redirections open file
 int		open_file_check_rdin(char *rdir_name, int *fd_infile);
-int		open_file_check_rdhoc_wr(int *fd_heredoc_file);
+char	*open_file_check_rdhoc_wr(int *fd_heredoc_file, int hdoc_counter);
 int		open_file_check_rdhoc_rd(int *fd_heredoc_file2);
 int		open_file_check_rdout(char *rdir_name, int *fd_outfile);
 int		open_file_check_rdapnd(char *rdir_name, int *fd_outfile);

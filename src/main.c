@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 00:52:31 by jorgutie          #+#    #+#             */
-/*   Updated: 2025/04/02 01:35:53 by jorgutie         ###   ########.fr       */
+/*   Updated: 2025/04/02 20:19:26 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

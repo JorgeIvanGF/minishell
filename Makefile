@@ -21,8 +21,9 @@ WHITE = \033[0;37m
 RESET = \033[0m
 
 # Readline
-RL_PATH = $(shell brew --prefix readline)
-RL_FLAGS = -I$(RL_PATH)/include -L$(RL_PATH)/lib -lreadline
+# RL_PATH = $(shell brew --prefix readline) 
+# -L$(RL_PATH)/lib 
+RL_FLAGS = -I$(RL_PATH)/include -lreadline
 
 # Directories
 SRC_DIR     = src

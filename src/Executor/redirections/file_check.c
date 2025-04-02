@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   file_check.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 00:50:52 by jorgutie          #+#    #+#             */
-/*   Updated: 2025/04/02 00:50:53 by jorgutie         ###   ########.fr       */
+/*   Updated: 2025/04/03 01:09:27 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,30 +29,23 @@ int	open_file_check_rdin(char *rdir_name, int *fd_infile)
 
 // open file check RD_HOC 1
 // opens or creates file in write mode (truncating if it exists);
-int	open_file_check_rdhoc_wr(int *fd_heredoc_file)
+char	*open_file_check_rdhoc_wr(int *fd_heredoc_file, int hdoc_counter)
 {
-	*fd_heredoc_file = open("./src/Executor/redirections/heredocfile",
+	char *file_no;
+	char *file_name;
+
+	file_no = ft_itoa(hdoc_counter);
+	file_name = ft_strjoin("./src/Executor/redirections/hd_file", file_no);
+	*fd_heredoc_file = open(file_name,
 			O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	free(file_no);
 	if (*fd_heredoc_file == -1)
 	{
 		error_heredoc();
-		return (-1);
+		return (NULL);
 	}
-	return (1);
-}
-
-// open file check RD_HOC 2
-// opens file in read mode
-int	open_file_check_rdhoc_rd(int *fd_heredoc_file2)
-{
-	*fd_heredoc_file2 = open("./src/Executor/redirections/heredocfile",
-			O_RDONLY);
-	if (*fd_heredoc_file2 == -1)
-	{
-		error_heredoc();
-		return (-1);
-	}
-	return (1);
+	
+	return (file_name);
 }
 
 // open file check RD_OUT

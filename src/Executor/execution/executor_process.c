@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_process.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jorgutie <jorgutie@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 00:50:34 by jorgutie          #+#    #+#             */
-/*   Updated: 2025/04/02 01:40:21 by jorgutie         ###   ########.fr       */
+/*   Updated: 2025/04/02 19:54:04 by pauladretta      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	iterate_and_execute_cmd_list(t_minishell *minishell)
 	}
 	if (id != -1)
 		handle_wait_and_exit_status(minishell, id, &status);
-	unlink("./src/Executor/redirections/heredocfile");
+	// unlink("./src/Executor/redirections/heredocfile"); //TODO: uncomment
 }
 
 /*
