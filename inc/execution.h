@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jorgutie <jorgutie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pdrettas <pdrettas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 00:49:00 by jorgutie          #+#    #+#             */
-/*   Updated: 2025/04/03 12:00:22 by jorgutie         ###   ########.fr       */
+/*   Updated: 2025/04/03 20:15:23 by pdrettas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,12 @@ void	redirect_stdin_to_file(int fd_infile);
 int		handle_heredoc(t_rdir *hdoc_rdir, char *delimiter,
 			t_minishell *minishell, int hdoc_counter);
 void	check_and_setup_redirections(t_cmd *cmd, t_minishell *minishell);
+int		check_heredoc(t_minishell *minishell);
+void	unlink_hdoc_files(t_lst_cmd *list_cmd);
 
 // redirections open file
 int		open_file_check_rdin(char *rdir_name, int *fd_infile);
 char	*open_file_check_rdhoc_wr(int *fd_heredoc_file, int hdoc_counter);
-int		open_file_check_rdhoc_rd(int *fd_heredoc_file2);
 int		open_file_check_rdout(char *rdir_name, int *fd_outfile);
 int		open_file_check_rdapnd(char *rdir_name, int *fd_outfile);
 
