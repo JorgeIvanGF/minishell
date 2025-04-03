@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
+/*   By: jorgutie <jorgutie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 00:49:00 by jorgutie          #+#    #+#             */
-/*   Updated: 2025/04/02 23:20:23 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/04/03 12:00:22 by jorgutie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ int		check_too_many_arguments(t_cmd *cmd, t_minishell *minishell);
 int		setup_redirections(t_cmd *cmd, t_minishell *minishell);
 void	redirect_stdout_to_file(int fd_outfile);
 void	redirect_stdin_to_file(int fd_infile);
-int		handle_heredoc(t_rdir *hdoc_rdir, char *delimiter, t_minishell *minishell, int hdoc_counter);
+int		handle_heredoc(t_rdir *hdoc_rdir, char *delimiter,
+			t_minishell *minishell, int hdoc_counter);
 void	check_and_setup_redirections(t_cmd *cmd, t_minishell *minishell);
 
 // redirections open file

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
+/*   By: jorgutie <jorgutie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 00:51:04 by jorgutie          #+#    #+#             */
-/*   Updated: 2025/04/02 23:24:44 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/04/03 11:53:28 by jorgutie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,13 +54,12 @@ int	setup_redirections(t_cmd *cmd, t_minishell *minishell)
 	return (1);
 }
 
-
 // Redirects STDIN by opening specified file (<) or processing a heredoc (<<)
 int	handle_input_redirection(t_rdir *current, t_minishell *minishell)
 {
-	(void) minishell;
 	int	fd_file;
 
+	(void) minishell;
 	if (current->type == RD_IN)
 	{
 		if (open_file_check_rdin(current->name, &fd_file) == -1)

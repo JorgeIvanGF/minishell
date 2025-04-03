@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
+/*   By: jorgutie <jorgutie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 00:51:20 by jorgutie          #+#    #+#             */
-/*   Updated: 2025/04/02 23:42:18 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/04/03 11:44:54 by jorgutie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ void	free_redirections(t_lst_rdir *list_rdir)
 	{
 		tmp = redir;
 		redir = redir->next;
-		// unlink(tmp->name);
 		free(tmp->name);
 		tmp->name = NULL;
 		free(tmp);

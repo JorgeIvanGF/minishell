@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rd_heredoc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
+/*   By: jorgutie <jorgutie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 00:50:55 by jorgutie          #+#    #+#             */
-/*   Updated: 2025/04/03 01:08:03 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/04/03 11:52:42 by jorgutie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	write_heredoc_to_file(int fd_heredoc_file, char *delimiter,
 		t_minishell *minishell)
 {
 	char	*line;
+
 	delimiter = ft_strjoin(delimiter, "\n");
 	while (1)
 	{
@@ -34,20 +35,18 @@ void	write_heredoc_to_file(int fd_heredoc_file, char *delimiter,
 		line = get_next_line(minishell->og_stdin_fd);
 		if (line == NULL)
 		{
-			break;
+			break ;
 		}
 		if (ft_strcmp(line, delimiter) == 0)
 		{
 			ft_free(line);
 			break ;
 		}
-
 		write(fd_heredoc_file, line, ft_strlen(line));
 		ft_free(line);
 	}
 	ft_free(delimiter);
 	close(fd_heredoc_file);
-	
 }
 
 // *******************
@@ -79,24 +78,24 @@ void	write_heredoc_to_file(int fd_heredoc_file, char *delimiter,
 // close(fd_heredoc_file);
 // }
 
-
 // Handles heredoc redirection by opening temporary file for writing, 
 // storing user input until delimiter is encountered,
 // then reopening file for reading and returning its file descriptor.
 // exit (3) [personalized] if ctrl d
 // exit (4) [personalized] if ctrl c (write_heredoc_to_file)
-int	handle_heredoc(t_rdir *hdoc_rdir, char *delimiter, t_minishell *minishell, int hdoc_counter)
+int	handle_heredoc(t_rdir *hdoc_rdir, char *delimiter
+	, t_minishell *minishell, int hdoc_counter)
 {
-	int	fd_heredoc_file;
-	char *heredoc_newname;
-	int id;
-	int status;
+	int		fd_heredoc_file;
+	char	*heredoc_newname;
+	int		id;
+	int		status;
 
 	heredoc_newname = open_file_check_rdhoc_wr(&fd_heredoc_file, hdoc_counter);
 	if (heredoc_newname == NULL)
 		return (-1);
 	id = fork();
-	if(id == 0)
+	if (id == 0)
 	{
 		signal(SIGINT, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);

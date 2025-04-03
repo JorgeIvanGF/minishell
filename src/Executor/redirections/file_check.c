@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   file_check.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pauladrettas <pauladrettas@student.42.f    +#+  +:+       +#+        */
+/*   By: jorgutie <jorgutie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 00:50:52 by jorgutie          #+#    #+#             */
-/*   Updated: 2025/04/03 01:09:27 by pauladretta      ###   ########.fr       */
+/*   Updated: 2025/04/03 11:45:40 by jorgutie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ int	open_file_check_rdin(char *rdir_name, int *fd_infile)
 // opens or creates file in write mode (truncating if it exists);
 char	*open_file_check_rdhoc_wr(int *fd_heredoc_file, int hdoc_counter)
 {
-	char *file_no;
-	char *file_name;
+	char	*file_no;
+	char	*file_name;
 
 	file_no = ft_itoa(hdoc_counter);
 	file_name = ft_strjoin("./src/Executor/redirections/hd_file", file_no);
@@ -44,7 +44,6 @@ char	*open_file_check_rdhoc_wr(int *fd_heredoc_file, int hdoc_counter)
 		error_heredoc();
 		return (NULL);
 	}
-	
 	return (file_name);
 }
 
